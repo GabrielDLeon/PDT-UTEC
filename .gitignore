@@ -1,5 +1,4 @@
 bin/
 client/.classpath
 server/.classpath
-server/.project
-client/.project
+build/
