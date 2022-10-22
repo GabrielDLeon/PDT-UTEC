@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+	<persistence-unit name="PDT-Server" transaction-type="JTA">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<jta-data-source>java:/ProyectoDS</jta-data-source>
+		<mapping-file>META-INF/orm.xml</mapping-file>
+		<properties>
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+            <property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
+			<property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
+			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+			<property name="hibernate.default_schema" value="PROYECTO"/>
+			<property name="hibernate.connection.username" value="PROYECTO"/>
+			<property name="hibernate.connection.password" value="PROYECTO"/>
+		</properties>
+	</persistence-unit>
+</persistence>
