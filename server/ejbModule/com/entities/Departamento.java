@@ -32,11 +32,9 @@ public class Departamento implements Serializable {
 
 	private String nombre;
 
-	//bi-directional many-to-one association to Itr
 	@OneToMany(mappedBy="departamento")
 	private List<Itr> itrs;
 
-	//bi-directional many-to-one association to Localidad
 	@OneToMany(mappedBy="departamento")
 	private List<Localidad> localidades;
 

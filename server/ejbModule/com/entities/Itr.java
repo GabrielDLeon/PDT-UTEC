@@ -31,12 +31,10 @@ public class Itr implements Serializable {
 
 	private String nombre;
 
-	//bi-directional many-to-one association to Departamento
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="DEPARTAMENTO")
 	private Departamento departamento;
 
-	//bi-directional many-to-one association to Usuario
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 

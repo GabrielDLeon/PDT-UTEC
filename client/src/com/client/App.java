@@ -1,16 +1,16 @@
 package com.client;
 
-import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import com.entities.Usuario;
+import com.services.users.DepartamentoBeanRemote;
 import com.services.users.UsuarioBeanRemote;
+import com.singleton.BeanRemoteManager;
 
 public class App {
 	
 	public static void main(String[] args) throws NamingException {
-		
-		UsuarioBeanRemote beanUsuario = (UsuarioBeanRemote) InitialContext.doLookup("PDT-Server/UsuarioBean!com.services.users.UsuarioBeanRemote");
+		UsuarioBeanRemote beanUsuario = BeanRemoteManager.getBeanUsuario(); 
 		try {
 			Usuario usuario = Usuario.builder()
 					.documento("46879543")
@@ -27,4 +27,10 @@ public class App {
 		}
 	}
 
+	public static void getDepartamentos() throws NamingException {
+		DepartamentoBeanRemote bean = BeanRemoteManager.getBeanDepartamento();
+		System.out.println("Bean cargado correctamente!");
+		bean.findAll();
+		System.out.println("Operación realizada!");
+	}
 }
