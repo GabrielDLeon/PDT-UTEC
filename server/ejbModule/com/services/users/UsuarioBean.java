@@ -2,15 +2,23 @@ package com.services.users;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import com.entities.Usuario;
 
 @Stateless
 public class UsuarioBean implements UsuarioBeanRemote {
 	
-	@PersistenceContext
-	private EntityManager em;
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
+	EntityManager em = emf.createEntityManager();
+	
+	Session session = em.unwrap(org.hibernate.Session.class);
+	SessionFactory factory = session.getSessionFactory();
 
 	public UsuarioBean() {
 	}

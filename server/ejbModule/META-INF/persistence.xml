@@ -3,16 +3,27 @@
 	<persistence-unit name="PDT-Server" transaction-type="JTA">
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:/ProyectoDS</jta-data-source>
-		<mapping-file>META-INF/orm.xml</mapping-file>
+		<class>com.entities.AccionConstancia</class>
+		<class>com.entities.Analista</class>
+		<class>com.entities.Asistencia</class>
+		<class>com.entities.AsistenciaPK</class>
+		<class>com.entities.Constancia</class>
+		<class>com.entities.ConstanciasTipo</class>
+		<class>com.entities.Departamento</class>
+		<class>com.entities.EstadoConstancia</class>
+		<class>com.entities.Estudiante</class>
+		<class>com.entities.Evento</class>
+		<class>com.entities.Genero</class>
+		<class>com.entities.Itr</class>
+		<class>com.entities.Localidad</class>
+		<class>com.entities.Tutor</class>
+		<class>com.entities.Usuario</class>
 		<properties>
+		<property name="hibernate.enable_lazy_load_no_trans" value="true"/>
+		<property name = "current_session_context_class" value = "thread" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
             <property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect"/>
-			<property name="hibernate.connection.driver_class" value="oracle.jdbc.OracleDriver"/>
-			<property name="hibernate.connection.url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
-			<property name="hibernate.default_schema" value="PROYECTO"/>
-			<property name="hibernate.connection.username" value="PROYECTO"/>
-			<property name="hibernate.connection.password" value="PROYECTO"/>
+			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle12cDialect"/>
 		</properties>
 	</persistence-unit>
 </persistence>

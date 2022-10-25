@@ -3,6 +3,9 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,9 +35,13 @@ public class Departamento implements Serializable {
 
 	private String nombre;
 
+	@ToString.Exclude
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="departamento")
 	private List<Itr> itrs;
 
+	@ToString.Exclude
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="departamento")
 	private List<Localidad> localidades;
 

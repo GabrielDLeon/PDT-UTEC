@@ -3,6 +3,9 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,10 +34,12 @@ public class Itr implements Serializable {
 
 	private String nombre;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@ManyToOne()
 	@JoinColumn(name="DEPARTAMENTO")
 	private Departamento departamento;
-
+	
+	@ToString.Exclude
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 

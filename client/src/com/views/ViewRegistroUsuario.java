@@ -7,6 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.hql.internal.ast.util.SessionFactoryHelper;
+
 import com.entities.Itr;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.services.users.ItrBeanRemote;
@@ -20,12 +24,16 @@ import javax.swing.UIManager;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
+import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
 public class ViewRegistroUsuario extends JFrame {
@@ -67,13 +75,17 @@ public class ViewRegistroUsuario extends JFrame {
 		});
 	}
 
-	public void getItr() throws NamingException {
-		ItrBeanRemote beanItr = BeanRemoteManager.getBeanItr(); 
-		itrList = beanItr.findAll();
-		itrList.size();
+	
+	
+	public List<Itr> getItr() throws NamingException {
+		
+
+		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
+		return itrList = beanItr.findAll();
+		
 	}
 	
-	public ViewRegistroUsuario() {
+	public ViewRegistroUsuario() throws NamingException {
 		try {
 			getItr();
 		} catch (NamingException e) {
@@ -257,8 +269,10 @@ public class ViewRegistroUsuario extends JFrame {
 		gbc_lbItr.gridx = 1;
 		gbc_lbItr.gridy = 10;
 		panel.add(lbItr, gbc_lbItr);
+	
+		ArrayList<Itr> itrs = (ArrayList<Itr>) getItr();
 		
-		selectItr = new JComboBox();
+		selectItr = new JComboBox(itrs.toArray());
 		GridBagConstraints gbc_selectItr = new GridBagConstraints();
 		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
 		gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;

@@ -3,17 +3,26 @@ package com.services.users;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import com.entities.Itr;
 
 @Stateless
 public class ItrBean implements ItrBeanRemote {
 
-	@PersistenceContext
-	EntityManager em;
+	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
+	EntityManager em = emf.createEntityManager();
+	
+	Session session = em.unwrap(org.hibernate.Session.class);
+	SessionFactory factory = session.getSessionFactory();
 	
     public ItrBean() {
         // TODO Auto-generated constructor stub
@@ -39,9 +48,14 @@ public class ItrBean implements ItrBeanRemote {
 
 	@Override
 	public List<Itr> findAll() {
+		session = factory.openSession();
+		session.beginTransaction();
 		TypedQuery<Itr> query = em.createNamedQuery("Itr.findAll", Itr.class);
 		List<Itr> list = query.getResultList();
-		list.size();
+		System.out.println(list.size());
+//		list.size();
+		session.getTransaction().commit();
+		session.close();
 		return list;
 	}
 
