@@ -3,6 +3,7 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

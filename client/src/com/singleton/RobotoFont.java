@@ -14,11 +14,35 @@ public class RobotoFont {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static Font getRobotoFont() {
+	public static Font getTitulo() {
+		return getRobotoFont("Roboto-Bold.ttf", 22f);
+	}
+	
+	public static Font getSubTitulo() {
+		return getRobotoFont("Roboto-Bold.ttf", 18f);
+	}
+	
+	public static Font getNormal(float size) {
+		return getRobotoFont("Roboto-Regular.ttf", size);
+	}
+	
+	public static Font getNormal() {
+		return getRobotoFont("Roboto-Regular.ttf", 14f);
+	}
+	
+	public static Font getBold(float size) {
+		return getRobotoFont("Roboto-Bold.ttf", size);
+	}
+	
+	public static Font getBold() {
+		return getRobotoFont("Roboto-Bold.ttf", 14f);
+	}
+	
+	private static Font getRobotoFont(String type, float size) {
 		try {
-			roboto = Font.createFont(Font.TRUETYPE_FONT, new File("Roboto-Regular.ttf")).deriveFont(14f);	
+			roboto = Font.createFont(Font.TRUETYPE_FONT, new File(type)).deriveFont(size);	
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("Roboto-Regular.ttf")));
+			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(type)));
 		} catch (IOException | FontFormatException e) {
 			e.printStackTrace();
 		}

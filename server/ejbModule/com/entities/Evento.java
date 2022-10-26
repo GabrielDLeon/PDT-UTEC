@@ -3,6 +3,13 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.enumerators.EnumEventoModalidad;
+import com.enumerators.EnumEventoTipo;
+
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -32,14 +39,30 @@ public class Evento implements Serializable {
 	@Column(name="ID_EVENTOS")
 	private long idEventos;
 
+	private String titulo;
+	
+	@Temporal(TemporalType.DATE)
+	private Date inicio;
+	
 	@Temporal(TemporalType.DATE)
 	@Column(name="FINAL")
 	private Date final_;
 
-	@Temporal(TemporalType.DATE)
-	private Date inicio;
+	
+	/* 
+	 * TODO Esta cosa no funciona, es necesaria
+	 * para cuando vas a crear el objeto Evento que le
+	 * tenes que pasar estos atributos pero no deja
+	 * 
+	private EnumEventoTipo tipo;
 
-	private String titulo;
+	private EnumEventoModalidad modalidad;
+	
+	@ManyToOne
+	@JoinColumn(name = "ITR")
+	private Itr itr;
+	*/
+
 
 	//bi-directional many-to-one association to Asistencia
 	@OneToMany(mappedBy="evento")
