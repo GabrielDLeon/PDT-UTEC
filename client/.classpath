@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PDT-Server"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17"/>
 	<classpathentry kind="lib" path="lib/flatlaf-2.5.jar"/>
 	<classpathentry kind="lib" path="lib/flatlaf-intellij-themes-2.4.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-core-5.3.24.Final.jar"/>
