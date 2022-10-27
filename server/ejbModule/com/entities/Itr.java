@@ -3,8 +3,6 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -45,7 +43,6 @@ public class Itr implements Serializable {
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 
-	private List<Evento> eventos;
 	
 	// Esto se generó automaticamente
 	public Usuario addUsuario(Usuario usuario) {

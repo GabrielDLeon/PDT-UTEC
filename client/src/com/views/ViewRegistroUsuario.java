@@ -12,7 +12,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.hql.internal.ast.util.SessionFactoryHelper;
 
 import com.entities.Itr;
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.services.users.ItrBeanRemote;
 import com.singleton.BeanRemoteManager;
@@ -55,14 +54,14 @@ public class ViewRegistroUsuario extends JFrame {
 	private JLabel lblEmailInstitucional;
 	private JLabel lblClave;
 	private JLabel lbItr;
-	private JComboBox<Itr> selectItr;
+	private JComboBox selectItr;
 	private JButton btnCrear;
 	
 	private List<Itr> itrList;
 
 	public static void main(String[] args) {
-		FlatDarkLaf.setup();
-		Font roboto = RobotoFont.getNormal();
+		FlatLightLaf.setup();
+		Font roboto = RobotoFont.getRobotoFont();
 		UIManager.getLookAndFeelDefaults().put("defaultFont", roboto);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -76,6 +75,8 @@ public class ViewRegistroUsuario extends JFrame {
 		});
 	}
 
+	
+	
 	public List<Itr> getItr() throws NamingException {
 		
 
@@ -278,6 +279,7 @@ public class ViewRegistroUsuario extends JFrame {
 		gbc_selectItr.gridx = 2;
 		gbc_selectItr.gridy = 10;
 		panel.add(selectItr, gbc_selectItr);
+		//selectItr.addItem();
 		
 		btnCrear = new JButton("Crear Usuario");
 		btnCrear.setToolTipText(

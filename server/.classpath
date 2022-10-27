@@ -15,6 +15,6 @@
 			<attribute name="owner.project.facets" value="jpt.jpa;jst.ejb"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/PDT-Client/lib/hibernate-core-5.3.24.Final.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Default.REVISION-PC/Documents/wildfly-26.1.0.Final/modules/system/layers/base/org/hibernate/main/hibernate-core-5.3.24.Final.jar" sourcepath="C:/Users/Default.REVISION-PC/.m2/repository/org/hibernate/hibernate-core/5.3.24.Final/hibernate-core-5.3.24.Final-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
