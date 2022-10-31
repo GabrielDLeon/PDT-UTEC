@@ -1,8 +1,9 @@
-package com.singleton;
+package com.app.singleton;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import com.services.eventos.EventoBeanRemote;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.ItrBeanRemote;
 import com.services.users.UsuarioBeanRemote;
@@ -12,7 +13,8 @@ public class BeanRemoteManager {
 	private static ItrBeanRemote beanItr;
 	private static UsuarioBeanRemote beanUsuario;
 	private static DepartamentoBeanRemote beanDepartamento;
-
+	private static EventoBeanRemote beanEvento;
+	
 	private BeanRemoteManager() {
 
 	}
@@ -33,6 +35,12 @@ public class BeanRemoteManager {
 		beanDepartamento = (DepartamentoBeanRemote) InitialContext
 				.doLookup("PDT-Server/DepartamentoBean!com.services.users.DepartamentoBeanRemote");
 		return beanDepartamento;
+	}
+	
+	public static EventoBeanRemote getBeanEvento() throws NamingException {
+		beanEvento = (EventoBeanRemote) InitialContext
+				.doLookup("PDT-Server/EventoBean!com.services.eventos.EventoBeanRemote");
+		return beanEvento;
 	}
 
 }

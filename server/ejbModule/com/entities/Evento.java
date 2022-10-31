@@ -3,6 +3,9 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.enumerators.EnumEventoModalidad;
+import com.enumerators.EnumEventoTipo;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +15,6 @@ import lombok.ToString;
 
 import java.util.Date;
 import java.util.List;
-
 
 @Getter
 @Setter
@@ -32,15 +34,25 @@ public class Evento implements Serializable {
 	@Column(name="ID_EVENTOS")
 	private long idEventos;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name="FINAL")
-	private Date final_;
+	@Column(name="NOMBRE")
+	private String nombre;
 
 	@Temporal(TemporalType.DATE)
-	private Date inicio;
+	@Column(name = "FECHA_FIN")
+	private Date fechaFin;
 
-	private String titulo;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "FECHA_INICIO")
+	private Date fechaInicio;
 
+	private EnumEventoModalidad modalidad;
+	
+	private EnumEventoTipo tipo;
+
+	@ManyToOne
+	@JoinColumn(name = "itr")
+	private Itr itr;
+	
 	//bi-directional many-to-one association to Asistencia
 	@OneToMany(mappedBy="evento")
 	private List<Asistencia> asistencias;
@@ -65,34 +77,5 @@ public class Evento implements Serializable {
 			}
 		)
 	private List<Tutor> tutor;
-
-	// Se generó automaticamente
-	public Asistencia addAsistencia(Asistencia asistencia) {
-		getAsistencias().add(asistencia);
-		asistencia.setEvento(this);
-
-		return asistencia;
-	}
-
-	public Asistencia removeAsistencia(Asistencia asistencia) {
-		getAsistencias().remove(asistencia);
-		asistencia.setEvento(null);
-
-		return asistencia;
-	}
-
-	public Constancia addConstancia(Constancia constancia) {
-		getConstancias().add(constancia);
-		constancia.setEvento(this);
-
-		return constancia;
-	}
-
-	public Constancia removeConstancia(Constancia constancia) {
-		getConstancias().remove(constancia);
-		constancia.setEvento(null);
-
-		return constancia;
-	}
 
 }

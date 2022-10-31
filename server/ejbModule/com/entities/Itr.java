@@ -19,7 +19,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 @Entity
 @NamedQuery(name="Itr.findAll", query="SELECT i FROM Itr i")
@@ -43,7 +42,6 @@ public class Itr implements Serializable {
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 
-	
 	// Esto se generó automaticamente
 	public Usuario addUsuario(Usuario usuario) {
 		getUsuarios().add(usuario);
@@ -59,4 +57,9 @@ public class Itr implements Serializable {
 		return usuario;
 	}
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
+	
 }

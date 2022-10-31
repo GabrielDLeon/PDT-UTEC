@@ -3,55 +3,63 @@ package com.services.users;
 import java.util.List;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.entities.Departamento;
+import com.entities.Genero;
+import com.entities.Itr;
 
 @Stateless
-public class DepartamentoBean implements DepartamentoBeanRemote {
+public class GeneroBean implements GeneroBeanRemote {
 
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
 	EntityManager em = emf.createEntityManager();
-
+	
 	Session session = em.unwrap(org.hibernate.Session.class);
-	SessionFactory factory = (SessionFactory) session.getSessionFactory();
-
-	public DepartamentoBean() {
-	}
+	SessionFactory factory = session.getSessionFactory();
+	
+    public GeneroBean() {
+        // TODO Auto-generated constructor stub
+    }
 
 	@Override
-	public void create(Departamento departamento) throws Exception {
+	public void create(Genero genero) throws Exception {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void update(Departamento departamento) throws Exception {
+	public void update(Genero genero) throws Exception {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public void delete(Departamento departamento) throws Exception {
+	public void delete(Long id) throws Exception {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
-	public List<Departamento> findAll() {
+	public List<Genero> findAll() {
 		session = factory.openSession();
 		session.beginTransaction();
-		TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findAll", Departamento.class);
-		List<Departamento> list = query.getResultList();
+		
+		TypedQuery<Genero> query = em.createNamedQuery("Genero.findAll", Genero.class);
+		List<Genero> list = query.getResultList();
+		
 		System.out.println(list.size());
+		
 		session.getTransaction().commit();
 		session.close();
+		
 		return list;
 	}
 

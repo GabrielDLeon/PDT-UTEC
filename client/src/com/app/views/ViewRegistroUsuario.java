@@ -1,4 +1,4 @@
-package com.views;
+package com.app.views;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -7,15 +7,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.hql.internal.ast.util.SessionFactoryHelper;
-
 import com.entities.Itr;
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarkLaf;
 import com.services.users.ItrBeanRemote;
-import com.singleton.BeanRemoteManager;
-import com.singleton.RobotoFont;
+import com.app.singleton.RobotoFont;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -32,8 +27,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 
 public class ViewRegistroUsuario extends JFrame {
@@ -54,14 +47,14 @@ public class ViewRegistroUsuario extends JFrame {
 	private JLabel lblEmailInstitucional;
 	private JLabel lblClave;
 	private JLabel lbItr;
-	private JComboBox selectItr;
+	private JComboBox<Itr> selectItr;
 	private JButton btnCrear;
-	
+
 	private List<Itr> itrList;
 
 	public static void main(String[] args) {
-		FlatLightLaf.setup();
-		Font roboto = RobotoFont.getRobotoFont();
+		FlatDarkLaf.setup();
+		Font roboto = RobotoFont.getNormal();
 		UIManager.getLookAndFeelDefaults().put("defaultFont", roboto);
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -75,23 +68,21 @@ public class ViewRegistroUsuario extends JFrame {
 		});
 	}
 
-	
-	
 	public List<Itr> getItr() throws NamingException {
-		
 
-		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
+		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext
+				.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
 		return itrList = beanItr.findAll();
-		
+
 	}
-	
+
 	public ViewRegistroUsuario() throws NamingException {
 		try {
 			getItr();
 		} catch (NamingException e) {
 			System.out.println("No se pudo cargar la lista de ITR");
 		}
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 800);
 		contentPane = new JPanel();
@@ -269,9 +260,9 @@ public class ViewRegistroUsuario extends JFrame {
 		gbc_lbItr.gridx = 1;
 		gbc_lbItr.gridy = 10;
 		panel.add(lbItr, gbc_lbItr);
-	
+
 		ArrayList<Itr> itrs = (ArrayList<Itr>) getItr();
-		
+
 		selectItr = new JComboBox(itrs.toArray());
 		GridBagConstraints gbc_selectItr = new GridBagConstraints();
 		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
@@ -279,8 +270,7 @@ public class ViewRegistroUsuario extends JFrame {
 		gbc_selectItr.gridx = 2;
 		gbc_selectItr.gridy = 10;
 		panel.add(selectItr, gbc_selectItr);
-		//selectItr.addItem();
-		
+
 		btnCrear = new JButton("Crear Usuario");
 		btnCrear.setToolTipText(
 				"Al presionar este botón, se registrara el Usuario en el sistema a partir de los datos ingresados en el formulario.");

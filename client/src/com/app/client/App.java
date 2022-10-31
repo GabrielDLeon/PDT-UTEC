@@ -1,11 +1,11 @@
-package com.client;
+package com.app.client;
 
 import javax.naming.NamingException;
 
 import com.entities.Usuario;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.UsuarioBeanRemote;
-import com.singleton.BeanRemoteManager;
+import com.app.singleton.BeanRemoteManager;
 
 public class App {
 	
