@@ -42,24 +42,4 @@ public class Itr implements Serializable {
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 
-	// Esto se generó automaticamente
-	public Usuario addUsuario(Usuario usuario) {
-		getUsuarios().add(usuario);
-		usuario.setItr(this);
-
-		return usuario;
-	}
-
-	public Usuario removeUsuario(Usuario usuario) {
-		getUsuarios().remove(usuario);
-		usuario.setItr(null);
-
-		return usuario;
-	}
-
-	@Override
-	public String toString() {
-		return nombre;
-	}
-	
 }

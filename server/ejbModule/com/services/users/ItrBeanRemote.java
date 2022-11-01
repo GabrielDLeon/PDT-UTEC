@@ -11,5 +11,6 @@ public interface ItrBeanRemote {
 	void create(Itr itr) throws Exception;
 	void update(Itr itr) throws Exception;
 	void delete(Long id) throws Exception;
+	Itr findById(Long id);
 	List<Itr> findAll();
 }

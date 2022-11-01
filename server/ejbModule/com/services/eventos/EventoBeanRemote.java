@@ -5,6 +5,7 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import com.entities.Evento;
+import com.entities.Tutor;
 
 @Remote
 public interface EventoBeanRemote {
@@ -13,4 +14,5 @@ public interface EventoBeanRemote {
 	void delete(Long id) throws Exception;
 	Evento findById(Long id);
 	List<Evento> findAll();
+	Tutor getTutor(Long id);
 }

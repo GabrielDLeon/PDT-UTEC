@@ -6,11 +6,13 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.entities.Evento;
+import com.entities.Tutor;
 
 @Stateless
 public class EventoBean implements EventoBeanRemote {
@@ -41,26 +43,39 @@ public class EventoBean implements EventoBeanRemote {
 
 	@Override
 	public void update(Evento evento) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			em.merge(evento);
+			em.flush();
+		} catch (Exception e) {
+			 throw new Exception("No se pudo actualizar el Evento");
+		}
 	}
 
 	@Override
 	public void delete(Long id) throws Exception {
-		// TODO Auto-generated method stub
-		
+		try {
+			Evento evento = findById(id);
+			em.remove(evento);
+			em.flush();				
+		} catch (Exception e) {
+			throw new Exception("No se pudo eliminar el evento");
+		}
 	}
 
 	@Override
 	public Evento findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return (Evento) em.find(Evento.class, id);
 	}
 
 	@Override
 	public List<Evento> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		Query query = em.createNamedQuery("Evento.findAll", Evento.class);
+		return query.getResultList();
+	}
+	
+	// Esto después se borra, está para las pruebas
+	public Tutor getTutor(Long id){
+		return (Tutor) em.find(Tutor.class, id);
 	}
 
 }

@@ -48,9 +48,9 @@ public class ViewRegistroEvento extends JFrame {
 
 	private Map<String, JTextField> fieldsMap = new HashMap<>();
 
-	private JComboBox<EnumEventoTipo> selectTipo;
-	private JComboBox<EnumEventoModalidad> selectModalidad;
-	private JComboBox<Itr> selectItr;
+	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
+	private JComboBox<EnumEventoModalidad> selectModalidad = new JComboBox<EnumEventoModalidad>();
+	private JComboBox<Itr> selectItr = new JComboBox<Itr>();
 
 	private EventoBO bo = new EventoBO();
 
@@ -70,18 +70,7 @@ public class ViewRegistroEvento extends JFrame {
 			}
 		});
 	}
-
-	private void cargarItr() {
-		try {
-			ItrBeanRemote bean = BeanRemoteManager.getBeanItr();
-			List<Itr> list = bean.findAll();
-			selectItr = new JComboBox<Itr>(list.toArray(new Itr[list.size()]));
-		} catch (NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
+	
 	protected void ingresar() {
 		// TODO Realizar la implementación del Ingresar()
 		boolean result = validarDatos();
@@ -93,7 +82,7 @@ public class ViewRegistroEvento extends JFrame {
 					.itr((Itr) selectItr.getSelectedItem())
 					.modalidad((EnumEventoModalidad) selectModalidad.getSelectedItem())
 					.tipo((EnumEventoTipo) selectTipo.getSelectedItem())
-					.tutor(null)
+					.tutores(null)
 					.build();
 			try {
 				bo.insert(evento);
@@ -128,10 +117,20 @@ public class ViewRegistroEvento extends JFrame {
 
 	}
 
-	public ViewRegistroEvento() {
+	private void cargarComboBox() {
 		selectTipo = new JComboBox<EnumEventoTipo>(EnumEventoTipo.values());
 		selectModalidad = new JComboBox<EnumEventoModalidad>(EnumEventoModalidad.values());
-		cargarItr();
+		try {
+			ItrBeanRemote bean = BeanRemoteManager.getBeanItr();
+			List<Itr> list = bean.findAll();
+			selectItr = new JComboBox<Itr>(list.toArray(new Itr[list.size()]));
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ViewRegistroEvento() {
+		cargarComboBox();
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 500);
@@ -145,10 +144,9 @@ public class ViewRegistroEvento extends JFrame {
 		contentPane.add(panel, BorderLayout.CENTER);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 
 		JLabel lblTitulo = new JLabel("Alta de Evento");
@@ -194,13 +192,13 @@ public class ViewRegistroEvento extends JFrame {
 		gbc_lblTipo.gridx = 1;
 		gbc_lblTipo.gridy = 6;
 		panel.add(lblTipo, gbc_lblTipo);
-
+		
 		GridBagConstraints gbc_selectTipo = new GridBagConstraints();
 		gbc_selectTipo.gridwidth = 2;
 		gbc_selectTipo.insets = new Insets(0, 0, 5, 5);
 		gbc_selectTipo.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectTipo.gridx = 1;
-		gbc_selectTipo.gridy = 6;
+		gbc_selectTipo.gridy = 7;
 		panel.add(selectTipo, gbc_selectTipo);
 
 		JLabel lblFechaInicio = new JLabel("Inicio");
@@ -260,13 +258,13 @@ public class ViewRegistroEvento extends JFrame {
 		gbc_lblModalidad.gridx = 1;
 		gbc_lblModalidad.gridy = 11;
 		panel.add(lblModalidad, gbc_lblModalidad);
-
+		
 		GridBagConstraints gbc_selectModalidad = new GridBagConstraints();
 		gbc_selectModalidad.gridwidth = 2;
 		gbc_selectModalidad.insets = new Insets(0, 0, 5, 5);
 		gbc_selectModalidad.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectModalidad.gridx = 1;
-		gbc_selectModalidad.gridy = 10;
+		gbc_selectModalidad.gridy = 12;
 		panel.add(selectModalidad, gbc_selectModalidad);
 
 		JLabel lblItr = new JLabel("ITR");
@@ -276,14 +274,14 @@ public class ViewRegistroEvento extends JFrame {
 		gbc_lblItr.gridx = 1;
 		gbc_lblItr.gridy = 13;
 		panel.add(lblItr, gbc_lblItr);
-
-		GridBagConstraints gbc_selectItr = new GridBagConstraints();
-		gbc_selectItr.gridwidth = 2;
-		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
-		gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectItr.gridx = 1;
-		gbc_selectItr.gridy = 12;
-		panel.add(selectItr, gbc_selectItr);
+		
+				GridBagConstraints gbc_selectItr = new GridBagConstraints();
+				gbc_selectItr.gridwidth = 2;
+				gbc_selectItr.insets = new Insets(0, 0, 5, 5);
+				gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
+				gbc_selectItr.gridx = 1;
+				gbc_selectItr.gridy = 14;
+				panel.add(selectItr, gbc_selectItr);
 
 		JLabel lblLocalizacion = new JLabel("Localización");
 		GridBagConstraints gbc_lblLocalizacion = new GridBagConstraints();
@@ -322,7 +320,7 @@ public class ViewRegistroEvento extends JFrame {
 		gbc_btnIngresar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnIngresar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnIngresar.gridx = 1;
-		gbc_btnIngresar.gridy = 19;
+		gbc_btnIngresar.gridy = 18;
 		panel.add(btnIngresar, gbc_btnIngresar);
 
 		JButton btnCancelar = new JButton("Cancelar Ingreso");
@@ -335,7 +333,7 @@ public class ViewRegistroEvento extends JFrame {
 		gbc_btnCancelar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnCancelar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCancelar.gridx = 2;
-		gbc_btnCancelar.gridy = 19;
+		gbc_btnCancelar.gridy = 18;
 		panel.add(btnCancelar, gbc_btnCancelar);
 	}
 
