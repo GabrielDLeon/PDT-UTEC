@@ -25,20 +25,25 @@ public class Asistencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private AsistenciaPK id;
-
-	private BigDecimal asistencia;
-
-	private BigDecimal calificacion;
+	private AsistenciaKey id;
 
 	// bi-directional many-to-one association to Evento
 	@ManyToOne
+	@MapsId("evento")
 	@JoinColumn(name = "EVENTO")
 	private Evento evento;
 
 	// uni-directional many-to-one association to Estudiante
 	@ManyToOne
+	@MapsId("estudiante")
 	@JoinColumn(name = "ESTUDIANTE")
 	private Estudiante estudiante;
 
+	
+	// Atributos propios de la entidad Asistencias
+	
+	private BigDecimal asistencia;
+
+	private BigDecimal calificacion;
+	
 }

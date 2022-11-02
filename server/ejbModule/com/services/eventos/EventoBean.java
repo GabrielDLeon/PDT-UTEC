@@ -24,7 +24,6 @@ public class EventoBean implements EventoBeanRemote {
 	SessionFactory factory = session.getSessionFactory();
 	
     public EventoBean() {
-        // TODO Auto-generated constructor stub
     }
 
 	@Override

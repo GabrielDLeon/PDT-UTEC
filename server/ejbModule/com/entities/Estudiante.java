@@ -33,30 +33,13 @@ public class Estudiante implements Serializable {
 	private String generacion;
 
 	//bi-directional many-to-one association to Constancia
+	@ToString.Exclude
 	@OneToMany(mappedBy="estudiante")
 	private List<Constancia> constancias;
 
-	// Esto tira error
-	//uni-directional one-to-one association to Usuario
-	/*
-	@OneToOne
-	@JoinColumn(name="USUARIO")
-	private Usuario usuario;
-	*/
+	//bi-directional one-to-many association to Asistencia
+	@ToString.Exclude
+	@OneToMany(mappedBy="estudiante")
+	List<Asistencia> asistencias;
 	
-	// Se generó automaticamente
-	public Constancia addConstancia(Constancia constancia) {
-		getConstancias().add(constancia);
-		constancia.setEstudiante(this);
-
-		return constancia;
-	}
-
-	public Constancia removeConstancia(Constancia constancia) {
-		getConstancias().remove(constancia);
-		constancia.setEstudiante(null);
-
-		return constancia;
-	}
-
 }

@@ -6,7 +6,7 @@
 		<class>com.entities.AccionConstancia</class>
 		<class>com.entities.Analista</class>
 		<class>com.entities.Asistencia</class>
-		<class>com.entities.AsistenciaPK</class>
+		<class>com.entities.AsistenciaKey</class>
 		<class>com.entities.Constancia</class>
 		<class>com.entities.ConstanciasTipo</class>
 		<class>com.entities.Departamento</class>

@@ -31,13 +31,5 @@ public class Tutor implements Serializable {
 	private String area;
 
 	private String tipo;
-
 	
-	//Esto tira error
-	//uni-directional one-to-one association to Usuario
-	/* 
-	@OneToOne
-	@JoinColumn(name="USUARIO")
-	private Usuario usuario;
-	*/
 }

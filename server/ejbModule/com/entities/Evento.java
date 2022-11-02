@@ -61,8 +61,8 @@ public class Evento implements Serializable {
 	private Itr itr;
 	
 	//bi-directional many-to-one association to Asistencia
-	@OneToMany(mappedBy="evento")
 	@ToString.Exclude
+	@OneToMany(mappedBy="evento")
 	private List<Asistencia> asistencias;
 
 	//bi-directional many-to-one association to Constancia

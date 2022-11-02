@@ -3,6 +3,7 @@ package com.app.singleton;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import com.services.eventos.AsistenciaBeanRemote;
 import com.services.eventos.EventoBeanRemote;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.ItrBeanRemote;
@@ -14,14 +15,14 @@ public class BeanRemoteManager {
 	private static UsuarioBeanRemote beanUsuario;
 	private static DepartamentoBeanRemote beanDepartamento;
 	private static EventoBeanRemote beanEvento;
-	
+	private static AsistenciaBeanRemote beanAsistencia;
+
 	private BeanRemoteManager() {
 
 	}
 
 	public static ItrBeanRemote getBeanItr() throws NamingException {
-		beanItr = (ItrBeanRemote) InitialContext
-				.doLookup("PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
+		beanItr = (ItrBeanRemote) InitialContext.doLookup("PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
 		return beanItr;
 	}
 
@@ -36,11 +37,17 @@ public class BeanRemoteManager {
 				.doLookup("PDT-Server/DepartamentoBean!com.services.users.DepartamentoBeanRemote");
 		return beanDepartamento;
 	}
-	
+
 	public static EventoBeanRemote getBeanEvento() throws NamingException {
 		beanEvento = (EventoBeanRemote) InitialContext
 				.doLookup("PDT-Server/EventoBean!com.services.eventos.EventoBeanRemote");
 		return beanEvento;
+	}
+
+	public static AsistenciaBeanRemote getBeanAsistencia() throws NamingException {
+		beanAsistencia = (AsistenciaBeanRemote) InitialContext
+				.doLookup("PDT-Server/AsistenciaBean!com.services.eventos.AsistenciaBeanRemote");
+		return beanAsistencia;
 	}
 
 }
