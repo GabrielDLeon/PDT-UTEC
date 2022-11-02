@@ -3,6 +3,8 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.hibernate.annotations.NamedNativeQuery;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,12 +22,14 @@ import java.math.BigDecimal;
 @Builder
 @Entity
 @Table(name = "ASISTENCIAS")
-@NamedQuery(name = "Asistencia.findAll", query = "SELECT a FROM Asistencia a")
+@NamedQueries({
+	@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT DISTINCT a FROM Asistencia a JOIN FETCH a.evento")
+})
 public class Asistencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private AsistenciaKey id;
+	private AsistenciaKey id = new AsistenciaKey();
 
 	// bi-directional many-to-one association to Evento
 	@ManyToOne

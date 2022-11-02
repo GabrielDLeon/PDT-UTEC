@@ -11,6 +11,7 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.Tutor;
 
@@ -75,6 +76,10 @@ public class EventoBean implements EventoBeanRemote {
 	// Esto después se borra, está para las pruebas
 	public Tutor getTutor(Long id){
 		return (Tutor) em.find(Tutor.class, id);
+	}
+	
+	public Estudiante getEstudiante(Long id){
+		return (Estudiante) em.find(Estudiante.class, id);
 	}
 
 }

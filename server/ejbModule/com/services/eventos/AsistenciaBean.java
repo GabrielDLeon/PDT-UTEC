@@ -30,8 +30,22 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 
 	@Override
 	public void create(Evento evento, List<Estudiante> convocados) throws Exception {
-		// TODO Auto-generated method stub
-		
+		session = factory.openSession();
+		session.beginTransaction();
+		try {
+			for (Estudiante estudiante : convocados) {
+				Asistencia a = Asistencia.builder()
+						.estudiante(estudiante)
+						.evento(evento)
+						.build();				
+				em.persist(a);
+			}
+			em.flush();			
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		session.getTransaction().commit();
+		session.close();
 	}
 
 	@Override
@@ -42,7 +56,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 
 	@Override
 	public List<Asistencia> getConvocatoria(Evento evento) throws Exception {
-		Query query = em.createNamedQuery("Asistencia.findAll", Asistencia.class);
+		Query query = em.createNamedQuery("Asistencia.findByEvento", Asistencia.class);
 		return query.getResultList();
 	}
 
