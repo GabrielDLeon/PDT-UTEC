@@ -15,6 +15,7 @@ public interface EventoBeanRemote {
 	void delete(Long id) throws Exception;
 	Evento findById(Long id);
 	List<Evento> findAll();
+	List<Evento> findByTutor(Long idTutor);
 	
 	// Esto después se borra
 	Tutor getTutor(Long id);

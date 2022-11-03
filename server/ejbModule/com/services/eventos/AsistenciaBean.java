@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,6 +15,7 @@ import org.hibernate.SessionFactory;
 import com.entities.Asistencia;
 import com.entities.Estudiante;
 import com.entities.Evento;
+import com.enumerators.EnumAsistenciaEstado;
 
 @Stateless
 public class AsistenciaBean implements AsistenciaBeanRemote {
@@ -37,14 +39,15 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 				Asistencia a = Asistencia.builder()
 						.estudiante(estudiante)
 						.evento(evento)
-						.build();				
+						.estado(EnumAsistenciaEstado.CONVOCADO)
+						.build();
 				em.persist(a);
+				session.getTransaction().commit();
 			}
 			em.flush();			
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
-		session.getTransaction().commit();
 		session.close();
 	}
 
@@ -55,15 +58,26 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 	}
 
 	@Override
-	public List<Asistencia> getConvocatoria(Evento evento) throws Exception {
-		Query query = em.createNamedQuery("Asistencia.findByEvento", Asistencia.class);
+	public List<Asistencia> findByEvento(Long idEvento) {
+		TypedQuery<Asistencia> query = em.createNamedQuery("Asistencia.findByEvento", Asistencia.class);
+		query.setParameter("id", idEvento);
 		return query.getResultList();
 	}
 
+	@Override
+	public List<Asistencia> findByStatus(Long idEvento, EnumAsistenciaEstado status) {
+		TypedQuery<Asistencia> query = em.createNamedQuery("Asistencia.findByStatus", Asistencia.class);
+		query.setParameter("id", idEvento);
+		query.setParameter("status", status);
+		return query.getResultList();
+	}
+	
 	@Override
 	public void clear(Evento evento) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	
 
 }

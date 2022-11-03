@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 
 import javax.persistence.*;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import lombok.Setter;
  * The primary key class for the ASISTENCIAS database table.
  */
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -21,11 +23,11 @@ public class AsistenciaKey implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(insertable=false, updatable=false)
-	private long evento;
+	@Column(name = "EVENTO")
+	private long idEvento;
 
-	@Column(insertable=false, updatable=false)
-	private long estudiante;
+	@Column(name = "ESTUDIANTE")
+	private long idEstudiante;
 
 	public boolean equals(Object other) {
 		if (this == other) {
@@ -36,15 +38,15 @@ public class AsistenciaKey implements Serializable {
 		}
 		AsistenciaKey castOther = (AsistenciaKey)other;
 		return 
-			(this.evento == castOther.evento)
-			&& (this.estudiante == castOther.estudiante);
+			(this.idEvento == castOther.idEvento)
+			&& (this.idEstudiante == castOther.idEstudiante);
 	}
 
 	public int hashCode() {
 		final int prime = 31;
 		int hash = 17;
-		hash = hash * prime + ((int) (this.evento ^ (this.evento >>> 32)));
-		hash = hash * prime + ((int) (this.estudiante ^ (this.estudiante >>> 32)));
+		hash = hash * prime + ((int) (this.idEvento ^ (this.idEvento >>> 32)));
+		hash = hash * prime + ((int) (this.idEstudiante ^ (this.idEstudiante >>> 32)));
 		
 		return hash;
 	}

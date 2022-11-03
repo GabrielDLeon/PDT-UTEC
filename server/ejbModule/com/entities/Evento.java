@@ -1,6 +1,8 @@
 package com.entities;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
 
 import org.hibernate.annotations.LazyCollection;
@@ -16,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -29,7 +30,7 @@ import java.util.List;
 @Table(name="EVENTOS")
 @NamedQueries({
 	@NamedQuery(name="Evento.findAll", query="SELECT e FROM Evento e"),
-	@NamedQuery(name="Evento.findById", query="SELECT e FROM Evento e WHERE idEvento = :id")
+	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.usuario = :id")
 })
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -43,13 +44,11 @@ public class Evento implements Serializable {
 	@Column(name="NOMBRE")
 	private String nombre;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "FECHA_INICIO")
-	private Date fechaInicio;
+	@Column(name = "FECHA_INICIO", columnDefinition = "TIMESTAMP")
+	private LocalDateTime fechaInicio;
 
-	@Temporal(TemporalType.DATE)
-	@Column(name = "FECHA_FIN")
-	private Date fechaFin;
+	@Column(name = "FECHA_FIN", columnDefinition = "TIMESTAMP")
+	private LocalDateTime fechaFin;
 
 	private EnumEventoModalidad modalidad;
 	
@@ -62,7 +61,7 @@ public class Evento implements Serializable {
 	
 	//bi-directional many-to-one association to Asistencia
 	@ToString.Exclude
-	@OneToMany(mappedBy="evento")
+	@OneToMany(mappedBy="evento", cascade = CascadeType.ALL)
 	private List<Asistencia> asistencias;
 
 	//bi-directional many-to-one association to Constancia
