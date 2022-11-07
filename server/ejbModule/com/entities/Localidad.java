@@ -18,7 +18,9 @@ import java.util.List;
 @ToString
 @Builder
 @Entity
-@Table(name="LOCALIDADES")
+@Table(name="LOCALIDADES", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"nombre", "departamento"})
+})
 @NamedQuery(name="Localidad.findAll", query="SELECT l FROM Localidad l")
 public class Localidad implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -29,6 +31,7 @@ public class Localidad implements Serializable {
 	@Column(name="ID_LOCALIDAD")
 	private long idLocalidad;
 
+	@Column(length = 50, nullable = false)
 	private String nombre;
 
 	//bi-directional many-to-one association to Departamento
@@ -39,19 +42,5 @@ public class Localidad implements Serializable {
 	//bi-directional many-to-one association to Usuario
 	@OneToMany(mappedBy="localidad")
 	private List<Usuario> usuarios;
-
-	
-	// Esto se generó automaticamente
-	public Usuario addUsuario(Usuario usuario) {
-		getUsuarios().add(usuario);
-		usuario.setLocalidad(this);
-		return usuario;
-	}
-
-	public Usuario removeUsuario(Usuario usuario) {
-		getUsuarios().remove(usuario);
-		usuario.setLocalidad(null);
-		return usuario;
-	}
 
 }

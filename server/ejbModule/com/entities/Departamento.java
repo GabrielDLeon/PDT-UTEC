@@ -33,6 +33,7 @@ public class Departamento implements Serializable {
 	@Column(name="ID_DEPARTAMENTO")
 	private long idDepartamento;
 
+	@Column(unique = true, nullable = false)
 	private String nombre;
 
 	@ToString.Exclude

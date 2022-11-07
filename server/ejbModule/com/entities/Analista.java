@@ -46,26 +46,4 @@ public class Analista implements Serializable {
 		)
 	private List<Evento> eventos;
 
-	// Esto tira error
-	//uni-directional one-to-one association to Usuario
-	/*
-	@OneToOne
-	@JoinColumn(name="USUARIO")
-	private Usuario usuario;
-	*/
-
-	public AccionConstancia addAccionCon(AccionConstancia accionCon) {
-		getAccionCons().add(accionCon);
-		accionCon.setAnalista(this);
-
-		return accionCon;
-	}
-
-	public AccionConstancia removeAccionCon(AccionConstancia accionCon) {
-		getAccionCons().remove(accionCon);
-		accionCon.setAnalista(null);
-
-		return accionCon;
-	}
-
 }

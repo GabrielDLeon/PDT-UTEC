@@ -30,6 +30,7 @@ public class Estudiante implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_ESTUDIANTES_USUARIO_GENERATOR")
 	private long usuario;
 
+	@Column(length = 20, nullable = true)
 	private String generacion;
 
 	//bi-directional many-to-one association to Constancia

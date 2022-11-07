@@ -30,26 +30,11 @@ public class Genero implements Serializable {
 	@Column(name="ID_GENERO")
 	private long idGenero;
 
+	@Column(unique = true, nullable = false)
 	private String nombre;
 
 	//bi-directional many-to-one association to Usuario
 	@OneToMany(mappedBy="genero")
 	private List<Usuario> usuarios;
-
-	
-	// Se generó automaticamente
-	public Usuario addUsuario(Usuario usuario) {
-		getUsuarios().add(usuario);
-		usuario.setGenero(this);
-
-		return usuario;
-	}
-
-	public Usuario removeUsuario(Usuario usuario) {
-		getUsuarios().remove(usuario);
-		usuario.setGenero(null);
-
-		return usuario;
-	}
 
 }

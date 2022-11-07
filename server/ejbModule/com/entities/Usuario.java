@@ -29,45 +29,59 @@ public class Usuario implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USUARIOS_IDUSUARIO_GENERATOR")
 	@Column(name="ID_USUARIO")
 	private long idUsuario;
+	
+	@Column(nullable = false, unique = true)
+	private String usuario;
 
-	private String apellido1;
-
-	private String apellido2;
-
+	@Column(nullable = false)
 	private String clave;
-
+	
+	@Column(nullable = false, unique = true)
 	private String documento;
 
+	@Column(nullable = false)
+	private String apellido1;
+
+	@Column(nullable = true)
+	private String apellido2;
+
 	@Temporal(TemporalType.DATE)
-	@Column(name="FECHA_NAC")
+	@Column(name="FECHA_NAC", nullable = false)
 	private Date fechaNac;
 
+	@Column(nullable = true)
 	private String mail;
 
-	@Column(name="MAIL_UTEC")
+	@Column(name="MAIL_UTEC", unique = true, nullable = false)
 	private String mailUtec;
 
+	@Column(nullable = false)
 	private String nombre1;
 
+	@Column(nullable = true)
 	private String nombre2;
 
+	@Column(nullable = true)
 	private String telefono;
-
-	private String usuario;
 
 	//bi-directional many-to-one association to Genero
 	@ManyToOne
-	@JoinColumn(name="GENERO")
+	@JoinColumn(name="GENERO", nullable = true)
 	private Genero genero;
 
 	//bi-directional many-to-one association to Itr
 	@ManyToOne
-	@JoinColumn(name="ITR")
+	@JoinColumn(name="ITR", nullable = true)
 	private Itr itr;
 
 	//bi-directional many-to-one association to Localidad
 	@ManyToOne
-	@JoinColumn(name="LOCALIDAD")
+	@JoinColumn(name="LOCALIDAD", nullable = false)
 	private Localidad localidad;
+	
+	//bi-directional many-to-one association to Departamento
+	@ManyToOne
+	@JoinColumn(name="DEPARTAMENTO", nullable = true)
+	private Departamento departamento;
 
 }

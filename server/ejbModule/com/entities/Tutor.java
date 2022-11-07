@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.enumerators.EnumTutorArea;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -28,8 +30,11 @@ public class Tutor implements Serializable {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_TUTORES_USUARIO_GENERATOR")
 	private long usuario;
 
-	private String area;
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = true)
+	private EnumTutorArea area;
 
+	@Column(nullable = true)
 	private String tipo;
-	
+
 }

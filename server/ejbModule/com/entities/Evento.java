@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import org.hibernate.validator.constraints.UniqueElements;
 
 import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
@@ -27,7 +28,9 @@ import java.util.List;
 @ToString
 @Builder
 @Entity
-@Table(name="EVENTOS")
+@Table(name="EVENTOS", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"NOMBRE", "FECHA_INICIO"})
+})
 @NamedQueries({
 	@NamedQuery(name="Evento.findAll", query="SELECT e FROM Evento e"),
 	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.usuario = :id")
@@ -41,17 +44,21 @@ public class Evento implements Serializable {
 	@Column(name="ID_EVENTOS")
 	private long idEvento;
 
-	@Column(name="NOMBRE")
+	@Column(name="NOMBRE", nullable = false)
 	private String nombre;
 
-	@Column(name = "FECHA_INICIO", columnDefinition = "TIMESTAMP")
+	@Column(name = "FECHA_INICIO", columnDefinition = "TIMESTAMP", nullable = false)
 	private LocalDateTime fechaInicio;
 
-	@Column(name = "FECHA_FIN", columnDefinition = "TIMESTAMP")
+	@Column(name = "FECHA_FIN", columnDefinition = "TIMESTAMP", nullable = true)
 	private LocalDateTime fechaFin;
 
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private EnumEventoModalidad modalidad;
 	
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private EnumEventoTipo tipo;
 
 	@LazyCollection(LazyCollectionOption.FALSE)

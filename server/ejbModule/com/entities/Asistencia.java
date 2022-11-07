@@ -56,8 +56,11 @@ public class Asistencia implements Serializable {
 
 	// Atributos propios de la entidad Asistencias
 	
+	@Column(nullable = false)
+	@Enumerated(EnumType.STRING)
 	private EnumAsistenciaEstado estado;
 
+	@Column(nullable = true)
 	private BigDecimal calificacion;
 	
 }
