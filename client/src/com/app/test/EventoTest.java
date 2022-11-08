@@ -29,7 +29,8 @@ public class EventoTest {
 			beanItr = BeanRemoteManager.getBeanItr();
 			beanEvento = BeanRemoteManager.getBeanEvento();
 			beanAsistencia = BeanRemoteManager.getBeanAsistencia();
-			delete(1052L);
+			
+			beanEvento.findByItr(1L).forEach(System.out::println);;
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -61,6 +62,7 @@ public class EventoTest {
 		}
 	}
 
+	/*
 	private static void update() {
 		try {
 			Evento evento = beanEvento.findById(1L);
@@ -89,4 +91,6 @@ public class EventoTest {
 			System.out.println(evento.toString());
 		}
 	}
+
+	*/
 }

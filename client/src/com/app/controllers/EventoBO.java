@@ -1,4 +1,4 @@
-package com.app.bo;
+package com.app.controllers;
 
 import javax.naming.NamingException;
 

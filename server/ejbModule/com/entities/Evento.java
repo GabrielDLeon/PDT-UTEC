@@ -33,7 +33,8 @@ import java.util.List;
 })
 @NamedQueries({
 	@NamedQuery(name="Evento.findAll", query="SELECT e FROM Evento e"),
-	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.usuario = :id")
+	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.usuario = :id"),
+	@NamedQuery(name="Evento.findByItr", query="SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr")
 })
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -1,6 +1,7 @@
 package com.services.eventos;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -32,6 +33,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 
 	@Override
 	public void create(Evento evento, List<Estudiante> convocados) throws Exception {
+		// TODO Hay que arreglar esto que no funciona
 		session = factory.openSession();
 		session.beginTransaction();
 		try {
@@ -52,9 +54,15 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 	}
 
 	@Override
-	public void update(Evento evento, List<Estudiante> convocados) throws Exception {
-		// TODO Auto-generated method stub
-		
+	public void update(List<Asistencia> asistencias) throws Exception {
+		try {
+			for (Asistencia asistencia : asistencias) {				
+				em.merge(asistencia);
+			}
+			em.flush();	
+		} catch (Exception e) {
+			throw new Exception("No se pudo actualizar la Asistencia");
+		}
 	}
 
 	@Override

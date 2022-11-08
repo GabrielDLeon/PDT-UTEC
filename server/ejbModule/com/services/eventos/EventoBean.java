@@ -89,16 +89,25 @@ public class EventoBean implements EventoBeanRemote {
 		return (Evento) em.find(Evento.class, id);
 	}
 
+	// Si eres Analista, llamas a este método
 	@Override
 	public List<Evento> findAll() {
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findAll", Evento.class);
 		return query.getResultList();
 	}
 	
+	// Si eres Tutor, llamas a este método
 	@Override
 	public List<Evento> findByTutor(Long idTutor) {
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByTutor", Evento.class);
 		query.setParameter("id", idTutor);
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<Evento> findByItr(Long idItr) {
+		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByItr", Evento.class);
+		query.setParameter("idItr", idItr);
 		return query.getResultList();
 	}
 	

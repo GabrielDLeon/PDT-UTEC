@@ -15,7 +15,7 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.FlatLightLaf;
 import com.services.users.ItrBeanRemote;
-import com.app.bo.EventoBO;
+import com.app.controllers.EventoBO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;

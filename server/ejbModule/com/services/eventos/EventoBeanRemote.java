@@ -16,6 +16,7 @@ public interface EventoBeanRemote {
 	Evento findById(Long id);
 	List<Evento> findAll();
 	List<Evento> findByTutor(Long idTutor);
+	List<Evento> findByItr(Long idItr);
 	
 	// Esto después se borra
 	Tutor getTutor(Long id);
