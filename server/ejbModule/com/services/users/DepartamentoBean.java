@@ -27,20 +27,37 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 
 	@Override
 	public void create(Departamento departamento) throws Exception {
-		// TODO Auto-generated method stub
-
+		try {
+			em.persist(departamento);
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
 	public void update(Departamento departamento) throws Exception {
-		// TODO Auto-generated method stub
-
+		try {
+			em.merge(departamento);
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
-	public void delete(Departamento departamento) throws Exception {
-		// TODO Auto-generated method stub
-
+	public void delete(Long id) throws Exception {
+		Departamento departamento = em.find(Departamento.class, id);
+		if (departamento == null) {
+			throw new Exception("No se encontró el departamento");
+		}
+		try {
+			em.remove(departamento);
+			departamento.setNombre("DURAZNOOO");
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception("Error: "+e);
+		}
 	}
 
 	@Override

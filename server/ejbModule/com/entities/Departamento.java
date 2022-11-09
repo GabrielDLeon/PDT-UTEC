@@ -46,34 +46,4 @@ public class Departamento implements Serializable {
 	@OneToMany(mappedBy="departamento")
 	private List<Localidad> localidades;
 
-	
-	//Esto se generó automaticamente
-	public Itr addItr(Itr itr) {
-		getItrs().add(itr);
-		itr.setDepartamento(this);
-
-		return itr;
-	}
-
-	public Itr removeItr(Itr itr) {
-		getItrs().remove(itr);
-		itr.setDepartamento(null);
-
-		return itr;
-	}
-
-	public Localidad addLocalidade(Localidad localidade) {
-		getLocalidades().add(localidade);
-		localidade.setDepartamento(this);
-
-		return localidade;
-	}
-
-	public Localidad removeLocalidade(Localidad localidade) {
-		getLocalidades().remove(localidade);
-		localidade.setDepartamento(null);
-
-		return localidade;
-	}
-
 }

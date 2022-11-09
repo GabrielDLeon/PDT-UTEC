@@ -10,6 +10,6 @@ import com.entities.Departamento;
 public interface DepartamentoBeanRemote {
 	void create(Departamento departamento) throws Exception;
 	void update(Departamento departamento) throws Exception;
-	void delete(Departamento departamento) throws Exception;
+	void delete(Long id) throws Exception;
 	List<Departamento> findAll();
 }

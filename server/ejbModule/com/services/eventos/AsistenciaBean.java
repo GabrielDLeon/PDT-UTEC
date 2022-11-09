@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.entities.Asistencia;
+import com.entities.AsistenciaKey;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.enumerators.EnumAsistenciaEstado;
@@ -38,15 +39,18 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 		session.beginTransaction();
 		try {
 			for (Estudiante estudiante : convocados) {
+				System.out.println(evento.getIdEvento());
+				System.out.println(estudiante.getUsuario());
 				Asistencia a = Asistencia.builder()
+						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getUsuario()))
 						.estudiante(estudiante)
 						.evento(evento)
 						.estado(EnumAsistenciaEstado.CONVOCADO)
 						.build();
-				em.persist(a);
+				em.merge(a);
 				session.getTransaction().commit();
 			}
-			em.flush();			
+			em.flush();
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}

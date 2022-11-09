@@ -32,8 +32,8 @@ public class Asistencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private AsistenciaKey id;
-
+	private AsistenciaKey id = new AsistenciaKey();
+	
 	public Asistencia(long idEvento, long idEstudiante, Evento evento, Estudiante estudiante, EnumAsistenciaEstado estado, BigDecimal calificacion) {
 		this.id = new AsistenciaKey(idEvento, idEstudiante);
 		this.evento = evento;
@@ -43,13 +43,13 @@ public class Asistencia implements Serializable {
 	}
 	
 	// bi-directional many-to-one association to Evento
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 	@MapsId("idEvento")
 	@JoinColumn(name = "EVENTO")
 	private Evento evento;
 
 	// uni-directional many-to-one association to Estudiante
-	@ManyToOne
+	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
 	@MapsId("idEstudiante")
 	@JoinColumn(name = "ESTUDIANTE")
 	private Estudiante estudiante;

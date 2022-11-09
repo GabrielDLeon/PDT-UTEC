@@ -26,7 +26,7 @@ public class UsuarioBean implements UsuarioBeanRemote {
 	public void create(Usuario usuario) throws Exception {
 		try {
 			em.persist(usuario);
-			em.flush();			
+			em.flush();
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}

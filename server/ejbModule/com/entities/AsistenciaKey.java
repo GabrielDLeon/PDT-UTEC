@@ -14,7 +14,6 @@ import lombok.Setter;
  * The primary key class for the ASISTENCIAS database table.
  */
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -23,6 +22,12 @@ public class AsistenciaKey implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
+	public AsistenciaKey(long idEvento, long idEstudiante) {
+		super();
+		this.idEvento = idEvento;
+		this.idEstudiante = idEstudiante;
+	}
+	
 	@Column(name = "EVENTO")
 	private long idEvento;
 
