@@ -2,6 +2,7 @@ package com.app.test;
 
 import java.awt.EventQueue;
 
+import javax.naming.NamingException;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -31,11 +32,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ListSelectionModel;
 
-public class ViewAsistenciaTest extends JFrame {
+public class ViewAsistenciaMain extends JFrame {
 
 	private static AsistenciaBeanRemote bean;
 
+	private JPanel panel;
 	private JPanel contentPane;
+	
+	private JScrollPane scrollPane;
+	
 	private JTable tEvento;
 	private JButton btnEliminar;
 	private JButton btnActualizar;
@@ -47,15 +52,17 @@ public class ViewAsistenciaTest extends JFrame {
 	
 	private Evento evento;
 	
-	private AsistenciaBO asistenciaBO = new AsistenciaBO();
+	private AsistenciaBO bo = new AsistenciaBO();
 	
+	// Esto después se tiene que borrar
+	// En desarrollo todavía se utiliza
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					bean = BeanRemoteManager.getBeanAsistencia();
-					ViewAsistenciaTest frame = new ViewAsistenciaTest(BeanRemoteManager.getBeanEvento().findById(1L));
+					ViewAsistenciaMain frame = new ViewAsistenciaMain(BeanRemoteManager.getBeanEvento().findById(1L));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,10 +71,18 @@ public class ViewAsistenciaTest extends JFrame {
 		});
 	}
 	
-	// Para crear la ventana de Asistencia se le debe pasar un evento
-	// En base al evento que le pasemos será el listado que mostrará
-	public ViewAsistenciaTest(Evento evento) {
+	// Manejadores de UI
+	
+	public ViewAsistenciaMain(Evento evento) {
+		// Para crear la ventana de Asistencia se le debe pasar un evento
+		// En base al evento que le pasemos será el listado que mostrará
 		this.evento = evento;
+		
+		try {
+			bean = BeanRemoteManager.getBeanAsistencia();
+		} catch (NamingException e1) {
+			e1.printStackTrace();
+		}
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 590);
@@ -76,23 +91,10 @@ public class ViewAsistenciaTest extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		contentPane.add(panel, BorderLayout.CENTER);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 484, 484, 484, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
-		gbc_scrollPane.gridwidth = 3;
-		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
-		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 1;
-		gbc_scrollPane.gridy = 1;
-		panel.add(scrollPane, gbc_scrollPane);
+		scrollPane = new JScrollPane();
 
 		model.addColumn("Estudiante");
 		model.addColumn("Estado");
@@ -116,18 +118,6 @@ public class ViewAsistenciaTest extends JFrame {
 				actualizarDatos();
 			}
 		});
-		GridBagConstraints gbc_btnActualizar = new GridBagConstraints();
-		gbc_btnActualizar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnActualizar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnActualizar.gridx = 1;
-		gbc_btnActualizar.gridy = 2;
-		panel.add(btnActualizar, gbc_btnActualizar);
-		GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
-		gbc_btnEliminar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnEliminar.gridx = 2;
-		gbc_btnEliminar.gridy = 2;
-		panel.add(btnEliminar, gbc_btnEliminar);
 		
 		btnGuardar = new JButton("Guardar Cambios");
 		btnGuardar.addActionListener(new ActionListener() {
@@ -135,35 +125,61 @@ public class ViewAsistenciaTest extends JFrame {
 				saveChanges();
 			}
 		});
+		
+		TableColumn estadoColumn = tEvento.getColumnModel().getColumn(1);
+		selectEstado = new JComboBox<EnumAsistenciaEstado>(EnumAsistenciaEstado.values());
+		estadoColumn.setCellEditor(new DefaultCellEditor(selectEstado));
+		
+		setGridBagLayout();
+		actualizarDatos();
+	}
+	
+	private void setGridBagLayout() {
+		GridBagLayout gbl_panel = new GridBagLayout();
+		gbl_panel.columnWidths = new int[]{0, 484, 484, 484, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, Double.MIN_VALUE};
+		panel.setLayout(gbl_panel);
+		
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.gridwidth = 3;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.gridx = 1;
+		gbc_scrollPane.gridy = 1;
+		panel.add(scrollPane, gbc_scrollPane);
+		
+		GridBagConstraints gbc_btnActualizar = new GridBagConstraints();
+		gbc_btnActualizar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnActualizar.insets = new Insets(0, 0, 0, 5);
+		gbc_btnActualizar.gridx = 1;
+		gbc_btnActualizar.gridy = 2;
+		panel.add(btnActualizar, gbc_btnActualizar);
+		
+		GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
+		gbc_btnEliminar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
+		gbc_btnEliminar.gridx = 2;
+		gbc_btnEliminar.gridy = 2;
+		panel.add(btnEliminar, gbc_btnEliminar);
+		
 		GridBagConstraints gbc_btnGuardar = new GridBagConstraints();
 		gbc_btnGuardar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnGuardar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnGuardar.gridx = 3;
 		gbc_btnGuardar.gridy = 2;
 		panel.add(btnGuardar, gbc_btnGuardar);
-		
-		TableColumn estadoColumn = tEvento.getColumnModel().getColumn(1);
-		selectEstado = new JComboBox<EnumAsistenciaEstado>(EnumAsistenciaEstado.values());
-		estadoColumn.setCellEditor(new DefaultCellEditor(selectEstado));
-		
-		actualizarDatos();
 	}
 	
-	protected void saveChanges() {
-		String mensaje = asistenciaBO.update(convocados);
-		System.out.println(mensaje);
-	}
-
+	
+	// Funciones sobre el Tablero
+	
 	private void actualizarDatos() {
-		System.out.println("Buscando convocados");
-		convocados = bean.findByEvento(evento.getIdEvento());
-		cargarTabla();
-	}
-	
-	private void delete() {
-		int row = tEvento.getSelectedRow();
-		convocados.remove(row);
-		cargarTabla();
+		if (evento != null) {
+			convocados = bean.findByEvento(evento.getIdEvento());
+			cargarTabla();
+		}
 	}
 	
 	protected void cargarTabla() {
@@ -176,4 +192,19 @@ public class ViewAsistenciaTest extends JFrame {
 			model.addRow(row);
 		}
 	}
+	
+	
+	// Funciones de DDL
+	
+	protected void saveChanges() {
+		String mensaje = bo.update(convocados);
+		System.out.println(mensaje);
+	}
+	
+	private void delete() {
+		int row = tEvento.getSelectedRow();
+		convocados.remove(row);
+		cargarTabla();
+	}
+	
 }

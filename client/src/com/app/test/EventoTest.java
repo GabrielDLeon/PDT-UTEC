@@ -29,7 +29,11 @@ public class EventoTest {
 			beanItr = BeanRemoteManager.getBeanItr();
 			beanEvento = BeanRemoteManager.getBeanEvento();
 			beanAsistencia = BeanRemoteManager.getBeanAsistencia();
-			//beanEvento.findByItr(1L).forEach(System.out::println);;
+//			List<Evento> evento = beanEvento.findByTutor(5L);
+//			evento.forEach(System.out::println);
+//			create();
+//			create();
+//			create();
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
@@ -38,7 +42,7 @@ public class EventoTest {
 	private static void create() {
 		List<Tutor> listaTutores = new LinkedList<Tutor>();
 		//Depende de cuantos Tutores tengas en la BD
-		listaTutores.add(beanEvento.getTutor(3L));
+		listaTutores.add(beanEvento.getTutor(4L));
 		//listaTutores.add(beanEvento.getTutor(4L));
 		
 		LocalDateTime time = LocalDateTime.now();

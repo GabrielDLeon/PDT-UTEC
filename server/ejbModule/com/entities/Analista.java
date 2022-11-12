@@ -3,12 +3,16 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.enumerators.EnumTutorArea;
+
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
@@ -17,17 +21,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
+@SuperBuilder
 @Entity
 @Table(name="USER_ANALISTAS")
+@PrimaryKeyJoinColumn(name = "USUARIO")
 @NamedQuery(name="Analista.findAll", query="SELECT a FROM Analista a")
-public class Analista implements Serializable {
+public class Analista extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
-	@SequenceGenerator(name="USER_ANALISTAS_USUARIO_GENERATOR", sequenceName="SEQ_USER_ANALISTAS")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="USER_ANALISTAS_USUARIO_GENERATOR")
-	private long usuario;
 
 	//bi-directional many-to-one association to AccionConstancia
 	@OneToMany(mappedBy="analista")

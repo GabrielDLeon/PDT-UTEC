@@ -42,7 +42,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 				System.out.println(evento.getIdEvento());
 				System.out.println(estudiante.getUsuario());
 				Asistencia a = Asistencia.builder()
-						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getUsuario()))
+						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getIdUsuario()))
 						.estudiante(estudiante)
 						.evento(evento)
 						.estado(EnumAsistenciaEstado.CONVOCADO)

@@ -4,11 +4,11 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
@@ -17,11 +17,12 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Builder
+@SuperBuilder
 @Entity
 @Table(name="USUARIOS")
+@Inheritance(strategy = InheritanceType.JOINED)
 @NamedQuery(name="Usuario.findAll", query="SELECT u FROM Usuario u")
-public class Usuario implements Serializable {
+public abstract class Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -30,58 +31,51 @@ public class Usuario implements Serializable {
 	@Column(name="ID_USUARIO")
 	private long idUsuario;
 	
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String usuario;
 
-	@Column(nullable = false)
 	private String clave;
 	
-	@Column(nullable = false, unique = true)
+	@Column(unique = true)
 	private String documento;
 
-	@Column(nullable = false)
 	private String apellido1;
 
-	@Column(nullable = true)
 	private String apellido2;
 
 	@Temporal(TemporalType.DATE)
-	@Column(name="FECHA_NAC", nullable = false)
+	@Column(name="FECHA_NAC")
 	private Date fechaNac;
 
-	@Column(nullable = true)
 	private String mail;
 
-	@Column(name="MAIL_UTEC", unique = true, nullable = false)
+	@Column(name="MAIL_UTEC", unique = true)
 	private String mailUtec;
 
-	@Column(nullable = false)
 	private String nombre1;
 
-	@Column(nullable = true)
 	private String nombre2;
 
-	@Column(nullable = true)
 	private String telefono;
 
 	//bi-directional many-to-one association to Genero
 	@ManyToOne
-	@JoinColumn(name="GENERO", nullable = true)
+	@JoinColumn(name="GENERO")
 	private Genero genero;
 
 	//bi-directional many-to-one association to Itr
 	@ManyToOne
-	@JoinColumn(name="ITR", nullable = true)
+	@JoinColumn(name="ITR")
 	private Itr itr;
 
 	//bi-directional many-to-one association to Localidad
 	@ManyToOne
-	@JoinColumn(name="LOCALIDAD", nullable = false)
+	@JoinColumn(name="LOCALIDAD")
 	private Localidad localidad;
 	
 	//bi-directional many-to-one association to Departamento
 	@ManyToOne
-	@JoinColumn(name="DEPARTAMENTO", nullable = true)
+	@JoinColumn(name="DEPARTAMENTO")
 	private Departamento departamento;
 
 }

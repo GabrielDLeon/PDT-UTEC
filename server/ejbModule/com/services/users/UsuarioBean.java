@@ -9,6 +9,11 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import com.dto.EstudianteVO;
+import com.dto.TutorVO;
+import com.dto.UsuarioVO;
+import com.entities.Estudiante;
+import com.entities.Tutor;
 import com.entities.Usuario;
 
 @Stateless
@@ -23,7 +28,9 @@ public class UsuarioBean implements UsuarioBeanRemote {
 	public UsuarioBean() {
 	}
 
+	@Override
 	public void create(Usuario usuario) throws Exception {
+		System.out.println("SE INTENTA PERSISTIR");
 		try {
 			em.persist(usuario);
 			em.flush();
@@ -32,6 +39,7 @@ public class UsuarioBean implements UsuarioBeanRemote {
 		}
 	}
 	
+	@Override
 	public void update(Usuario usuario) throws Exception {
 		try {
 			em.merge(usuario);
@@ -41,6 +49,7 @@ public class UsuarioBean implements UsuarioBeanRemote {
 		}
 	}
 	
+	@Override
 	public void delete(Long id) throws Exception {
 		try {
 			Usuario usuario = em.find(Usuario.class, id);
@@ -49,5 +58,59 @@ public class UsuarioBean implements UsuarioBeanRemote {
 		} catch (Exception e) {
 			throw new Exception("No se pudo eliminar el Usuario");
 		}
+	}
+	
+	@Override
+	public Tutor getTutor(Long id){
+		return (Tutor) em.find(Tutor.class, id);
+	}
+	
+	@Override
+	public Usuario getUsuario(Long id){
+		return (Usuario) em.find(Usuario.class, id);
+	}
+	
+	@Override
+	public Estudiante getEstudiante(Long id){
+		return (Estudiante) em.find(Estudiante.class, id);
+	}
+	
+	private Usuario buildGeneric(UsuarioVO vo) {
+		Usuario user = null;
+		user.setUsuario(null);
+		user.setClave(null);
+		user.setUsuario(vo.getUsuario());
+		user.setClave(vo.getClave());
+		user.setDocumento(vo.getDocumento());
+		user.setNombre1(vo.getNombre1());
+		user.setNombre2(vo.getNombre2());
+		user.setApellido1(vo.getApellido1());
+		user.setApellido2(vo.getApellido2());
+		user.setFechaNac(vo.getFechaNac());
+		user.setMail(vo.getMail());
+		user.setMailUtec(vo.getMailUtec());
+		user.setTelefono(vo.getTelefono());
+		user.setGenero(vo.getGenero());
+		user.setItr(vo.getItr());
+		user.setLocalidad(vo.getLocalidad());
+		user.setDepartamento(vo.getDepartamento());
+		return user;
+	}
+	
+	private Usuario buildEstudiante(EstudianteVO vo) {
+		Usuario estudiante = buildGeneric(vo);
+		estudiante = Estudiante.builder()
+				.generacion(vo.getGeneracion())
+				.build();
+		return estudiante;
+	}
+	
+	private Usuario buildTutor(TutorVO vo) {
+		Usuario tutor = buildGeneric(vo);
+		tutor = Tutor.builder()
+				.area(vo.getArea())
+				.tipo(vo.getTipo())
+				.build();
+		return tutor;
 	}
 }

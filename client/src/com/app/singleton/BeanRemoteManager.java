@@ -11,8 +11,8 @@ import com.services.users.UsuarioBeanRemote;
 
 public class BeanRemoteManager {
 
-	private static ItrBeanRemote beanItr;
 	private static UsuarioBeanRemote beanUsuario;
+	private static ItrBeanRemote beanItr;
 	private static DepartamentoBeanRemote beanDepartamento;
 	private static EventoBeanRemote beanEvento;
 	private static AsistenciaBeanRemote beanAsistencia;
@@ -21,15 +21,15 @@ public class BeanRemoteManager {
 
 	}
 
-	public static ItrBeanRemote getBeanItr() throws NamingException {
-		beanItr = (ItrBeanRemote) InitialContext.doLookup("PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
-		return beanItr;
-	}
-
 	public static UsuarioBeanRemote getBeanUsuario() throws NamingException {
 		beanUsuario = (UsuarioBeanRemote) InitialContext
 				.doLookup("PDT-Server/UsuarioBean!com.services.users.UsuarioBeanRemote");
 		return beanUsuario;
+	}
+
+	public static ItrBeanRemote getBeanItr() throws NamingException {
+		beanItr = (ItrBeanRemote) InitialContext.doLookup("PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
+		return beanItr;
 	}
 
 	public static DepartamentoBeanRemote getBeanDepartamento() throws NamingException {

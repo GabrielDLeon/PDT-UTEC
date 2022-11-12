@@ -7,7 +7,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
@@ -100,6 +99,7 @@ public class EventoBean implements EventoBeanRemote {
 	@Override
 	public List<Evento> findByTutor(Long idTutor) {
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByTutor", Evento.class);
+		System.out.println(idTutor);
 		query.setParameter("id", idTutor);
 		return query.getResultList();
 	}
@@ -111,11 +111,12 @@ public class EventoBean implements EventoBeanRemote {
 		return query.getResultList();
 	}
 	
-	// Esto después se borra, está para las pruebas
+	// TODO Borrar luego de finalizar el desarrollo y las pruebas
 	public Tutor getTutor(Long id){
 		return (Tutor) em.find(Tutor.class, id);
 	}
-	
+
+	// TODO Borrar luego de finalizar el desarrollo y las pruebas
 	public Estudiante getEstudiante(Long id){
 		return (Estudiante) em.find(Estudiante.class, id);
 	}

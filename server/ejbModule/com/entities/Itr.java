@@ -42,4 +42,9 @@ public class Itr implements Serializable {
 	@OneToMany(mappedBy="itr")
 	private List<Usuario> usuarios;
 
+	@Override
+	public String toString() {
+		return nombre;
+	}
+
 }

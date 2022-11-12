@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-import org.hibernate.validator.constraints.UniqueElements;
 
 import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
@@ -25,7 +24,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 @Entity
 @Table(name="EVENTOS", uniqueConstraints = {
@@ -33,8 +31,8 @@ import java.util.List;
 })
 @NamedQueries({
 	@NamedQuery(name="Evento.findAll", query="SELECT e FROM Evento e"),
-	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.usuario = :id"),
-	@NamedQuery(name="Evento.findByItr", query="SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr")
+	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.idUsuario = :id ORDER BY e.idEvento"),
+	@NamedQuery(name="Evento.findByItr", query="SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr ORDER BY e.idEvento")
 })
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -45,7 +43,7 @@ public class Evento implements Serializable {
 	@Column(name="ID_EVENTOS")
 	private long idEvento;
 
-	@Column(name="NOMBRE", nullable = false)
+	@Column(nullable = false)
 	private String nombre;
 
 	@Column(name = "FECHA_INICIO", columnDefinition = "TIMESTAMP", nullable = false)
@@ -54,6 +52,9 @@ public class Evento implements Serializable {
 	@Column(name = "FECHA_FIN", columnDefinition = "TIMESTAMP", nullable = true)
 	private LocalDateTime fechaFin;
 
+	@Column(nullable = true)
+	private String localizacion;
+	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumEventoModalidad modalidad;
@@ -96,5 +97,10 @@ public class Evento implements Serializable {
 			}
 		)
 	private List<Tutor> tutores;
+
+	public String toStringAll() {
+		return "Evento [idEvento=" + idEvento + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin="
+				+ fechaFin + ", modalidad=" + modalidad + ", tipo=" + tipo + ", itr=" + itr + "]";
+	}
 
 }
