@@ -1,10 +1,13 @@
 package com.services.users;
 
+import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,6 +16,7 @@ import com.dto.EstudianteVO;
 import com.dto.TutorVO;
 import com.dto.UsuarioVO;
 import com.entities.Estudiante;
+import com.entities.Evento;
 import com.entities.Tutor;
 import com.entities.Usuario;
 
@@ -61,17 +65,31 @@ public class UsuarioBean implements UsuarioBeanRemote {
 	}
 	
 	@Override
-	public Tutor getTutor(Long id){
+	public List<Tutor> findAllTutores(){
+		TypedQuery<Tutor> query = em.createNamedQuery("Tutor.findAll", Tutor.class);
+		System.out.println(query.getResultList());
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<Estudiante> findAllEstudiantes() {
+		TypedQuery<Estudiante> query = em.createNamedQuery("Estudiante.findAll", Estudiante.class);
+		System.out.println(query.getResultList());
+		return query.getResultList();
+	}
+	
+	@Override
+	public Tutor findTutor(Long id){
 		return (Tutor) em.find(Tutor.class, id);
 	}
 	
 	@Override
-	public Usuario getUsuario(Long id){
+	public Usuario findUsuario(Long id){
 		return (Usuario) em.find(Usuario.class, id);
 	}
 	
 	@Override
-	public Estudiante getEstudiante(Long id){
+	public Estudiante findEstudiante(Long id){
 		return (Estudiante) em.find(Estudiante.class, id);
 	}
 	

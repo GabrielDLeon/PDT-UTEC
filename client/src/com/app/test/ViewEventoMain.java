@@ -150,7 +150,7 @@ public class ViewEventoMain extends JFrame {
 		btnDelete.setEnabled(false);
 		
 		try {
-			Usuario xd = BeanRemoteManager.getBeanUsuario().getUsuario(3L);
+			Usuario xd = BeanRemoteManager.getBeanUsuario().findUsuario(3L);
 			System.out.println(xd);
 		} catch (Exception e) {
 			System.out.println(e.getMessage());

@@ -1,5 +1,7 @@
 package com.services.users;
 
+import java.util.List;
+
 import javax.ejb.Remote;
 
 import com.dto.UsuarioVO;
@@ -12,7 +14,11 @@ public interface UsuarioBeanRemote {
 	void create(Usuario usuario) throws Exception;
 	void update(Usuario usuario) throws Exception;
 	void delete(Long id) throws Exception;
-	Tutor getTutor(Long id);
-	Estudiante getEstudiante(Long id);
-	Usuario getUsuario(Long id);
+	
+	List<Tutor> findAllTutores();
+	List<Estudiante> findAllEstudiantes();
+
+	Tutor findTutor(Long id);
+	Estudiante findEstudiante(Long id);
+	Usuario findUsuario(Long id);
 }
