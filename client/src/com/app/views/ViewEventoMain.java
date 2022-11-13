@@ -1,4 +1,4 @@
-package com.app.test;
+package com.app.views;
 
 import java.awt.EventQueue;
 
@@ -12,7 +12,6 @@ import javax.swing.table.DefaultTableModel;
 
 import com.app.controllers.EventoBO;
 import com.app.singleton.BeanRemoteManager;
-import com.app.views.ViewEventoRegistro;
 import com.entities.Analista;
 import com.entities.Evento;
 import com.entities.Usuario;

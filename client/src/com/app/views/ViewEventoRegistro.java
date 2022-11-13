@@ -15,11 +15,11 @@ import com.enumerators.EnumEventoTipo;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.services.users.ItrBeanRemote;
+import com.toedter.calendar.JDateChooser;
 import com.app.controllers.EventoBO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
-import com.app.test.ViewEventoMain;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -35,7 +35,10 @@ import javax.naming.NamingException;
 import javax.swing.JButton;
 import java.awt.Color;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +50,12 @@ public class ViewEventoRegistro extends JFrame {
 	private JPanel panel;
 	private JPanel contentPane;
 	private JTextField inputNombre;
-	private JTextField textField_1;
 	private JTextField inputLocalizacion;
-	private JTextField textField;
 	private JButton btnCreate, btnCancel;
 	private JLabel lblResNombre, lblResLocalizacion, lblResFechaFin, lblResFechaInicio, lblTitulo, lblNombre, lblTipo, lblFechaInicio, lblFechaFinal, lblModalidad, lblItr, lblLocalizacion;
+	
+	private JDateChooser dateInicio = new JDateChooser();
+	private JDateChooser dateFin = new JDateChooser();
 	
 	private ViewEventoMain eventoTable;
 	private Evento editEvent;
@@ -88,6 +92,9 @@ public class ViewEventoRegistro extends JFrame {
 
 	// Manejadores de UI
 	
+	/**
+	 * @wbp.parser.constructor
+	 */
 	public ViewEventoRegistro(ViewEventoMain eventoTable) {
 		this.eventoTable = eventoTable;
 		fillComboBox();
@@ -152,17 +159,8 @@ public class ViewEventoRegistro extends JFrame {
 		inputNombre = new JTextField();		
 		inputNombre.setColumns(10);		
 
-		// TODO Cambiar esto por el JCalendar
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
-
-		// TODO Cambiar esto por el JCalendar
-		textField = new JTextField();
-		textField.setColumns(10);
-
 		inputLocalizacion = new JTextField();
 		inputLocalizacion.setColumns(10);
-		
 
 		// Buttons
 		
@@ -250,19 +248,19 @@ public class ViewEventoRegistro extends JFrame {
 		gbc_lblFechaFinal.gridy = 8;
 		panel.add(lblFechaFinal, gbc_lblFechaFinal);
 		
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 9;
-		panel.add(textField_1, gbc_textField_1);
+		GridBagConstraints gbc_dateInicio = new GridBagConstraints();
+		gbc_dateInicio.insets = new Insets(0, 0, 5, 5);
+		gbc_dateInicio.fill = GridBagConstraints.HORIZONTAL;
+		gbc_dateInicio.gridx = 1;
+		gbc_dateInicio.gridy = 9;
+		panel.add(dateInicio, gbc_dateInicio);
 		
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.gridx = 2;
-		gbc_textField.gridy = 9;
-		panel.add(textField, gbc_textField);
+		GridBagConstraints gbc_dateFin = new GridBagConstraints();
+		gbc_dateFin.insets = new Insets(0, 0, 5, 5);
+		gbc_dateFin.fill = GridBagConstraints.HORIZONTAL;
+		gbc_dateFin.gridx = 2;
+		gbc_dateFin.gridy = 9;
+		panel.add(dateFin, gbc_dateFin);
 		
 		GridBagConstraints gbc_lblResFechaInicio = new GridBagConstraints();
 		gbc_lblResFechaInicio.insets = new Insets(0, 0, 5, 5);
@@ -369,9 +367,14 @@ public class ViewEventoRegistro extends JFrame {
 	
 	// Funciones de DDL
 	
+	public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
+	
 	private boolean validarDatos() {
 		boolean result = true;
-		
 		try {
 			TextFieldException eNombre = new TextFieldException(inputNombre, lblResNombre);
 			bo.validarNombre(eNombre);
@@ -386,47 +389,62 @@ public class ViewEventoRegistro extends JFrame {
 			result = false;
 		}
 		
+		try {
+			LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
+			LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
+			bo.validarFechas(fechaInicio, fechaFin);
+		} catch (Exception e) {
+			result = false;
+		}
+		
 		return result;
 	}
 	
 	private void create() {
 		// TODO Realizar la implementación del Ingresar()
-		boolean result = validarDatos();
-		LocalDateTime time = LocalDateTime.now();
+		boolean result = true;//validarDatos();
 		if (result) {
-			Evento evento = Evento.builder()
-					.nombre(inputNombre.getText().trim())
-					.fechaInicio(time)
-					.fechaFin(time.plusDays(10))
-					.itr((Itr) selectItr.getSelectedItem())
-					.modalidad((EnumEventoModalidad) selectModalidad.getSelectedItem())
-					.tipo((EnumEventoTipo) selectTipo.getSelectedItem())
-					.tutores(null)
-					.build();
 			try {
+				Evento evento = getEventoFromForm();
 				if (editEvent == null) {
 					bo.create(evento);					
 				} else {
 					evento.setIdEvento(editEvent.getIdEvento());
 					bo.update(evento);
 				}
-				
-				if (eventoTable != null) {
-					eventoTable.refreshTable();					
-				}
-				JOptionPane.showMessageDialog(null, (editEvent == null)
-						? "Se insertó el Evento correctamente en el Sistema"
-						: "Se modificó el Evento correctamente en el Sistema"
-				);
+			} catch (NullPointerException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
+			
+			if (eventoTable != null) eventoTable.refreshTable();					
+			
+			JOptionPane.showMessageDialog(null, (editEvent == null)
+					? "Se insertó el Evento correctamente en el Sistema"
+					: "Se modificó el Evento correctamente en el Sistema"
+			);
 		}
 	}
 	
 	protected void cancelar() {
 		// TODO Realizar la implementación del Cancelar()
 
+	}
+	
+	private Evento getEventoFromForm() throws NullPointerException {
+		LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
+		LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
+		Evento evento = Evento.builder()
+				.nombre(inputNombre.getText().trim())
+				.fechaInicio(fechaInicio)
+				.fechaFin(fechaFin)
+				.itr((Itr) selectItr.getSelectedItem())
+				.modalidad((EnumEventoModalidad) selectModalidad.getSelectedItem())
+				.tipo((EnumEventoTipo) selectTipo.getSelectedItem())
+				.tutores(null)
+				.build();
+		return evento;
 	}
 	
 }

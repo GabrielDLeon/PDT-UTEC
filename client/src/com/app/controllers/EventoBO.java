@@ -1,5 +1,6 @@
 package com.app.controllers;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -25,6 +26,26 @@ public class EventoBO {
 		}
 	}
 
+	public void validarFechas(LocalDateTime fechaInicio, LocalDateTime fechaFin) throws Exception
+	{
+
+		// Valida que las fechas no sean valores núlos
+		if (fechaInicio == null || fechaFin == null) {
+			throw new Exception("La fecha de Inicio y fecha de Fin no pudene estar vacías.");
+		}
+
+		// Valida que la fecha de inicio no se encuentre después que la fecha de fin
+		if (fechaInicio.isAfter(fechaFin)) {
+			throw new Exception("La fecha de Inicio no puede estar después de la fecha Fin.");
+		}
+		
+		// Valida que las fechas no sean iguales
+		if (fechaInicio.equals(fechaFin)) {
+			throw new Exception("Ambas fechas no pueden coincidir en fecha y hora.");
+		}
+		
+	}
+	
 	public void validarNombre(TextFieldException e) throws TextFieldException {
 		String value = e.getCampo().getText();
 		if (value.isEmpty()) {
@@ -61,7 +82,7 @@ public class EventoBO {
 				: beanEvento.findByTutor(usuario.getIdUsuario());
 		return eventos;
 	}
-
+	
 	public String create(Evento evento) {
 		try {
 			beanEvento.create(evento);

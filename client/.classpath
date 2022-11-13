@@ -11,6 +11,7 @@
 	<classpathentry kind="lib" path="lib/hibernate-core-5.3.24.Final.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-client.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-modules.jar"/>
+	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/PDT-Server"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
