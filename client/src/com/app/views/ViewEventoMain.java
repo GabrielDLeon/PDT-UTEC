@@ -17,6 +17,7 @@ import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
 import com.entities.Itr;
+import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumEventoEstado;
 import com.enumerators.EnumEventoModalidad;
@@ -64,6 +65,7 @@ public class ViewEventoMain extends JFrame {
 	private JButton btnUpdate;
 	private JButton btnDelete;
 	private JButton btnBuscar;
+	private JButton btnClean;
 	
 	private JLabel lblTipo = new JLabel("Tipo de Evento");
 	private JLabel lblModalidad = new JLabel("Modalidad");
@@ -71,6 +73,7 @@ public class ViewEventoMain extends JFrame {
 	private JLabel lblEstado = new JLabel("Estado del Evento");
 	private JLabel lblFiltro = new JLabel("Filtros de búsqueda");
 	private JLabel lblBuscador =  new JLabel("Nombre");
+	private JLabel lblTutor = new JLabel("Tutor");
 
 	private JTextField inputBuscador = new JTextField();
 
@@ -78,11 +81,16 @@ public class ViewEventoMain extends JFrame {
 	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
 	private JComboBox<EnumEventoModalidad> selectModalidad = new JComboBox<EnumEventoModalidad>();
 	private JComboBox<EnumEventoEstado> selectEstado= new JComboBox<EnumEventoEstado>();
+	private JComboBox<Tutor> selectTutor = new JComboBox<Tutor>();
 	
-	private Usuario user = new Analista();
+	// Para cambiar la perspectiva de usuario se debe modificar el new User() por el tipo de usuario deseado
+	// Por ejemplo, si queremos usar la vista Analista: Usuario user = new Analista();
+	private Usuario user = new Tutor();
 	
 	private EventoBO bo = new EventoBO(user);
-	private JButton btnClean;
+
+	private List<Evento> eventos;
+	
 	
 	// Este método main después se borra
 	// Solo se utiliza en desarrollo
@@ -102,8 +110,16 @@ public class ViewEventoMain extends JFrame {
 	
 	// Manejadores de UI
 	
+	private void setup() {
+		// Si necesitas utilizar WindowBuilder tienes que comentar la llamada al método setupComboBox()
+		setupComboBox();
+		setGridBagLayout();
+		eventos = bo.getList();
+		refreshTable();
+		setVisible(true);
+	}
+	
 	public ViewEventoMain() {
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 606);
 		contentPane = new JPanel();
@@ -178,7 +194,7 @@ public class ViewEventoMain extends JFrame {
 			}
 		});
 		btnDelete.setEnabled(false);
-		
+
 		btnBuscar = new JButton("Buscar");
 		btnBuscar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -192,11 +208,8 @@ public class ViewEventoMain extends JFrame {
 				cleanFilters();
 			}
 		});
-				
-		setupComboBox();
-		setGridBagLayout();
-		setVisible(true);
-		refreshTable();
+		
+		setup();
 	}
 
 	private void setGridBagLayout() {
@@ -224,9 +237,9 @@ public class ViewEventoMain extends JFrame {
 		
 		GridBagLayout gbl_panel_1 = new GridBagLayout();
 		gbl_panel_1.columnWidths = new int[]{20, 0, 20, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		gbl_panel_1.columnWeights = new double[]{1.0, 5.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel_1.setLayout(gbl_panel_1);
 		
 		GridBagConstraints gbc_lblFiltro = new GridBagConstraints();
@@ -306,18 +319,34 @@ public class ViewEventoMain extends JFrame {
 		gbc_selectEstado.gridy = 12;
 		panel_1.add(selectEstado, gbc_selectEstado);
 		
+		if (user.getClass().equals(Analista.class)) {
+			GridBagConstraints gbc_lblTutor = new GridBagConstraints();
+			gbc_lblTutor.anchor = GridBagConstraints.WEST;
+			gbc_lblTutor.insets = new Insets(0, 0, 5, 5);
+			gbc_lblTutor.gridx = 1;
+			gbc_lblTutor.gridy = 13;
+			panel_1.add(lblTutor, gbc_lblTutor);
+			
+			GridBagConstraints gbc_selectTutor = new GridBagConstraints();
+			gbc_selectTutor.insets = new Insets(0, 0, 5, 5);
+			gbc_selectTutor.fill = GridBagConstraints.HORIZONTAL;
+			gbc_selectTutor.gridx = 1;
+			gbc_selectTutor.gridy = 14;
+			panel_1.add(selectTutor, gbc_selectTutor);
+		}
+		
 		GridBagConstraints gbc_btnClean = new GridBagConstraints();
 		gbc_btnClean.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnClean.insets = new Insets(0, 0, 5, 5);
 		gbc_btnClean.gridx = 1;
-		gbc_btnClean.gridy = 14;
+		gbc_btnClean.gridy = 15;
 		panel_1.add(btnClean, gbc_btnClean);
 		
 		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
 		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnBuscar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnBuscar.gridx = 1;
-		gbc_btnBuscar.gridy = 15;
+		gbc_btnBuscar.gridy = 16;
 		panel_1.add(btnBuscar, gbc_btnBuscar);
 		
 		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -356,19 +385,23 @@ public class ViewEventoMain extends JFrame {
 		selectEstado = new JComboBox<EnumEventoEstado>(EnumEventoEstado.values());
 		try {
 			List<Itr> itrs = BeanRemoteManager.getBeanItr().findAll();
-			System.out.println(itrs);
 			selectItr = new JComboBox<Itr>(itrs.toArray(new Itr[itrs.size()]));
+			
+			if (user.getClass().equals(Analista.class)) {
+				List<Tutor> tutores = BeanRemoteManager.getBeanUsuario().findAllTutores();
+				selectTutor = new JComboBox<Tutor>(tutores.toArray(new Tutor[tutores.size()]));
+			}
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 		cleanFilters();
 	}
 	
+	
 	// Funciones sobre el Tablero
 	
 	public void refreshTable() {
 		model.setRowCount(0);
-		List<Evento> eventos = bo.getList();
 		try {
 			for (Evento evento : eventos) {
 				Object[] row = new Object[7];
@@ -395,31 +428,18 @@ public class ViewEventoMain extends JFrame {
 	
 	protected void search() {
 		String nombre = inputBuscador.getText();
-		System.out.println(nombre);
-		
 		EnumEventoTipo tipo = (EnumEventoTipo) selectTipo.getSelectedItem();
-		System.out.println(tipo);
-		
-		Object modalidad = selectModalidad.getSelectedItem();
-		System.out.println(modalidad);
-		
+		EnumEventoModalidad modalidad = (EnumEventoModalidad) selectModalidad.getSelectedItem();
+		EnumEventoEstado estado = (EnumEventoEstado) selectEstado.getSelectedItem();
 		Itr itr = (Itr) selectItr.getSelectedItem();
-		System.out.println(itr);
 		
-		Object estado = selectEstado.getSelectedItem();
-		System.out.println(estado);
-		try {
-			EventoBusquedaVO vo = EventoBusquedaVO.builder()
-					.nombre("")
-					.estado(null)
-					.modalidad(null)
-					.tipo(tipo)
-					.itr(null)
-					.build();
-			BeanRemoteManager.getBeanEvento().search(vo);
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
+		Tutor tutor = (user.getClass().equals(Tutor.class))
+				? (Tutor) user
+				: (Tutor) selectTutor.getSelectedItem();
+		System.out.println(tutor);
+		
+		eventos = bo.search(nombre, tipo, modalidad, estado, itr, tutor);
+		refreshTable();
 	}
 	
 	protected void cleanFilters() {
@@ -428,8 +448,12 @@ public class ViewEventoMain extends JFrame {
 		selectModalidad.setSelectedItem(null);
 		selectItr.setSelectedItem(null);
 		selectEstado.setSelectedItem(null);
+		selectTutor.setSelectedItem(null);
 		
+		eventos = bo.getList();
+		refreshTable();
 	}
+	
 	
 	// Funciones de DDL
 

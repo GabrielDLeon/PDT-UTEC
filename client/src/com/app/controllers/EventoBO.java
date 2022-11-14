@@ -7,9 +7,15 @@ import javax.naming.NamingException;
 
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
+import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
+import com.entities.Itr;
+import com.entities.Tutor;
 import com.entities.Usuario;
+import com.enumerators.EnumEventoEstado;
+import com.enumerators.EnumEventoModalidad;
+import com.enumerators.EnumEventoTipo;
 import com.services.eventos.EventoBeanRemote;
 
 public class EventoBO {
@@ -81,6 +87,19 @@ public class EventoBO {
 				? beanEvento.findAll()
 				: beanEvento.findByTutor(usuario.getIdUsuario());
 		return eventos;
+	}
+	
+	public List<Evento> search(String nombre, EnumEventoTipo tipo, EnumEventoModalidad modalidad, EnumEventoEstado estado, Itr itr, Tutor tutor) {
+		EventoBusquedaVO vo = EventoBusquedaVO.builder()
+				.nombre(nombre)
+				.modalidad(modalidad)
+				.tipo(tipo)
+				.estado(estado)
+				.itr(itr)
+				.tutor(tutor)
+				.build();
+		List<Evento> result = beanEvento.search(vo);
+		return result;
 	}
 	
 	public String create(Evento evento) {

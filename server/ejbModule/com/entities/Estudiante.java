@@ -3,7 +3,6 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
-
 
 @Getter
 @Setter

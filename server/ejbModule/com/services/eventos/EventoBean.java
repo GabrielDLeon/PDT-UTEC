@@ -9,6 +9,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,11 +20,10 @@ import org.hibernate.SessionFactory;
 import com.dto.EventoBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Evento;
+import com.entities.Itr;
 import com.entities.Tutor;
 import com.enumerators.EnumAsistenciaEstado;
 import com.enumerators.EnumEventoEstado;
-import com.enumerators.EnumEventoModalidad;
-import com.enumerators.EnumEventoTipo;
 
 @Stateless
 public class EventoBean implements EventoBeanRemote {
@@ -90,22 +93,48 @@ public class EventoBean implements EventoBeanRemote {
 	
 	@Override
 	public List<Evento> search(EventoBusquedaVO vo){
-		String sql = "SELECT e FROM e ";
+		var qb = em.getCriteriaBuilder();
+		var query = qb.createQuery(Evento.class);
+		var root = query.from(Evento.class);
+		query.select(root);
 		
-		List<String> where = new ArrayList<String>();
-		if (!vo.getNombre().isEmpty()) where.add("nombre = " + vo.getNombre());
-		if (vo.getModalidad() != null) where.add("modalidad = " + vo.getModalidad());
-		if (vo.getTipo() != null) where.add("tipo = " + vo.getTipo());
-		if (vo.getItr() != null) where.add("itr = " + vo.getItr().getIdItr());
-		if (where.size()>0) sql += "WHERE ";
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		if (!vo.getNombre().trim().isEmpty())
+	    	predicates.add(qb.like(root.get("nombre"), vo.getNombre()+"%"));
+	    
+		if (vo.getModalidad() != null)
+	    	predicates.add(qb.equal(root.get("modalidad"), vo.getModalidad()));
+	    
+		if (vo.getTipo() != null)
+			predicates.add(qb.equal(root.get("tipo"), vo.getTipo()));
 		
-		for (String string : where) {
-			sql += string + ", ";
+		EnumEventoEstado estado = vo.getEstado();
+		if (estado != null) {
+			Path<LocalDateTime> dateStartPath = root.get("fechaInicio");
+			Path<LocalDateTime> dateFinishPath = root.get("fechaFin");
+			LocalDateTime now = LocalDateTime.now();
+			if (estado.equals(EnumEventoEstado.FUTURO)){
+				predicates.add(qb.greaterThan(dateStartPath, now));
+			} else if (estado.equals(EnumEventoEstado.CORRIENTE)) {
+				predicates.add(qb.lessThan(dateStartPath, now));
+				predicates.add(qb.greaterThan(dateFinishPath, now));
+			} else if (estado.equals(EnumEventoEstado.FINALIZADO)) {
+				predicates.add(qb.lessThan(dateFinishPath, now));
+			}
 		}
-		System.out.println(sql);
 		
-//		TypedQuery<Evento> query = em.createNamedQuery(where, null);
-		return null;
+		if (vo.getItr() != null) {
+			Join<Evento, Itr> joinItr = root.join("itr", JoinType.INNER);
+			predicates.add(qb.equal(joinItr.get("idItr"), vo.getItr().getIdItr()));
+		}
+		
+		if (vo.getTutor() != null) {
+			Join<Evento, Tutor> joinTutor = root.join("tutores", JoinType.INNER);
+			predicates.add(qb.equal(joinTutor.get("idUsuario"), vo.getTutor().getIdUsuario()));
+		}
+		
+		query.where(qb.and(predicates.toArray(new Predicate[predicates.size()])));
+		return em.createQuery(query).getResultList();
 	}
 
 	@Override

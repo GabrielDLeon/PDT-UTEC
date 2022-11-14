@@ -3,11 +3,7 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import com.enumerators.EnumTutorArea;
-
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

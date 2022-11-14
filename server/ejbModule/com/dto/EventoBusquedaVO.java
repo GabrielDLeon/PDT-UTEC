@@ -3,6 +3,7 @@ package com.dto;
 import java.io.Serializable;
 
 import com.entities.Itr;
+import com.entities.Tutor;
 import com.enumerators.EnumEventoEstado;
 import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
@@ -27,5 +28,6 @@ public class EventoBusquedaVO implements Serializable {
 	private EnumEventoModalidad modalidad;
 	private EnumEventoTipo tipo;
 	private Itr itr;
+	private Tutor tutor;
 	
 }

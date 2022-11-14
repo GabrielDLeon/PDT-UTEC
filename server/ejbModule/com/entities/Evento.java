@@ -62,6 +62,13 @@ public class Evento implements Serializable {
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumEventoTipo tipo;
+	
+	/*
+	 * TODO: Verificar que sea necesario su utilización
+	 * @Column(nullable = false)
+	 * @Enumerated(EnumType.STRING)
+	 * private EnumEventoEstado estado;
+	*/
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne

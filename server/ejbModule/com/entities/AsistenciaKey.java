@@ -1,11 +1,9 @@
 package com.entities;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 import javax.persistence.*;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
