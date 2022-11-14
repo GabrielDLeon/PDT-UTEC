@@ -4,9 +4,13 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
+import com.dto.EventoBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.Tutor;
+import com.enumerators.EnumEventoEstado;
+import com.enumerators.EnumEventoModalidad;
+import com.enumerators.EnumEventoTipo;
 
 @Remote
 public interface EventoBeanRemote {
@@ -21,4 +25,6 @@ public interface EventoBeanRemote {
 	// Esto después se borra
 	Tutor getTutor(Long id);
 	Estudiante getEstudiante(Long id);
+	List<Evento> search(EventoBusquedaVO vo);
+	
 }
