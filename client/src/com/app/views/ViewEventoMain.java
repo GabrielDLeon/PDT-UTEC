@@ -13,7 +13,6 @@ import javax.swing.table.DefaultTableModel;
 import com.app.controllers.EventoBO;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
-import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
 import com.entities.Itr;
@@ -85,7 +84,7 @@ public class ViewEventoMain extends JFrame {
 	
 	// Para cambiar la perspectiva de usuario se debe modificar el new User() por el tipo de usuario deseado
 	// Por ejemplo, si queremos usar la vista Analista: Usuario user = new Analista();
-	private Usuario user = new Tutor();
+	private Usuario user = new Analista();
 	
 	private EventoBO bo = new EventoBO(user);
 
@@ -349,34 +348,36 @@ public class ViewEventoMain extends JFrame {
 		gbc_btnBuscar.gridy = 16;
 		panel_1.add(btnBuscar, gbc_btnBuscar);
 		
-		GridBagConstraints gbc_btnCreate = new GridBagConstraints();
-		gbc_btnCreate.gridwidth = 3;
-		gbc_btnCreate.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnCreate.insets = new Insets(0, 0, 5, 5);
-		gbc_btnCreate.gridx = 1;
-		gbc_btnCreate.gridy = 2;
-		panel.add(btnCreate, gbc_btnCreate);
-
 		GridBagConstraints gbc_btnConvocatoria = new GridBagConstraints();
+		gbc_btnConvocatoria.gridwidth = 3;
 		gbc_btnConvocatoria.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnConvocatoria.insets = new Insets(0, 0, 5, 5);
 		gbc_btnConvocatoria.gridx = 1;
-		gbc_btnConvocatoria.gridy = 3;
+		gbc_btnConvocatoria.gridy = 2;
 		panel.add(btnConvocatoria, gbc_btnConvocatoria);
 		
-		GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
-		gbc_btnUpdate.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
-		gbc_btnUpdate.gridx = 2;
-		gbc_btnUpdate.gridy = 3;
-		panel.add(btnUpdate, gbc_btnUpdate);
-		
-		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
-		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnDelete.insets = new Insets(0, 0, 5, 5);
-		gbc_btnDelete.gridx = 3;
-		gbc_btnDelete.gridy = 3;
-		panel.add(btnDelete, gbc_btnDelete);
+		if (user.getClass().equals(Analista.class)) {
+			GridBagConstraints gbc_btnCreate = new GridBagConstraints();
+			gbc_btnCreate.fill = GridBagConstraints.HORIZONTAL;
+			gbc_btnCreate.insets = new Insets(0, 0, 5, 5);
+			gbc_btnCreate.gridx = 1;
+			gbc_btnCreate.gridy = 3;
+			panel.add(btnCreate, gbc_btnCreate);
+			
+			GridBagConstraints gbc_btnUpdate = new GridBagConstraints();
+			gbc_btnUpdate.fill = GridBagConstraints.HORIZONTAL;
+			gbc_btnUpdate.insets = new Insets(0, 0, 5, 5);
+			gbc_btnUpdate.gridx = 2;
+			gbc_btnUpdate.gridy = 3;
+			panel.add(btnUpdate, gbc_btnUpdate);
+			
+			GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+			gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
+			gbc_btnDelete.insets = new Insets(0, 0, 5, 5);
+			gbc_btnDelete.gridx = 3;
+			gbc_btnDelete.gridy = 3;
+			panel.add(btnDelete, gbc_btnDelete);
+		}
 	}
 
 	private void setupComboBox() {

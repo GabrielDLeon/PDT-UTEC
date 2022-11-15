@@ -31,5 +31,4 @@ public class Tutor extends Usuario implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EnumTutorArea area;
 
-
 }

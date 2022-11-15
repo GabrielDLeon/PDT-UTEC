@@ -11,6 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import com.app.controllers.UsuarioBO;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
+import com.app.views.ViewEventoRegistro;
 import com.entities.Evento;
 import com.entities.Tutor;
 import com.formdev.flatlaf.FlatDarkLaf;
@@ -21,6 +22,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JScrollPane;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -41,24 +44,30 @@ public class ViewUsuarioSeleccion extends JFrame {
 
 	private JPanel panel;
 	private JPanel contentPane;
-	
 	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
 	
 	private JTable tEvento;
+	private DefaultTableModel tModel = new DefaultTableModel();
+	
+	private JList listTutores;
+	private DefaultListModel<Tutor> lModel;
+
+	private JTextField inputSearch;
+
+	private JLabel lblList;
+	private JLabel lblBuscador;
+
 	private JButton btnEliminar;
 	private JButton btnAdd;
 	private JButton btnGuardar;
-	private DefaultTableModel tModel = new DefaultTableModel();
-	private DefaultListModel<Tutor> lModel;
 
-	private JList listEstudiantes;
-	private JLabel lblList;
-	private JLabel lblBuscador;
-	private JTextField inputSearch;
-	private JScrollPane scrollPane_1;
 	
 	private List<Tutor> tutores;
+	private List<Tutor> asignados = new ArrayList<Tutor>();
 	private Set<Tutor> temporal = new HashSet<Tutor>();
+	
+	private Evento evento;
 	
 	private UsuarioBO bo = new UsuarioBO();
 	
@@ -69,7 +78,7 @@ public class ViewUsuarioSeleccion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion(BeanRemoteManager.getBeanEvento().findById(1L));
+					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -77,10 +86,86 @@ public class ViewUsuarioSeleccion extends JFrame {
 			}
 		});
 	}
+
+
+	public ViewUsuarioSeleccion() {
+		view();
+		setup();
+	}
+	
+	private void setup() {
+		tutores = bo.getAllTutores();
+		refreshTable();
+		refreshList();
+		setGridBagLayout();
+	}
+
+	
+	// Funciones sobre el Tablero
+	
+	private void refreshTable() {
+		tModel.setRowCount(0);
+		try {
+			for (Tutor tutor : tutores) {
+				Object[] row = new Object[1];
+				row[0] = tutor;
+				tModel.addRow(row);
+			}
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+	}
+	
+	private void refreshList() {
+		try {
+			lModel.clear();
+			for (Tutor tutor : temporal) {
+				lModel.addElement(tutor);
+			}			
+		} catch (NullPointerException e) {
+			JOptionPane.showMessageDialog(null, e.getMessage());
+		}
+	}
+	
+	public Tutor getTutorFromTable() {
+		int row = tEvento.getSelectedRow();
+		Tutor tutor = (Tutor) tEvento.getValueAt(row, 0);
+//		tutor = bo.findTutor(tutor.getIdUsuario());
+		return tutor;
+	}
+	
+	
+	// Funciones
+
+	private void addToList() {
+		Tutor tutor = getTutorFromTable();
+		temporal.add(tutor);
+		refreshList();
+	}
+	
+	private void saveList() {
+		asignados.clear();
+		asignados.addAll(temporal);
+	}
+	
+	private void deleteFromList() {
+		Object result = listTutores.getSelectedValue();
+		temporal.remove(result);
+		refreshList();
+	}
+
+	public List<Tutor> getTutores() {
+		return asignados;
+	}
+	
+	public void setEvento(Evento evento) {
+		this.evento = evento;
+	}
+	
 	
 	// Manejadores de UI
 	
-	public ViewUsuarioSeleccion(Evento evento) {
+	private void view() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 700, 601);
 		contentPane = new JPanel();
@@ -110,8 +195,8 @@ public class ViewUsuarioSeleccion extends JFrame {
 		lblList = new JLabel("Lista de Responsables");
 		lblList.setFont(RobotoFont.getTitulo());
 		
-		listEstudiantes = new JList(lModel);
-		scrollPane_1.setViewportView(listEstudiantes);
+		listTutores = new JList(lModel);
+		scrollPane_1.setViewportView(listTutores);
 		
 		btnAdd = new JButton("Agregar a la Lista");
 		btnAdd.addActionListener(new ActionListener() {
@@ -120,6 +205,12 @@ public class ViewUsuarioSeleccion extends JFrame {
 			}
 		});
 		
+		btnGuardar = new JButton("Guardar Cambios");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				saveList();
+			}
+		});
 		btnEliminar = new JButton("Eliminar Convocado");
 		btnEliminar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -127,20 +218,9 @@ public class ViewUsuarioSeleccion extends JFrame {
 			}
 		});
 		
-		btnGuardar = new JButton("Guardar Cambios");
-		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//actualizarDatos();
-			}
-		});
-		
 		tModel.addColumn("Docente");
-		
-		refreshList();
-		setGridBagLayout();
-		cargarTabla();
 	}
-
+	
 	private void setGridBagLayout() {
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 484, 484, 0, 0};
@@ -188,7 +268,6 @@ public class ViewUsuarioSeleccion extends JFrame {
 		gbc_lblList.gridy = 6;
 		panel.add(lblList, gbc_lblList);
 		
-		
 		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
 		gbc_scrollPane_1.gridheight = 2;
 		gbc_scrollPane_1.gridwidth = 2;
@@ -198,67 +277,19 @@ public class ViewUsuarioSeleccion extends JFrame {
 		gbc_scrollPane_1.gridy = 7;
 		panel.add(scrollPane_1, gbc_scrollPane_1);
 		
-		GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
-		gbc_btnEliminar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnEliminar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnEliminar.gridx = 1;
-		gbc_btnEliminar.gridy = 9;
-		panel.add(btnEliminar, gbc_btnEliminar);
-		
 		GridBagConstraints gbc_btnGuardar = new GridBagConstraints();
 		gbc_btnGuardar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnGuardar.insets = new Insets(0, 0, 5, 5);
-		gbc_btnGuardar.gridx = 2;
+		gbc_btnGuardar.gridx = 1;
 		gbc_btnGuardar.gridy = 9;
 		panel.add(btnGuardar, gbc_btnGuardar);
-	}
-	
-
-	// Funciones sobre el Tablero
-	
-	protected void cargarTabla() {
-		tModel.setRowCount(0);
-		tutores = bo.getAllTutores();
-		try {
-			for (Tutor tutor : tutores) {
-				Object[] row = new Object[1];
-				row[0] = tutor;
-				tModel.addRow(row);
-			}
-		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
-	}
-	
-	private void refreshList() {
-		try {
-			lModel.clear();
-			for (Tutor tutor : temporal) {
-				lModel.addElement(tutor);
-			}			
-		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null, e.getMessage());
-		}
-	}
-	
-	protected void addToList() {
-		Tutor tutor = getTutorFromTable();
-		temporal.add(tutor);
-		refreshList();
-	}
-	
-	protected void deleteFromList() {
 		
+		GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
+		gbc_btnEliminar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnEliminar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnEliminar.gridx = 2;
+		gbc_btnEliminar.gridy = 9;
+		panel.add(btnEliminar, gbc_btnEliminar);
 	}
-
-	public Tutor getTutorFromTable() {
-		int row = tEvento.getSelectedRow();
-		Tutor tutor = (Tutor) tEvento.getValueAt(row, 0);
-		tutor = bo.findTutor(tutor.getIdUsuario());
-		return tutor;
-	}
-	
-	// Funciones de DDL
-
 	
 }

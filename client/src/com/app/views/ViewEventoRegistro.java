@@ -20,6 +20,7 @@ import com.app.controllers.EventoBO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
+import com.app.test.ViewUsuarioSeleccion;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -46,7 +47,7 @@ import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
 public class ViewEventoRegistro extends JFrame {
-
+	
 	private JPanel panel;
 	private JPanel contentPane;
 	private JTextField inputNombre;
@@ -69,7 +70,10 @@ public class ViewEventoRegistro extends JFrame {
 	private Usuario usuario = new Analista();
 	
 	private EventoBO bo = new EventoBO(usuario);
+	private JButton btnResponsables;
 
+	private ViewUsuarioSeleccion viewUsuarioSeleccion = new ViewUsuarioSeleccion();
+	
 	// Este método main después se borra
 	// Solo se utiliza en desarrollo
 	public static void main(String[] args) {
@@ -89,9 +93,6 @@ public class ViewEventoRegistro extends JFrame {
 		});
 	}
 	
-
-	// Manejadores de UI
-	
 	/**
 	 * @wbp.parser.constructor
 	 */
@@ -99,19 +100,136 @@ public class ViewEventoRegistro extends JFrame {
 		this.eventoTable = eventoTable;
 		fillComboBox();
 		init();
+		setGridBagLayout();
 	}
 	
 	public ViewEventoRegistro(ViewEventoMain eventoTable, Evento evento) {
 		this.eventoTable = eventoTable;
 		this.editEvent = evento;
-		fillComboBox();
+//		fillComboBox();
 		init();
 		fillFields();
+		setGridBagLayout();
 	}
+	
+	protected void responsables() {
+		viewUsuarioSeleccion.setVisible(true);
+		viewUsuarioSeleccion.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		viewUsuarioSeleccion.getTutores();
+	}
+
+	// Funciones sobre el Formulario
+	
+	private void fillFields() {
+		inputNombre.setText(editEvent.getNombre());
+		inputLocalizacion.setText(editEvent.getLocalizacion());
+		selectItr.setSelectedItem(editEvent.getItr());
+		selectModalidad.setSelectedItem(editEvent.getModalidad());
+		selectTipo.setSelectedItem(editEvent.getTipo());
+	}
+	
+	private void fillComboBox() {
+		selectTipo = new JComboBox<EnumEventoTipo>(EnumEventoTipo.values());
+		selectModalidad = new JComboBox<EnumEventoModalidad>(EnumEventoModalidad.values());
+		try {
+			ItrBeanRemote bean = BeanRemoteManager.getBeanItr();
+			List<Itr> list = bean.findAll();
+			selectItr = new JComboBox<Itr>(list.toArray(new Itr[list.size()]));
+		} catch (NamingException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	// Funciones de DDL
+	
+	public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
+	    return dateToConvert.toInstant()
+	      .atZone(ZoneId.systemDefault())
+	      .toLocalDateTime();
+	}
+	
+	private boolean validarDatos() {
+		boolean result = true;
+		try {
+			TextFieldException eNombre = new TextFieldException(inputNombre, lblResNombre);
+			bo.validarNombre(eNombre);
+		} catch (TextFieldException e) {
+			result = false;
+		}
+		
+		try {
+			TextFieldException eLocalizacion = new TextFieldException(inputLocalizacion, lblResLocalizacion);
+			bo.validarLocalizacion(eLocalizacion);
+		} catch (TextFieldException e) {
+			result = false;
+		}
+		
+		try {
+			LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
+			LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
+			bo.validarFechas(fechaInicio, fechaFin);
+		} catch (Exception e) {
+			result = false;
+		}
+		
+		return result;
+	}
+	
+	private void create() {
+		// TODO Realizar la implementación del Ingresar()
+		boolean result = validarDatos();
+		if (result) {
+			try {
+				Evento evento = getEventoFromForm();
+				evento.setTutores(viewUsuarioSeleccion.getTutores());
+				if (editEvent == null) {
+					bo.create(evento);					
+				} else {
+					evento.setIdEvento(editEvent.getIdEvento());
+					bo.update(evento);
+				}
+			} catch (NullPointerException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(null, e.getMessage());
+			}
+			
+			if (eventoTable != null) eventoTable.refreshTable();					
+			
+			JOptionPane.showMessageDialog(null, (editEvent == null)
+					? "Se insertó el Evento correctamente en el Sistema"
+					: "Se modificó el Evento correctamente en el Sistema"
+			);
+		}
+	}
+	
+	protected void cancelar() {
+		// TODO Realizar la implementación del Cancelar()
+
+	}
+	
+	private Evento getEventoFromForm() throws NullPointerException {
+		LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
+		LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
+		Evento evento = Evento.builder()
+				.nombre(inputNombre.getText().trim())
+				.fechaInicio(fechaInicio)
+				.fechaFin(fechaFin)
+				.itr((Itr) selectItr.getSelectedItem())
+				.modalidad((EnumEventoModalidad) selectModalidad.getSelectedItem())
+				.tipo((EnumEventoTipo) selectTipo.getSelectedItem())
+				.tutores(null)
+				.build();
+		return evento;
+	}
+	
+	
+	// Manejadores de UI
 	
 	private void init() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 500, 500);
+		setBounds(100, 100, 500, 540);
 		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -162,6 +280,7 @@ public class ViewEventoRegistro extends JFrame {
 		inputLocalizacion = new JTextField();
 		inputLocalizacion.setColumns(10);
 
+		
 		// Buttons
 		
 		btnCreate = new JButton((editEvent == null)
@@ -174,22 +293,27 @@ public class ViewEventoRegistro extends JFrame {
 			}
 		});
 		
+		btnResponsables = new JButton("Administrar Encargados");
+		btnResponsables.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				responsables();
+			}
+		});
+		
 		btnCancel = new JButton("Cancelar");
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				cancelar();
 			}
 		});
-		
-		setGridBagLayout();
 	}
 	
 	private void setGridBagLayout() {
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[] { 0, 0, 0, 0, 0 };
-		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+		gbl_panel.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 		gbl_panel.columnWeights = new double[] { 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE };
-		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+		gbl_panel.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		panel.setLayout(gbl_panel);
 		
 		GridBagConstraints gbc_lblTitulo = new GridBagConstraints();
@@ -325,126 +449,27 @@ public class ViewEventoRegistro extends JFrame {
 		gbc_lblResLocalizacion.gridx = 1;
 		gbc_lblResLocalizacion.gridy = 17;
 		panel.add(lblResLocalizacion, gbc_lblResLocalizacion);
+				
+		GridBagConstraints gbc_btnResponsables = new GridBagConstraints();
+		gbc_btnResponsables.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnResponsables.gridwidth = 2;
+		gbc_btnResponsables.insets = new Insets(0, 0, 5, 5);
+		gbc_btnResponsables.gridx = 1;
+		gbc_btnResponsables.gridy = 18;
+		panel.add(btnResponsables, gbc_btnResponsables);
 		
 		GridBagConstraints gbc_btnIngresar = new GridBagConstraints();
 		gbc_btnIngresar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnIngresar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnIngresar.gridx = 1;
-		gbc_btnIngresar.gridy = 18;
+		gbc_btnIngresar.gridy = 19;
 		panel.add(btnCreate, gbc_btnIngresar);
 		
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnCancelar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnCancelar.gridx = 2;
-		gbc_btnCancelar.gridy = 18;
+		gbc_btnCancelar.gridy = 19;
 		panel.add(btnCancel, gbc_btnCancelar);
 	}
-	
-	
-	// Funciones sobre el Formulario
-	
-	private void fillFields() {
-		inputNombre.setText(editEvent.getNombre());
-		inputLocalizacion.setText(editEvent.getLocalizacion());
-		selectItr.setSelectedItem(editEvent.getItr());
-		selectModalidad.setSelectedItem(editEvent.getModalidad());
-		selectTipo.setSelectedItem(editEvent.getTipo());
-	}
-	
-	private void fillComboBox() {
-		selectTipo = new JComboBox<EnumEventoTipo>(EnumEventoTipo.values());
-		selectModalidad = new JComboBox<EnumEventoModalidad>(EnumEventoModalidad.values());
-		try {
-			ItrBeanRemote bean = BeanRemoteManager.getBeanItr();
-			List<Itr> list = bean.findAll();
-			selectItr = new JComboBox<Itr>(list.toArray(new Itr[list.size()]));
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	// Funciones de DDL
-	
-	public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
-	    return dateToConvert.toInstant()
-	      .atZone(ZoneId.systemDefault())
-	      .toLocalDateTime();
-	}
-	
-	private boolean validarDatos() {
-		boolean result = true;
-		try {
-			TextFieldException eNombre = new TextFieldException(inputNombre, lblResNombre);
-			bo.validarNombre(eNombre);
-		} catch (TextFieldException e) {
-			result = false;
-		}
-		
-		try {
-			TextFieldException eLocalizacion = new TextFieldException(inputLocalizacion, lblResLocalizacion);
-			bo.validarLocalizacion(eLocalizacion);
-		} catch (TextFieldException e) {
-			result = false;
-		}
-		
-		try {
-			LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
-			LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
-			bo.validarFechas(fechaInicio, fechaFin);
-		} catch (Exception e) {
-			result = false;
-		}
-		
-		return result;
-	}
-	
-	private void create() {
-		// TODO Realizar la implementación del Ingresar()
-		boolean result = true;//validarDatos();
-		if (result) {
-			try {
-				Evento evento = getEventoFromForm();
-				if (editEvent == null) {
-					bo.create(evento);					
-				} else {
-					evento.setIdEvento(editEvent.getIdEvento());
-					bo.update(evento);
-				}
-			} catch (NullPointerException e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
-			} catch (Exception e) {
-				JOptionPane.showMessageDialog(null, e.getMessage());
-			}
-			
-			if (eventoTable != null) eventoTable.refreshTable();					
-			
-			JOptionPane.showMessageDialog(null, (editEvent == null)
-					? "Se insertó el Evento correctamente en el Sistema"
-					: "Se modificó el Evento correctamente en el Sistema"
-			);
-		}
-	}
-	
-	protected void cancelar() {
-		// TODO Realizar la implementación del Cancelar()
-
-	}
-	
-	private Evento getEventoFromForm() throws NullPointerException {
-		LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
-		LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
-		Evento evento = Evento.builder()
-				.nombre(inputNombre.getText().trim())
-				.fechaInicio(fechaInicio)
-				.fechaFin(fechaFin)
-				.itr((Itr) selectItr.getSelectedItem())
-				.modalidad((EnumEventoModalidad) selectModalidad.getSelectedItem())
-				.tipo((EnumEventoTipo) selectTipo.getSelectedItem())
-				.tutores(null)
-				.build();
-		return evento;
-	}
-	
 }
