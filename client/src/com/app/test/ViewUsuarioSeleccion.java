@@ -61,13 +61,10 @@ public class ViewUsuarioSeleccion extends JFrame {
 	private JButton btnEliminar;
 	private JButton btnAdd;
 	private JButton btnGuardar;
-
 	
 	private List<Tutor> tutores;
 	private List<Tutor> asignados = new ArrayList<Tutor>();
 	private Set<Tutor> temporal = new HashSet<Tutor>();
-	
-	private Evento evento;
 	
 	private UsuarioBO bo = new UsuarioBO();
 	
@@ -78,7 +75,7 @@ public class ViewUsuarioSeleccion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion();
+					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -88,7 +85,9 @@ public class ViewUsuarioSeleccion extends JFrame {
 	}
 
 
-	public ViewUsuarioSeleccion() {
+	public ViewUsuarioSeleccion(List<Tutor> lista) {
+		this.asignados = lista;
+		this.temporal = new HashSet<Tutor>(asignados);
 		view();
 		setup();
 	}
@@ -158,11 +157,7 @@ public class ViewUsuarioSeleccion extends JFrame {
 		return asignados;
 	}
 	
-	public void setEvento(Evento evento) {
-		this.evento = evento;
-	}
-	
-	
+
 	// Manejadores de UI
 	
 	private void view() {

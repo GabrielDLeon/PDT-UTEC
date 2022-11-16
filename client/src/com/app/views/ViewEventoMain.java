@@ -403,6 +403,7 @@ public class ViewEventoMain extends JFrame {
 	
 	public void refreshTable() {
 		model.setRowCount(0);
+		eventos = bo.getList();
 		try {
 			for (Evento evento : eventos) {
 				Object[] row = new Object[7];
@@ -437,7 +438,6 @@ public class ViewEventoMain extends JFrame {
 		Tutor tutor = (user.getClass().equals(Tutor.class))
 				? (Tutor) user
 				: (Tutor) selectTutor.getSelectedItem();
-		System.out.println(tutor);
 		
 		eventos = bo.search(nombre, tipo, modalidad, estado, itr, tutor);
 		refreshTable();
@@ -477,7 +477,6 @@ public class ViewEventoMain extends JFrame {
 		int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Evento seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
 		if(dialogResult == JOptionPane.YES_OPTION){
 			String mensaje = bo.delete(id);
-			refreshTable();
 			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
@@ -487,7 +486,7 @@ public class ViewEventoMain extends JFrame {
 		if (evento != null) {
 			ViewAsistenciaMain viewAsistenciaMain = new ViewAsistenciaMain(evento);
 			viewAsistenciaMain.setVisible(true);
-			viewAsistenciaMain.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+			viewAsistenciaMain.setDefaultCloseOperation(HIDE_ON_CLOSE);
 		} else {
 			JOptionPane.showInternalMessageDialog(null, "No se encontró el Evento.");
 		}

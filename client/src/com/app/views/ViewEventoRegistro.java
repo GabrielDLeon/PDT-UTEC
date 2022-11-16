@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 import com.entities.Analista;
 import com.entities.Evento;
 import com.entities.Itr;
+import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
@@ -39,6 +40,7 @@ import java.awt.event.ActionListener;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -58,25 +60,24 @@ public class ViewEventoRegistro extends JFrame {
 	private JDateChooser dateInicio = new JDateChooser();
 	private JDateChooser dateFin = new JDateChooser();
 	
+	private ViewUsuarioSeleccion viewUsuarioSeleccion;
 	private ViewEventoMain eventoTable;
-	private Evento editEvent;
-
-	private Map<String, JTextField> fieldsMap = new HashMap<>();
 
 	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
 	private JComboBox<EnumEventoModalidad> selectModalidad = new JComboBox<EnumEventoModalidad>();
 	private JComboBox<Itr> selectItr = new JComboBox<Itr>();
 
-	private Usuario usuario = new Analista();
-	
-	private EventoBO bo = new EventoBO(usuario);
 	private JButton btnResponsables;
 
-	private ViewUsuarioSeleccion viewUsuarioSeleccion = new ViewUsuarioSeleccion();
+	private Usuario usuario = new Analista();
+	private EventoBO bo = new EventoBO(usuario);
+	private Evento editEvent;
+	
+	private List<Tutor> tutores = new ArrayList<Tutor>();
 	
 	// Este método main después se borra
 	// Solo se utiliza en desarrollo
-	public static void main(String[] args) {
+ 	public static void main(String[] args) {
 		FlatLaf.registerCustomDefaultsSource("com.app.themes");
 		FlatDarkLaf.setup();
 		UIManager.getLookAndFeelDefaults().put("defaultFont", RobotoFont.getNormal());
@@ -98,31 +99,29 @@ public class ViewEventoRegistro extends JFrame {
 	 */
 	public ViewEventoRegistro(ViewEventoMain eventoTable) {
 		this.eventoTable = eventoTable;
-		fillComboBox();
 		init();
+		fillComboBox();
+		cleanForm();
 		setGridBagLayout();
 	}
 	
 	public ViewEventoRegistro(ViewEventoMain eventoTable, Evento evento) {
 		this.eventoTable = eventoTable;
 		this.editEvent = evento;
-//		fillComboBox();
+		this.tutores = evento.getTutores();
 		init();
+		fillComboBox();
 		fillFields();
 		setGridBagLayout();
 	}
 	
-	protected void responsables() {
-		viewUsuarioSeleccion.setVisible(true);
-		viewUsuarioSeleccion.setDefaultCloseOperation(HIDE_ON_CLOSE);
-		viewUsuarioSeleccion.getTutores();
-	}
-
 	// Funciones sobre el Formulario
 	
 	private void fillFields() {
 		inputNombre.setText(editEvent.getNombre());
 		inputLocalizacion.setText(editEvent.getLocalizacion());
+		dateInicio.setDate(convertToDateViaSqlDate(editEvent.getFechaInicio()));
+		dateFin.setDate(convertToDateViaSqlDate(editEvent.getFechaFin()));
 		selectItr.setSelectedItem(editEvent.getItr());
 		selectModalidad.setSelectedItem(editEvent.getModalidad());
 		selectTipo.setSelectedItem(editEvent.getTipo());
@@ -140,6 +139,16 @@ public class ViewEventoRegistro extends JFrame {
 		}
 	}
 	
+	private void cleanForm() {
+		inputNombre.setText("");
+		selectTipo.setSelectedItem(null);
+		dateInicio.setDate(null);
+		dateFin.setDate(null);
+		selectModalidad.setSelectedItem(null);
+		selectItr.setSelectedItem(null);
+		inputLocalizacion.setText("");
+	}
+	
 	
 	// Funciones de DDL
 	
@@ -147,6 +156,10 @@ public class ViewEventoRegistro extends JFrame {
 	    return dateToConvert.toInstant()
 	      .atZone(ZoneId.systemDefault())
 	      .toLocalDateTime();
+	}
+	
+	public Date convertToDateViaSqlDate(LocalDateTime dateToConvert) {
+        return java.sql.Timestamp.valueOf(dateToConvert);
 	}
 	
 	private boolean validarDatos() {
@@ -195,12 +208,17 @@ public class ViewEventoRegistro extends JFrame {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			}
 			
-			if (eventoTable != null) eventoTable.refreshTable();					
+			if (eventoTable != null) eventoTable.refreshTable();
 			
 			JOptionPane.showMessageDialog(null, (editEvent == null)
 					? "Se insertó el Evento correctamente en el Sistema"
-					: "Se modificó el Evento correctamente en el Sistema"
-			);
+							: "Se modificó el Evento correctamente en el Sistema"
+					);
+			
+			viewUsuarioSeleccion.dispose();
+			viewUsuarioSeleccion = new ViewUsuarioSeleccion(tutores);
+			
+			if (editEvent == null) cleanForm();
 		}
 	}
 	
@@ -213,7 +231,8 @@ public class ViewEventoRegistro extends JFrame {
 		LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
 		LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
 		Evento evento = Evento.builder()
-				.nombre(inputNombre.getText().trim())
+				.nombre(inputNombre.getText())
+				.localizacion(inputLocalizacion.getText())
 				.fechaInicio(fechaInicio)
 				.fechaFin(fechaFin)
 				.itr((Itr) selectItr.getSelectedItem())
@@ -226,8 +245,16 @@ public class ViewEventoRegistro extends JFrame {
 	
 	
 	// Manejadores de UI
+
+	protected void responsables() {
+		viewUsuarioSeleccion.setVisible(true);
+		viewUsuarioSeleccion.getTutores();
+		viewUsuarioSeleccion.setDefaultCloseOperation(HIDE_ON_CLOSE);
+	}
 	
 	private void init() {
+		viewUsuarioSeleccion = new ViewUsuarioSeleccion(tutores);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 540);
 		
@@ -293,7 +320,8 @@ public class ViewEventoRegistro extends JFrame {
 			}
 		});
 		
-		btnResponsables = new JButton("Administrar Encargados");
+		btnResponsables = new JButton();
+		btnResponsables.setText("Administrar Encargados");
 		btnResponsables.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				responsables();
