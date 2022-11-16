@@ -55,6 +55,10 @@ public class Evento implements Serializable {
 	@Column(nullable = true)
 	private String localizacion;
 	
+	@ManyToOne
+	@JoinColumn(name= "ESTADO", nullable = true)
+	private EventoEstado estado;
+	
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumEventoModalidad modalidad;
@@ -77,7 +81,7 @@ public class Evento implements Serializable {
 	
 	//bi-directional many-to-one association to Asistencia
 	@ToString.Exclude
-	@OneToMany(mappedBy="evento", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="evento", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
 	private List<Asistencia> asistencias;
 
 	//bi-directional many-to-one association to Constancia
@@ -90,7 +94,7 @@ public class Evento implements Serializable {
 	@ToString.Exclude
 	@ManyToMany(mappedBy="eventos")
 	private List<Analista> analistas;
-
+	
 	//uni-directional many-to-many association to Tutor
 	@ManyToMany
 	@ToString.Exclude

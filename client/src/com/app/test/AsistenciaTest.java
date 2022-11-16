@@ -43,7 +43,7 @@ public class AsistenciaTest {
 			lista.add(e3);
 			lista.forEach(System.out::println);
 			
-			beanAsistencia.create(evento, lista);
+//			beanAsistencia.create(evento, lista);
 			
 			System.out.println("Asistencia registrada para el evento 1");
 		} catch (Exception e) {

@@ -20,6 +20,7 @@ import org.hibernate.SessionFactory;
 import com.dto.EventoBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Evento;
+import com.entities.EventoEstado;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.enumerators.EnumAsistenciaEstado;
@@ -61,7 +62,7 @@ public class EventoBean implements EventoBeanRemote {
 			session.getTransaction().commit();
 			em.flush();
 		} catch (Exception e) {
-			 throw new Exception("No se pudo actualizar el Evento");
+			throw new Exception("No se pudo actualizar el Evento "+e.getMessage());
 		}
 		session.close();
 	}
@@ -142,16 +143,16 @@ public class EventoBean implements EventoBeanRemote {
 		return (Evento) em.find(Evento.class, id);
 	}
 
-	// Si eres Analista, llamas a este método
 	@Override
 	public List<Evento> findAll() {
+		// Si eres Analista, llamas a este método
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findAll", Evento.class);
 		return query.getResultList();
 	}
 	
-	// Si eres Tutor, llamas a este método
 	@Override
 	public List<Evento> findByTutor(Long idTutor) {
+		// Si eres Tutor, llamas a este método
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByTutor", Evento.class);
 		System.out.println(idTutor);
 		query.setParameter("id", idTutor);

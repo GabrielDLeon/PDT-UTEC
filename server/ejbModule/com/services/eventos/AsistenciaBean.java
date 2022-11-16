@@ -32,7 +32,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
         // TODO Auto-generated constructor stub
     }
 
-	@Override
+/*    
 	public void create(Evento evento, List<Estudiante> convocados) throws Exception {
 		// TODO Hay que arreglar esto que no funciona
 		session = factory.openSession();
@@ -56,7 +56,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 		}
 		session.close();
 	}
-
+    
 	@Override
 	public void update(List<Asistencia> asistencias) throws Exception {
 		try {
@@ -68,6 +68,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 			throw new Exception("No se pudo actualizar la Asistencia");
 		}
 	}
+ */
 
 	@Override
 	public List<Asistencia> findByEvento(Long idEvento) {

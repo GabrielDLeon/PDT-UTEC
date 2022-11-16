@@ -6,9 +6,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.naming.NamingException;
+import javax.swing.JOptionPane;
 
+import com.app.controllers.EventoEstadoBO;
 import com.app.singleton.BeanRemoteManager;
 import com.entities.Evento;
+import com.entities.EventoEstado;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.enumerators.EnumAsistenciaEstado;
@@ -16,6 +19,7 @@ import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
 import com.services.eventos.AsistenciaBeanRemote;
 import com.services.eventos.EventoBeanRemote;
+import com.services.eventos.EventoEstadoBeanRemote;
 import com.services.users.ItrBeanRemote;
 
 public class EventoTest {
@@ -23,22 +27,27 @@ public class EventoTest {
 	static EventoBeanRemote beanEvento;
 	static ItrBeanRemote beanItr;
 	static AsistenciaBeanRemote beanAsistencia;
+	static EventoEstadoBeanRemote beanEventoEstado;
 
 	public static void main(String[] args) {
 		try {
 			beanItr = BeanRemoteManager.getBeanItr();
 			beanEvento = BeanRemoteManager.getBeanEvento();
+			beanEventoEstado = BeanRemoteManager.getBeanEventoEstado();
 			beanAsistencia = BeanRemoteManager.getBeanAsistencia();
-//			List<Evento> evento = beanEvento.findByTutor(5L);
-//			evento.forEach(System.out::println);
-//			create();
-//			create();
-//			create();
+			workspace();
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private static void workspace() {
+		EventoEstadoBO bo = new EventoEstadoBO();
+		EventoEstado estado = bo.findById(152L);
+		String mensaje = bo.delete(estado.getIdEstado());
+		JOptionPane.showMessageDialog(null, mensaje);
+	}
+	
 	private static void create() {
 		List<Tutor> listaTutores = new LinkedList<Tutor>();
 		//Depende de cuantos Tutores tengas en la BD

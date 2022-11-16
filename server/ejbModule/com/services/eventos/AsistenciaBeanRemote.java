@@ -12,8 +12,9 @@ import com.enumerators.EnumAsistenciaEstado;
 @Remote
 public interface AsistenciaBeanRemote {
 	
-	void create(Evento evento, List<Estudiante> convocados) throws Exception;
-	void update(List<Asistencia> asistencias) throws Exception;
+//	void create(Evento evento, List<Estudiante> convocados) throws Exception;
+//	void create(Evento evento) throws Exception;
+//	void update(List<Asistencia> asistencias) throws Exception;
 	
 	List<Asistencia> findByEvento(Long idEvento);
 	List<Asistencia> findByStatus(Long idEvento, EnumAsistenciaEstado status);
