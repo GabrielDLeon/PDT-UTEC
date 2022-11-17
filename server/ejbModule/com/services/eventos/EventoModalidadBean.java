@@ -8,7 +8,6 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-import com.entities.EventoEstado;
 import com.entities.EventoModalidad;
 
 @Stateless
@@ -34,9 +33,9 @@ public class EventoModalidadBean implements EventoModalidadBeanRemote {
 	}
 
 	@Override
-	public void delete(Long idEstado) throws Exception {
-		EventoEstado estado = em.find(EventoEstado.class, idEstado);
-		em.remove(estado);
+	public void delete(Long idModalidad) throws Exception {
+		EventoModalidad modalidad = em.find(EventoModalidad.class, idModalidad);
+		em.remove(modalidad);
 		em.flush();
 	}
 	

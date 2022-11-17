@@ -11,7 +11,6 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
-import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
 import org.hibernate.Session;
@@ -21,10 +20,10 @@ import com.dto.EventoBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.EventoEstado;
+import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.enumerators.EnumAsistenciaEstado;
-import com.enumerators.EnumEventoEstado;
 
 @Stateless
 public class EventoBean implements EventoBeanRemote {
@@ -109,6 +108,7 @@ public class EventoBean implements EventoBeanRemote {
 		if (vo.getTipo() != null)
 			predicates.add(qb.equal(root.get("tipo"), vo.getTipo()));
 		
+		/*
 		EnumEventoEstado estado = vo.getEstado();
 		if (estado != null) {
 			Path<LocalDateTime> dateStartPath = root.get("fechaInicio");
@@ -122,6 +122,17 @@ public class EventoBean implements EventoBeanRemote {
 			} else if (estado.equals(EnumEventoEstado.FINALIZADO)) {
 				predicates.add(qb.lessThan(dateFinishPath, now));
 			}
+		}
+		*/
+		
+		if (vo.getEstado() != null) {
+			Join<Evento, EventoEstado> joinEstado = root.join("estado", JoinType.INNER);
+			predicates.add(qb.equal(joinEstado.get("idEstado"), vo.getEstado().getIdEstado()));
+		}
+		
+		if (vo.getModalidad() != null) {
+			Join<Evento, EventoModalidad> joinModalidad = root.join("modalidad", JoinType.INNER);
+			predicates.add(qb.equal(joinModalidad.get("idModalidad"), vo.getModalidad().getIdModalidad()));
 		}
 		
 		if (vo.getItr() != null) {

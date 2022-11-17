@@ -8,7 +8,6 @@ import javax.persistence.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
-import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
 
 import lombok.AllArgsConstructor;
@@ -26,21 +25,17 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name="EVENTOS", uniqueConstraints = {
-		@UniqueConstraint(columnNames = {"NOMBRE", "FECHA_INICIO"})
-})
-@NamedQueries({
-	@NamedQuery(name="Evento.findAll", query="SELECT e FROM Evento e"),
-	@NamedQuery(name="Evento.findByTutor", query="SELECT e FROM Evento e JOIN e.tutores t WHERE t.idUsuario = :id ORDER BY e.idEvento"),
-	@NamedQuery(name="Evento.findByItr", query="SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr ORDER BY e.idEvento")
-})
+@Table(name = "EVENTOS", uniqueConstraints = { @UniqueConstraint(columnNames = { "NOMBRE", "FECHA_INICIO" }) })
+@NamedQueries({ @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
+		@NamedQuery(name = "Evento.findByTutor", query = "SELECT e FROM Evento e JOIN e.tutores t WHERE t.idUsuario = :id ORDER BY e.idEvento"),
+		@NamedQuery(name = "Evento.findByItr", query = "SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr ORDER BY e.idEvento") })
 public class Evento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="EVENTOS_IDEVENTOS_GENERATOR", sequenceName="SEQ_EVENTOS")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="EVENTOS_IDEVENTOS_GENERATOR")
-	@Column(name="ID_EVENTOS")
+	@SequenceGenerator(name = "EVENTOS_IDEVENTOS_GENERATOR", sequenceName = "SEQ_EVENTOS")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EVENTOS_IDEVENTOS_GENERATOR")
+	@Column(name = "ID_EVENTOS")
 	private long idEvento;
 
 	@Column(nullable = false)
@@ -54,59 +49,53 @@ public class Evento implements Serializable {
 
 	@Column(nullable = true)
 	private String localizacion;
-	
+
 	@ManyToOne
-	@JoinColumn(name= "ESTADO", nullable = true)
+	@JoinColumn(name = "ESTADO", nullable = true)
 	private EventoEstado estado;
-	
-	@Column(nullable = false)
-	@Enumerated(EnumType.STRING)
-	private EnumEventoModalidad modalidad;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "MODALIDAD", nullable = true)
+	private EventoModalidad modalidad;
+
 	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private EnumEventoTipo tipo;
-	
+
 	/*
 	 * TODO: Verificar que sea necesario su utilización
+	 * 
 	 * @Column(nullable = false)
-	 * @Enumerated(EnumType.STRING)
-	 * private EnumEventoEstado estado;
-	*/
+	 * 
+	 * @Enumerated(EnumType.STRING) private EnumEventoEstado estado;
+	 */
 
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne
 	@JoinColumn(name = "itr")
 	private Itr itr;
-	
-	//bi-directional many-to-one association to Asistencia
+
+	// bi-directional many-to-one association to Asistencia
 	@ToString.Exclude
-	@OneToMany(mappedBy="evento", cascade = {CascadeType.PERSIST,CascadeType.REMOVE})
+	@OneToMany(mappedBy = "evento", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<Asistencia> asistencias;
 
-	//bi-directional many-to-one association to Constancia
+	// bi-directional many-to-one association to Constancia
 	@ToString.Exclude
-	@OneToMany(mappedBy="evento")
+	@OneToMany(mappedBy = "evento")
 	private List<Constancia> constancias;
 
-	//bi-directional many-to-many association to Analista
+	// bi-directional many-to-many association to Analista
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ToString.Exclude
-	@ManyToMany(mappedBy="eventos")
+	@ManyToMany(mappedBy = "eventos")
 	private List<Analista> analistas;
-	
-	//uni-directional many-to-many association to Tutor
+
+	// uni-directional many-to-many association to Tutor
 	@ManyToMany
 	@ToString.Exclude
-	@JoinTable(
-		name="RESPONSABLES"
-		, joinColumns={
-			@JoinColumn(name="EVENTO")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="TUTOR")
-			}
-		)
+	@JoinTable(name = "RESPONSABLES", joinColumns = { @JoinColumn(name = "EVENTO") }, inverseJoinColumns = {
+			@JoinColumn(name = "TUTOR") })
 	private List<Tutor> tutores;
 
 	public String toStringAll() {

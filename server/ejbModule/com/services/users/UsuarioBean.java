@@ -6,7 +6,6 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
@@ -16,7 +15,6 @@ import com.dto.EstudianteVO;
 import com.dto.TutorVO;
 import com.dto.UsuarioVO;
 import com.entities.Estudiante;
-import com.entities.Evento;
 import com.entities.Tutor;
 import com.entities.Usuario;
 

@@ -3,7 +3,6 @@ package com.entities;
 import java.io.Serializable;
 import java.lang.Long;
 import java.lang.String;
-import java.util.List;
 
 import javax.persistence.*;
 
@@ -12,7 +11,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter

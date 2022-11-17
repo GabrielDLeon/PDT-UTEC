@@ -19,9 +19,16 @@ public class EventoEstadoBO {
 			e.printStackTrace();
 		}
 	}
-	
+
+	public String validateNombre(String nombre) throws Exception {
+		nombre = nombre.trim();
+		if(nombre.isEmpty()) throw new Exception("El nombre no puede estar vacío");
+		return nombre;
+	}
+
 	public String create(EventoEstado estado) {
 		try {
+			estado.setNombre(validateNombre(estado.getNombre()));
 			bean.create(estado);
 			return "Estado de Evento creado exitosamente";
 		} catch (Exception e) {
@@ -31,6 +38,7 @@ public class EventoEstadoBO {
 	
 	public String update(EventoEstado estado) {
 		try {
+			estado.setNombre(validateNombre(estado.getNombre()));
 			bean.update(estado);
 			return "Estado de Evento modificado exitosamente";
 		} catch (Exception e) {

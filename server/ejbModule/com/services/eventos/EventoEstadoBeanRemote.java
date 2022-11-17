@@ -3,7 +3,6 @@ package com.services.eventos;
 import java.util.List;
 
 import javax.ejb.Remote;
-import javax.persistence.PersistenceException;
 
 import com.entities.EventoEstado;
 

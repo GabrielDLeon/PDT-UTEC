@@ -19,6 +19,7 @@
 		<class>com.entities.Tutor</class>
 		<class>com.entities.Usuario</class>
 		<class>com.entities.EventoEstado</class>
+		<class>com.entities.EventoModalidad</class>
 		<properties>
 			<property name="hibernate.enable_lazy_load_no_trans" value="true"/>
 			<property name="current_session_context_class" value = "thread" />

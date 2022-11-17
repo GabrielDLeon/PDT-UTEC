@@ -90,11 +90,14 @@ public class ViewEventoEstado extends JFrame {
 	
 
 	private void delete() {
-		EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
-		String mensaje = bo.delete(estado.getIdEstado());
-		refreshList();
-		inputNombre.setText("");
-		JOptionPane.showMessageDialog(null, mensaje);
+		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		if (option == JOptionPane.YES_OPTION) {
+			EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
+			String mensaje = bo.delete(estado.getIdEstado());
+			refreshList();
+			inputNombre.setText("");
+			JOptionPane.showMessageDialog(null, mensaje);
+		}
 	}
 	
 	
@@ -102,7 +105,6 @@ public class ViewEventoEstado extends JFrame {
 		model.removeAllElements();
 		estados = bo.findAll();
 		model.addAll(estados);
-		EventoEstado i = model.getElementAt(0);
 	}
 	
 	public ViewEventoEstado() {

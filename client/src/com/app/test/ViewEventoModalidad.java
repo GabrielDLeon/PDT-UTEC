@@ -90,11 +90,14 @@ public class ViewEventoModalidad extends JFrame {
 	
 
 	private void delete() {
-		EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
-		String mensaje = bo.delete(modalidad.getIdModalidad());
-		refreshList();
-		inputNombre.setText("");
-		JOptionPane.showMessageDialog(null, mensaje);
+		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		if (option == JOptionPane.YES_OPTION) {
+			EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
+			String mensaje = bo.delete(modalidad.getIdModalidad());
+			refreshList();
+			inputNombre.setText("");
+			JOptionPane.showMessageDialog(null, mensaje);
+		}
 	}
 	
 	
@@ -102,7 +105,7 @@ public class ViewEventoModalidad extends JFrame {
 		model.removeAllElements();
 		modalidades = bo.findAll();
 		model.addAll(modalidades);
-		EventoModalidad i = model.getElementAt(0);
+		//EventoModalidad i = model.getElementAt(0);
 	}
 	
 	public ViewEventoModalidad() {

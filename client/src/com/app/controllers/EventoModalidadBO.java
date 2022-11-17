@@ -22,8 +22,15 @@ public class EventoModalidadBO {
 		}
 	}
 	
+	public String validateNombre(String nombre) throws Exception {
+		nombre = nombre.trim();
+		if(nombre.isEmpty()) throw new Exception("El nombre no puede estar vacío");
+		return nombre;
+	}
+	
 	public String create(EventoModalidad modalidad) {
 		try {
+			modalidad.setNombre(validateNombre(modalidad.getNombre()));
 			bean.create(modalidad);
 			return "Modalidad de Evento creado exitosamente";
 		} catch (Exception e) {
@@ -33,6 +40,7 @@ public class EventoModalidadBO {
 	
 	public String update(EventoModalidad modalidad) {
 		try {
+			modalidad.setNombre(validateNombre(modalidad.getNombre()));
 			bean.update(modalidad);
 			return "Modalidad de Evento modificado exitosamente";
 		} catch (Exception e) {

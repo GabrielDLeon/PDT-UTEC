@@ -51,7 +51,7 @@ public class EventoTest {
 	private static void create() {
 		List<Tutor> listaTutores = new LinkedList<Tutor>();
 		//Depende de cuantos Tutores tengas en la BD
-		listaTutores.add(beanEvento.getTutor(4L));
+//		listaTutores.add(beanEvento.getTutor(4L));
 		//listaTutores.add(beanEvento.getTutor(4L));
 		
 		LocalDateTime time = LocalDateTime.now();
@@ -61,7 +61,8 @@ public class EventoTest {
 				.nombre("Exámen Patrones de Diseño")
 				.fechaInicio(time)
 				.fechaFin(time)
-				.modalidad(EnumEventoModalidad.PRESENCIAL)
+				.modalidad(null)
+				.estado(null)
 				.tipo(EnumEventoTipo.EXAMEN)
 				.itr(itr)
 				.tutores(listaTutores)

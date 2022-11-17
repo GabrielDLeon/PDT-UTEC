@@ -13,13 +13,14 @@ import javax.swing.table.DefaultTableModel;
 import com.app.controllers.EventoBO;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
+import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
+import com.entities.EventoEstado;
+import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.entities.Usuario;
-import com.enumerators.EnumEventoEstado;
-import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -78,15 +79,15 @@ public class ViewEventoMain extends JFrame {
 
 	private JComboBox<Itr> selectItr = new JComboBox<Itr>();
 	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
-	private JComboBox<EnumEventoModalidad> selectModalidad = new JComboBox<EnumEventoModalidad>();
-	private JComboBox<EnumEventoEstado> selectEstado= new JComboBox<EnumEventoEstado>();
+	private JComboBox<EventoModalidad> selectModalidad = new JComboBox<EventoModalidad>();
+	private JComboBox<EventoEstado> selectEstado= new JComboBox<EventoEstado>();
 	private JComboBox<Tutor> selectTutor = new JComboBox<Tutor>();
 	
 	// Para cambiar la perspectiva de usuario se debe modificar el new User() por el tipo de usuario deseado
 	// Por ejemplo, si queremos usar la vista Analista: Usuario user = new Analista();
-	private Usuario user = new Analista();
 	
-	private EventoBO bo = new EventoBO(user);
+	private Usuario user;
+	private EventoBO bo;
 
 	private List<Evento> eventos;
 	
@@ -98,7 +99,7 @@ public class ViewEventoMain extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewEventoMain frame = new ViewEventoMain();
+					ViewEventoMain frame = new ViewEventoMain(new Analista());
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -114,11 +115,14 @@ public class ViewEventoMain extends JFrame {
 		setupComboBox();
 		setGridBagLayout();
 		eventos = bo.getList();
-		refreshTable();
+		refreshTable(null);
 		setVisible(true);
 	}
 	
-	public ViewEventoMain() {
+	public ViewEventoMain(Usuario user) {
+		this.user = user;
+		this.bo = new EventoBO(user);
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 606);
 		contentPane = new JPanel();
@@ -134,6 +138,7 @@ public class ViewEventoMain extends JFrame {
 		model.addColumn("Título");
 		model.addColumn("Tipo");
 		model.addColumn("Modalidad");
+		model.addColumn("Estado");
 		model.addColumn("Inicio");
 		model.addColumn("Fin");
 		model.addColumn("ITR");
@@ -228,8 +233,9 @@ public class ViewEventoMain extends JFrame {
 		panel.add(scrollPane, gbc_scrollPane);
 		
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
+		gbc_panel_1.gridheight = 4;
 		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
+		gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel_1.gridx = 5;
 		gbc_panel_1.gridy = 1;
 		panel.add(panel_1, gbc_panel_1);
@@ -382,11 +388,15 @@ public class ViewEventoMain extends JFrame {
 
 	private void setupComboBox() {
 		selectTipo = new JComboBox<EnumEventoTipo>(EnumEventoTipo.values());
-		selectModalidad = new JComboBox<EnumEventoModalidad>(EnumEventoModalidad.values());
-		selectEstado = new JComboBox<EnumEventoEstado>(EnumEventoEstado.values());
 		try {
 			List<Itr> itrs = BeanRemoteManager.getBeanItr().findAll();
 			selectItr = new JComboBox<Itr>(itrs.toArray(new Itr[itrs.size()]));
+			
+			List<EventoModalidad> modalidades = BeanRemoteManager.getBeanEventoModalidad().findAll();
+			selectModalidad = new JComboBox<EventoModalidad>(modalidades.toArray(new EventoModalidad[modalidades.size()]));
+			
+			List<EventoEstado> estados = BeanRemoteManager.getBeanEventoEstado().findAll();
+			selectEstado = new JComboBox<EventoEstado>(estados.toArray(new EventoEstado[estados.size()]));
 			
 			if (user.getClass().equals(Analista.class)) {
 				List<Tutor> tutores = BeanRemoteManager.getBeanUsuario().findAllTutores();
@@ -401,19 +411,25 @@ public class ViewEventoMain extends JFrame {
 	
 	// Funciones sobre el Tablero
 	
-	public void refreshTable() {
+	public void refreshTable(EventoBusquedaVO vo) {
 		model.setRowCount(0);
-		eventos = bo.getList();
+		if (vo != null) {
+			eventos = bo.search(vo);
+		} else {
+			eventos = bo.getList();
+		}
+		
 		try {
 			for (Evento evento : eventos) {
-				Object[] row = new Object[7];
+				Object[] row = new Object[8];
 				row[0] = evento.getIdEvento();
 				row[1] = evento.getNombre();
 				row[2] = evento.getTipo();
 				row[3] = evento.getModalidad();
-				row[4] = evento.getFechaInicio();
-				row[5] = evento.getFechaFin();
-				row[6] = evento.getItr();
+				row[4] = evento.getEstado();
+				row[5] = evento.getFechaInicio();
+				row[6] = evento.getFechaFin();
+				row[7] = evento.getItr();
 				model.addRow(row);
 			}
 		} catch (NullPointerException e) {
@@ -428,22 +444,31 @@ public class ViewEventoMain extends JFrame {
 		return evento;
 	}
 	
-	protected void search() {
+	private void search() {
 		String nombre = inputBuscador.getText();
 		EnumEventoTipo tipo = (EnumEventoTipo) selectTipo.getSelectedItem();
-		EnumEventoModalidad modalidad = (EnumEventoModalidad) selectModalidad.getSelectedItem();
-		EnumEventoEstado estado = (EnumEventoEstado) selectEstado.getSelectedItem();
+		EventoModalidad modalidad = (EventoModalidad) selectModalidad.getSelectedItem();
+		EventoEstado estado = (EventoEstado) selectEstado.getSelectedItem();
 		Itr itr = (Itr) selectItr.getSelectedItem();
 		
 		Tutor tutor = (user.getClass().equals(Tutor.class))
 				? (Tutor) user
 				: (Tutor) selectTutor.getSelectedItem();
 		
-		eventos = bo.search(nombre, tipo, modalidad, estado, itr, tutor);
-		refreshTable();
+		EventoBusquedaVO vo = EventoBusquedaVO.builder()
+				.nombre(nombre)
+				.tipo(tipo)
+				.modalidad(modalidad)
+				.estado(estado)
+				.itr(itr)
+				.tutor(tutor)
+				.build();
+		
+		eventos = bo.search(vo);
+		refreshTable(vo);
 	}
 	
-	protected void cleanFilters() {
+	private void cleanFilters() {
 		inputBuscador.setText("");
 		selectTipo.setSelectedItem(null);
 		selectModalidad.setSelectedItem(null);
@@ -452,36 +477,38 @@ public class ViewEventoMain extends JFrame {
 		selectTutor.setSelectedItem(null);
 		
 		eventos = bo.getList();
-		refreshTable();
+		refreshTable(null);
 	}
 	
 	
 	// Funciones de DDL
 
-	protected void create() {
+	private void create() {
 		ViewEventoRegistro viewRegistro = new ViewEventoRegistro(this);
 		viewRegistro.setVisible(true);
 		viewRegistro.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	protected void update() {
+	private void update() {
 		Evento evento = getEventoFromTable();
 		ViewEventoRegistro viewRegistro = new ViewEventoRegistro(this, evento);
 		viewRegistro.setVisible(true);
 		viewRegistro.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 
-	protected void delete() {
+	private void delete() {
 		int row = tEvento.getSelectedRow();
 		Long id = (Long) tEvento.getValueAt(row, 0);
 		int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Evento seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
 		if(dialogResult == JOptionPane.YES_OPTION){
 			String mensaje = bo.delete(id);
+			eventos = bo.getList();
+			refreshTable(null);
 			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
 	
-	protected void showConvocatoria() {
+	private void showConvocatoria() {
 		Evento evento = getEventoFromTable();
 		if (evento != null) {
 			ViewAsistenciaMain viewAsistenciaMain = new ViewAsistenciaMain(evento);

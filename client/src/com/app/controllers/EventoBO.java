@@ -10,6 +10,8 @@ import com.app.singleton.BeanRemoteManager;
 import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
+import com.entities.EventoEstado;
+import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.entities.Usuario;
@@ -89,15 +91,7 @@ public class EventoBO {
 		return eventos;
 	}
 	
-	public List<Evento> search(String nombre, EnumEventoTipo tipo, EnumEventoModalidad modalidad, EnumEventoEstado estado, Itr itr, Tutor tutor) {
-		EventoBusquedaVO vo = EventoBusquedaVO.builder()
-				.nombre(nombre)
-				.modalidad(modalidad)
-				.tipo(tipo)
-				.estado(estado)
-				.itr(itr)
-				.tutor(tutor)
-				.build();
+	public List<Evento> search(EventoBusquedaVO vo) {
 		List<Evento> result = beanEvento.search(vo);
 		return result;
 	}
