@@ -7,6 +7,7 @@ import javax.naming.NamingException;
 import com.app.singleton.BeanRemoteManager;
 import com.entities.Estudiante;
 import com.entities.Tutor;
+import com.entities.Usuario;
 import com.services.users.UsuarioBeanRemote;
 
 public class UsuarioBO {
@@ -34,6 +35,18 @@ public class UsuarioBO {
 	public List<Estudiante> getAllEstudiantes(){
 		List<Estudiante> estudiantes = beanUsuario.findAllEstudiantes();
 		return estudiantes;
+	}
+	
+	public Usuario login(String user, String password) throws Exception{
+		try {
+			if (user.trim().isEmpty() || password.trim().isEmpty()) {
+				throw new Exception ("Debe de completar todos los campos");
+			}
+			Usuario u = beanUsuario.login(user, password);
+			return u;
+		} catch (Exception e) {
+			throw new Exception (e.getMessage());
+		}
 	}
 	
 }

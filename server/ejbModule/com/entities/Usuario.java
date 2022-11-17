@@ -3,6 +3,8 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import com.enumerators.EnumUsuarioEstado;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -62,6 +64,9 @@ public abstract class Usuario implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="GENERO")
 	private Genero genero;
+	
+	@Enumerated(value = EnumType.STRING)
+	private EnumUsuarioEstado estado;
 
 	//bi-directional many-to-one association to Itr
 	@ManyToOne

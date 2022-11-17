@@ -3,8 +3,6 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import org.hibernate.annotations.NamedNativeQuery;
-
 import com.enumerators.EnumAsistenciaEstado;
 
 import lombok.AllArgsConstructor;
@@ -25,8 +23,8 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "ASISTENCIAS")
 @NamedQueries({
-	@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id"),
-	@NamedQuery(name = "Asistencia.findByStatus", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id AND a.estado = :status")
+	@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT a FROM Asistencia a JOIN a.evento e WHERE e.idEvento = :id"),
+	@NamedQuery(name = "Asistencia.findByStatus", query = "SELECT a FROM Asistencia a JOIN a.evento e WHERE e.idEvento = :id AND a.estado = :status")
 })
 public class Asistencia implements Serializable {
 	private static final long serialVersionUID = 1L;
