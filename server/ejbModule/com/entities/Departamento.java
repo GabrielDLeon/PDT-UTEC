@@ -45,5 +45,10 @@ public class Departamento implements Serializable {
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="departamento")
 	private List<Localidad> localidades;
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 
 }

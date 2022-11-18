@@ -12,6 +12,9 @@
 	<classpathentry kind="lib" path="lib/hibernate-core-5.3.24.Final.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-client.jar"/>
 	<classpathentry kind="lib" path="lib/jboss-modules.jar"/>
-	<classpathentry kind="lib" path="lib/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Default.REVISION-PC/Documents/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Default.REVISION-PC/Documents/jgoodies-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Default.REVISION-PC/Documents/jgoodies-looks-2.4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Default.REVISION-PC/Documents/junit-4.6.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

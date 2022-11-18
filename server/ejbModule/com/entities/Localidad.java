@@ -22,6 +22,7 @@ import java.util.List;
 		@UniqueConstraint(columnNames = {"nombre", "departamento"})
 })
 @NamedQuery(name="Localidad.findAll", query="SELECT l FROM Localidad l")
+//@NamedQuery(name ="Localidad.findByDepartamento", query="SELECT l FROM Localidad l JOIN l.departamento d WHERE d.idDepartamento = :id")
 public class Localidad implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -40,7 +41,13 @@ public class Localidad implements Serializable {
 	private Departamento departamento;
 
 	//bi-directional many-to-one association to Usuario
+	@ToString.Exclude
 	@OneToMany(mappedBy="localidad")
 	private List<Usuario> usuarios;
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 
 }

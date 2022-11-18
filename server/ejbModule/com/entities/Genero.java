@@ -33,8 +33,14 @@ public class Genero implements Serializable {
 	@Column(unique = true, nullable = false)
 	private String nombre;
 
+	@ToString.Exclude
 	//bi-directional many-to-one association to Usuario
 	@OneToMany(mappedBy="genero")
 	private List<Usuario> usuarios;
+	
+	@Override
+	public String toString() {
+		return nombre;
+	}
 
 }

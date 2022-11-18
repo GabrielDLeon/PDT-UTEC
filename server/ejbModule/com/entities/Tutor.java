@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.enumerators.EnumTutorArea;
+import com.enumerators.EnumTutorTipo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,7 +27,8 @@ import lombok.experimental.SuperBuilder;
 public class Tutor extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String tipo;
+	@Enumerated(EnumType.STRING)
+	private EnumTutorTipo tipo;
 
 	@Enumerated(EnumType.STRING)
 	private EnumTutorArea area;

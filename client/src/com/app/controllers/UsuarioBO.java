@@ -48,5 +48,15 @@ public class UsuarioBO {
 			throw new Exception (e.getMessage());
 		}
 	}
+
+	public void create(Usuario u) {
+		// TODO Auto-generated method stub
+		try {
+			beanUsuario.create(u);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 }
