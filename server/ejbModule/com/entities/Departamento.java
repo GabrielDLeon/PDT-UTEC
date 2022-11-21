@@ -24,6 +24,7 @@ import java.util.List;
 @Entity
 @Table(name="DEPARTAMENTOS")
 @NamedQuery(name="Departamento.findAll", query="SELECT d FROM Departamento d")
+@NamedQuery(name ="Localidad.findByDepartamento", query="SELECT l.idLocalidad, l.nombre FROM Localidad l JOIN Departamento d WHERE d.idDepartamento = :id")
 public class Departamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JComboBox;
 import javax.naming.InitialContext;
@@ -81,6 +82,9 @@ public class ViewRegistroUsuario extends JFrame {
 	private List<Departamento> departamentoList;
 	private Set<Localidad> localidadList;
 	private List<Genero> generoList;
+	private List<Localidad> localidades;
+	
+	
 	private JComboBox selectDepartamento;
 	private JLabel lblDepartamento;
 	private JComboBox<Localidad> selectLocalidad = new JComboBox<Localidad>();
@@ -98,9 +102,6 @@ public class ViewRegistroUsuario extends JFrame {
 	private JLabel lblTipo;
 	private JComboBox selectArea;
 	private JComboBox selectTipo;
-	
-//	private UsuarioBeanRemote ubr = (UsuarioBeanRemote) InitialContext
-//			.doLookup("UsuarioBean!com.services.users.UsuarioBeanRemote");
 	
 	private UsuarioBO bo = new UsuarioBO();
 
@@ -122,11 +123,15 @@ public class ViewRegistroUsuario extends JFrame {
 	}
 
 	public List<Itr> getItr() throws NamingException {
-
 		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext
 				.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
 		return itrList = beanItr.findAll();
-
+	}
+	
+	public Itr getItrById(Long id) throws NamingException {
+		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext
+				.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
+		return beanItr.findById(id);
 	}
 	
 	public List<Departamento> getDepartamento() throws NamingException {
@@ -135,17 +140,17 @@ public class ViewRegistroUsuario extends JFrame {
 		return departamentoList = beanDepartamento.findAll();
 	}
 	
+	public Departamento getDepartamentoById(Long id) throws NamingException {
+		DepartamentoBeanRemote beanDepartamento = (DepartamentoBeanRemote) InitialContext
+				.doLookup("ejb:/PDT-Server/DepartamentoBean!com.services.users.DepartamentoBeanRemote");
+		return beanDepartamento.findById(id);
+	}
+	
 	public List<Genero> getGenero() throws NamingException {
 		GeneroBeanRemote beanGenero = (GeneroBeanRemote) InitialContext
 				.doLookup("ejb:/PDT-Server/GeneroBean!com.services.users.GeneroBeanRemote");
 		return generoList = beanGenero.findAll();
 	}
-	
-//	public Set<Localidad> getLocalidad() throws NamingException {
-//		LocalidadBeanRemote beanLocalidad = (LocalidadBeanRemote) InitialContext
-//				.doLookup("ejb:/PDT-Server/LocalidadBean!com.services.users.LocalidadBeanRemote");
-//		return localidadList = beanLocalidad.read();
-//	}
 	
 	public ViewRegistroUsuario(Usuario u) throws NamingException {
 		
@@ -504,7 +509,7 @@ public class ViewRegistroUsuario extends JFrame {
 	protected void register() {
 		
 		if(userType.getClass() == Estudiante.class) {
-		Estudiante e = Estudiante.builder()
+		Usuario e = Estudiante.builder()
 				.apellido1(inputApellido1.getText())
 				.apellido2(inputApellido2.getText())
 				.nombre1(inputNombre1.getText())
@@ -522,42 +527,41 @@ public class ViewRegistroUsuario extends JFrame {
 				.generacion(yearChooser.getValue())
 				.estado(EnumUsuarioEstado.PENDIENTE)
 				.build();
-		
 			try {
 				bo.create(e);
+				JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente");
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
 			}
 		
-		} else if (userType.getClass() == Tutor.class) {
-			Tutor t = Tutor.builder()
+		} else if (userType.getClass() == Tutor.class) {	
+			@SuppressWarnings("deprecation")
+			Usuario t = Tutor.builder()
 					.apellido1(inputApellido1.getText())
 					.apellido2(inputApellido2.getText())
 					.nombre1(inputNombre1.getText())
 					.nombre2(inputNombre2.getText())
-//					.genero((Genero) selectGenero.getSelectedItem())
+					.genero((Genero) selectGenero.getSelectedItem())
 					.fechaNac(dateChooser.getDate())
 					.documento(inputCedula.getText())
 					.mail(inputEmail.getText())
 					.telefono(inputTelefono.getText())
 					.usuario(inputUsuario.getText())
 					.clave(inputClave.getText())
-//					.itr((Itr) selectItr.getSelectedItem())
-//					.departamento((Departamento) selectDepartamento.getSelectedItem())
-//					.localidad((Localidad) selectLocalidad.getSelectedItem())
-//					.area((EnumTutorArea) selectArea.getSelectedItem())
-//					.tipo((EnumTutorTipo) selectTipo.getSelectedItem())
+					.itr((Itr) selectItr.getSelectedItem())
+					.departamento((Departamento) selectDepartamento.getSelectedItem())
+					.localidad((Localidad) selectLocalidad.getSelectedItem())
+					.area((EnumTutorArea) selectArea.getSelectedItem())
+					.tipo((EnumTutorTipo) selectTipo.getSelectedItem())
 					.estado(EnumUsuarioEstado.PENDIENTE)
 					.build();
-			
-			try {
-				bo.create(t);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			
+				try {
+					bo.create(t);
+					JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente");
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
+				}
+
 		}
 	}
 
