@@ -77,6 +77,7 @@ public class Evento implements Serializable {
 
 	// bi-directional many-to-one association to Asistencia
 	@ToString.Exclude
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy = "evento", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
 	private List<Asistencia> asistencias;
 

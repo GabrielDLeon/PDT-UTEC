@@ -100,8 +100,8 @@ public class ViewAsistenciaMain extends JFrame {
 	
 	private void saveChanges() {
 		evento.setAsistencias(convocados);
-		String mensaje = bo.update(evento);
-		JOptionPane.showMessageDialog(null, mensaje);
+//		String mensaje = bo.update(evento);
+//		JOptionPane.showMessageDialog(null, mensaje);
 	}
 	
 	private void restore() {

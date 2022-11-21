@@ -32,43 +32,46 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
         // TODO Auto-generated constructor stub
     }
 
-/*    
-	public void create(Evento evento, List<Estudiante> convocados) throws Exception {
-		// TODO Hay que arreglar esto que no funciona
-		session = factory.openSession();
+    @Override
+    public void create(Evento evento, List<Asistencia> convocados) throws Exception {
+    	session = factory.openSession();
 		session.beginTransaction();
-		try {
-			for (Estudiante estudiante : convocados) {
-				System.out.println(evento.getIdEvento());
-				System.out.println(estudiante.getUsuario());
-				Asistencia a = Asistencia.builder()
-						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getIdUsuario()))
-						.estudiante(estudiante)
-						.evento(evento)
-						.estado(EnumAsistenciaEstado.CONVOCADO)
-						.build();
-				em.merge(a);
-				session.getTransaction().commit();
-			}
-			em.flush();
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+		for (Asistencia asistencia : convocados) {
+			em.merge(asistencia);
 		}
+		session.getTransaction().commit();
 		session.close();
-	}
+    }
     
-	@Override
-	public void update(List<Asistencia> asistencias) throws Exception {
-		try {
-			for (Asistencia asistencia : asistencias) {				
-				em.merge(asistencia);
-			}
-			em.flush();	
-		} catch (Exception e) {
-			throw new Exception("No se pudo actualizar la Asistencia");
-		}
-	}
- */
+    @Override
+    public void update(Asistencia asistencia) throws Exception {
+    	session = factory.openSession();
+		session.beginTransaction();
+		em.merge(asistencia);
+		session.getTransaction().commit();
+		session.close();
+    }
+    
+    @Override
+    public void delete(Long idEvento, Long idEstudiante) throws Exception {
+    	session = factory.openSession();
+    	session.beginTransaction();
+    	AsistenciaKey key = new AsistenciaKey(idEvento, idEstudiante);
+    	Asistencia asistencia = em.find(Asistencia.class, key);
+    	if (asistencia == null) throw new Exception("No se encontró el registro de Asistencia");
+    	System.out.println(asistencia);
+    	em.remove(asistencia);
+    	em.flush();
+    	session.getTransaction().commit();
+		session.close();
+    }
+    
+    @Override
+    public void findById(Long idEvento, Long idEstudiante) {
+    	TypedQuery<Asistencia> query = em.createNamedQuery("Asistencia.find", Asistencia.class);
+    	query.setParameter("idEvento", query);
+    	query.setParameter("idEstudiante", query);
+    }
 
 	@Override
 	public List<Asistencia> findByEvento(Long idEvento) {

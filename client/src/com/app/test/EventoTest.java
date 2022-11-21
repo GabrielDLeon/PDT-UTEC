@@ -8,8 +8,10 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 
+import com.app.controllers.EventoBO;
 import com.app.controllers.EventoEstadoBO;
 import com.app.singleton.BeanRemoteManager;
+import com.entities.Asistencia;
 import com.entities.Evento;
 import com.entities.EventoEstado;
 import com.entities.Itr;
@@ -21,6 +23,7 @@ import com.services.eventos.AsistenciaBeanRemote;
 import com.services.eventos.EventoBeanRemote;
 import com.services.eventos.EventoEstadoBeanRemote;
 import com.services.users.ItrBeanRemote;
+import com.services.users.UsuarioBeanRemote;
 
 public class EventoTest {
 
@@ -28,6 +31,7 @@ public class EventoTest {
 	static ItrBeanRemote beanItr;
 	static AsistenciaBeanRemote beanAsistencia;
 	static EventoEstadoBeanRemote beanEventoEstado;
+	static UsuarioBeanRemote beanUsuario;
 
 	public static void main(String[] args) {
 		try {
@@ -35,6 +39,7 @@ public class EventoTest {
 			beanEvento = BeanRemoteManager.getBeanEvento();
 			beanEventoEstado = BeanRemoteManager.getBeanEventoEstado();
 			beanAsistencia = BeanRemoteManager.getBeanAsistencia();
+			beanUsuario = BeanRemoteManager.getBeanUsuario();
 			workspace();
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -42,68 +47,13 @@ public class EventoTest {
 	}
 
 	private static void workspace() {
-		EventoEstadoBO bo = new EventoEstadoBO();
-		EventoEstado estado = bo.findById(152L);
-		String mensaje = bo.delete(estado.getIdEstado());
-		JOptionPane.showMessageDialog(null, mensaje);
-	}
-	
-	private static void create() {
-		List<Tutor> listaTutores = new LinkedList<Tutor>();
-		//Depende de cuantos Tutores tengas en la BD
-//		listaTutores.add(beanEvento.getTutor(4L));
-		//listaTutores.add(beanEvento.getTutor(4L));
+		/*
+		beanUsuario.findEstudiante(1L);
 		
-		LocalDateTime time = LocalDateTime.now();
-		Itr itr = beanItr.findById(1L);
-		
-		Evento evento = Evento.builder()
-				.nombre("Exámen Patrones de Diseño")
-				.fechaInicio(time)
-				.fechaFin(time)
-				.modalidad(null)
-				.estado(null)
-				.tipo(EnumEventoTipo.EXAMEN)
-				.itr(itr)
-				.tutores(listaTutores)
-				.build();
-		try {
-			beanEvento.create(evento);
-			System.out.println("Evento creado!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		EventoBO bo = new EventoBO(null);
+		List<Asistencia> asistencias;
+		Asistencia a1 = Asistencia.builder().estudiante(null)
+		bo.create(Evento.builder().nombre("Prueba").asistencias(null).build());
+		*/
 	}
-
-	/*
-	private static void update() {
-		try {
-			Evento evento = beanEvento.findById(1L);
-			evento.setNombre("Jornada Presencial 25/06");
-			evento.setTipo(EnumEventoTipo.JORNADA_PRESENCIAL);
-			evento.setModalidad(EnumEventoModalidad.PRESENCIAL);
-			beanEvento.update(evento);
-			System.out.println("Evento actualizado!");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void delete(Long id) {
-		try {
-			beanEvento.delete(id);
-			System.out.println("Evento eliminado!");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-	}
-	
-	private static void getEventos() {
-		List<Evento> lista = beanEvento.findAll();
-		for (Evento evento : lista) {
-			System.out.println(evento.toString());
-		}
-	}
-
-	*/
 }

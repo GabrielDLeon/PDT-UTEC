@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "ASISTENCIAS")
 @NamedQueries({
+	@NamedQuery(name = "Asistencia.find", query = "SELECT a FROM Asistencia a WHERE a.id.idEvento = :idEvento AND a.id.idEstudiante = :idEstudiante"),
 	@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id"),
 	@NamedQuery(name = "Asistencia.findByStatus", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id AND a.estado = :status")
 })
@@ -43,13 +44,13 @@ public class Asistencia implements Serializable {
 	}
 	
 	// bi-directional many-to-one association to Evento
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade = CascadeType.ALL)
 	@MapsId("idEvento")
 	@JoinColumn(name = "EVENTO")
 	private Evento evento;
 
 	// uni-directional many-to-one association to Estudiante
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.REFRESH})
+	@ManyToOne(cascade = CascadeType.ALL)
 	@MapsId("idEstudiante")
 	@JoinColumn(name = "ESTUDIANTE")
 	private Estudiante estudiante;
