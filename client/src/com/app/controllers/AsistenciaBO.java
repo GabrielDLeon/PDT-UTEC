@@ -42,7 +42,6 @@ public class AsistenciaBO {
 					.evento(evento)
 					.estado(EnumAsistenciaEstado.CONVOCADO)
 					.build();
-			System.out.println(a);
 			convocatoria.add(a);
 		}
 		beanAsistencia.create(evento, convocatoria);

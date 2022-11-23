@@ -78,7 +78,6 @@ public class ViewEventoEstado extends JFrame {
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
 	
-
 	private void update() {
 		EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
 		estado.setNombre(inputNombre.getText());
@@ -87,7 +86,6 @@ public class ViewEventoEstado extends JFrame {
 		inputNombre.setText("");
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
-	
 
 	private void delete() {
 		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);

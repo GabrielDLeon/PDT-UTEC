@@ -14,6 +14,7 @@ import com.app.singleton.RobotoFont;
 import com.app.views.ViewEventoRegistro;
 import com.entities.Evento;
 import com.entities.Tutor;
+import com.entities.Usuario;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.services.eventos.AsistenciaBeanRemote;
 
@@ -51,7 +52,7 @@ public class ViewUsuarioSeleccion extends JFrame {
 	private DefaultTableModel tModel = new DefaultTableModel();
 	
 	private JList listTutores;
-	private DefaultListModel<Tutor> lModel;
+	private DefaultListModel<Usuario> lModel;
 
 	private JTextField inputSearch;
 
@@ -62,9 +63,9 @@ public class ViewUsuarioSeleccion extends JFrame {
 	private JButton btnAdd;
 	private JButton btnGuardar;
 	
-	private List<Tutor> tutores;
-	private List<Tutor> asignados = new ArrayList<Tutor>();
-	private Set<Tutor> temporal = new HashSet<Tutor>();
+	private List<Usuario> usuarios = new ArrayList<Usuario>();
+	private List<Usuario> seleccionados = new ArrayList<Usuario>();
+	private Set<Usuario> temporal = new HashSet<Usuario>();
 	
 	private UsuarioBO bo = new UsuarioBO();
 	
@@ -75,7 +76,7 @@ public class ViewUsuarioSeleccion extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion(null);
+					ViewUsuarioSeleccion frame = new ViewUsuarioSeleccion(null, null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -84,16 +85,19 @@ public class ViewUsuarioSeleccion extends JFrame {
 		});
 	}
 
+	public ViewUsuarioSeleccion() {
+		setup();
+	}
 
-	public ViewUsuarioSeleccion(List<Tutor> lista) {
-		this.asignados = lista;
-		this.temporal = new HashSet<Tutor>(asignados);
-		view();
+	public ViewUsuarioSeleccion(List<Usuario> usuarios, List<Usuario> seleccionados) {
+		this.usuarios = usuarios;
+		this.seleccionados = seleccionados;
+		this.temporal = new HashSet<Usuario>(usuarios);
 		setup();
 	}
 	
 	private void setup() {
-		tutores = bo.getAllTutores();
+		view();
 		refreshTable();
 		refreshList();
 		setGridBagLayout();
@@ -105,9 +109,9 @@ public class ViewUsuarioSeleccion extends JFrame {
 	private void refreshTable() {
 		tModel.setRowCount(0);
 		try {
-			for (Tutor tutor : tutores) {
+			for (Usuario usuario : temporal) {
 				Object[] row = new Object[1];
-				row[0] = tutor;
+				row[0] = usuario;
 				tModel.addRow(row);
 			}
 		} catch (NullPointerException e) {
@@ -118,8 +122,8 @@ public class ViewUsuarioSeleccion extends JFrame {
 	private void refreshList() {
 		try {
 			lModel.clear();
-			for (Tutor tutor : temporal) {
-				lModel.addElement(tutor);
+			for (Usuario usuario : temporal) {
+				lModel.addElement(usuario);
 			}			
 		} catch (NullPointerException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
@@ -143,8 +147,8 @@ public class ViewUsuarioSeleccion extends JFrame {
 	}
 	
 	private void saveList() {
-		asignados.clear();
-		asignados.addAll(temporal);
+		seleccionados.clear();
+		seleccionados.addAll(temporal);
 	}
 	
 	private void deleteFromList() {
@@ -153,8 +157,8 @@ public class ViewUsuarioSeleccion extends JFrame {
 		refreshList();
 	}
 
-	public List<Tutor> getTutores() {
-		return asignados;
+	public List<Usuario> getUsuarios() {
+		return seleccionados;
 	}
 	
 

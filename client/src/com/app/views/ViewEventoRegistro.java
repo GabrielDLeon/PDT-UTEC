@@ -120,8 +120,10 @@ public class ViewEventoRegistro extends JFrame {
 	private void fillFields() {
 		inputNombre.setText(editEvent.getNombre());
 		inputLocalizacion.setText(editEvent.getLocalizacion());
-		dateInicio.setDate(convertToDateViaSqlDate(editEvent.getFechaInicio()));
-		dateFin.setDate(convertToDateViaSqlDate(editEvent.getFechaFin()));
+		if (editEvent.getFechaFin() != null)
+			dateInicio.setDate(convertToDateViaSqlDate(editEvent.getFechaInicio()));
+		if (editEvent.getFechaInicio() != null)
+			dateFin.setDate(convertToDateViaSqlDate(editEvent.getFechaFin()));
 		selectItr.setSelectedItem(editEvent.getItr());
 		selectModalidad.setSelectedItem(editEvent.getModalidad());
 		selectEstado.setSelectedItem(editEvent.getEstado());
@@ -202,7 +204,7 @@ public class ViewEventoRegistro extends JFrame {
 		if (result) {
 			try {
 				Evento evento = getEventoFromForm();
-				evento.setTutores(viewUsuarioSeleccion.getTutores());
+//				evento.setTutores(viewUsuarioSeleccion.getTutores());
 				if (editEvent == null) {
 					bo.create(evento);					
 				} else {
@@ -224,7 +226,7 @@ public class ViewEventoRegistro extends JFrame {
 			if (editEvent == null) {
 				cleanForm();
 				viewUsuarioSeleccion.dispose();
-				viewUsuarioSeleccion = new ViewUsuarioSeleccion(tutores);
+				viewUsuarioSeleccion = new ViewUsuarioSeleccion();
 			}
 		}
 	}
@@ -256,12 +258,12 @@ public class ViewEventoRegistro extends JFrame {
 
 	protected void responsables() {
 		viewUsuarioSeleccion.setVisible(true);
-		viewUsuarioSeleccion.getTutores();
+//		viewUsuarioSeleccion.getTutores();
 		viewUsuarioSeleccion.setDefaultCloseOperation(HIDE_ON_CLOSE);
 	}
 	
 	private void init() {
-		viewUsuarioSeleccion = new ViewUsuarioSeleccion(tutores);
+		viewUsuarioSeleccion = new ViewUsuarioSeleccion();
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 520, 585);

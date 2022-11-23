@@ -62,14 +62,6 @@ public class Evento implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EnumEventoTipo tipo;
 
-	/*
-	 * TODO: Verificar que sea necesario su utilización
-	 * 
-	 * @Column(nullable = false)
-	 * 
-	 * @Enumerated(EnumType.STRING) private EnumEventoEstado estado;
-	 */
-
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ManyToOne
 	@JoinColumn(name = "itr")
@@ -94,6 +86,7 @@ public class Evento implements Serializable {
 
 	// uni-directional many-to-many association to Tutor
 	@ManyToMany
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@ToString.Exclude
 	@JoinTable(name = "RESPONSABLES", joinColumns = { @JoinColumn(name = "EVENTO") }, inverseJoinColumns = {
 			@JoinColumn(name = "TUTOR") })

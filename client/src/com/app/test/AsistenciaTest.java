@@ -1,12 +1,15 @@
 package com.app.test;
 
 import java.util.List;
-import java.util.LinkedList;
 
 import javax.naming.NamingException;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 import com.app.controllers.AsistenciaBO;
 import com.app.singleton.BeanRemoteManager;
+import com.entities.Asistencia;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.services.eventos.AsistenciaBeanRemote;
@@ -23,51 +26,44 @@ public class AsistenciaTest {
 			beanEvento = BeanRemoteManager.getBeanEvento();
 			System.out.println("Bean obtenido!");
 			workspace();
-		} catch (NamingException e) {
+			System.out.println("Workspace Ejecutado!");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private static void workspace() {
-		String mensaje = bo.delete(952L, 3L);
+	private static void workspace() throws Exception {
+//		create();
+//		update();
+		delete();
+	}
+	
+	private static void create() throws Exception {
+		Evento evento = beanEvento.findById(1L);
+		List<Estudiante> convocados = new ArrayList<Estudiante>();
+		convocados.add(BeanRemoteManager.getBeanUsuario().findEstudiante(1L));
+		convocados.add(BeanRemoteManager.getBeanUsuario().findEstudiante(2L));
+		convocados.add(BeanRemoteManager.getBeanUsuario().findEstudiante(3L));
+		bo.create(evento, convocados);
+		System.out.println("Asistencias registradas");
+	}
+	
+	private static void update() {
+		List<Asistencia> result = bo.findByEvento(1L);
+		Asistencia item = result.get(0);
+		item.setCalificacion(3.56);
+		String mensaje = bo.update(item);
+		System.out.println(mensaje);
+		
+		result.get(1).setCalificacion(4.98);
+		result.get(2).setCalificacion(2.22);
+		mensaje = bo.update(result);
 		System.out.println(mensaje);
 	}
 	
-	/*
-	 * private static void workspace() {
-		try {
-			Estudiante usuario = BeanRemoteManager.getBeanUsuario().findEstudiante(2L);
-			System.out.println(usuario.getAsistencias());
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-	}
-	 * */
-	
-	private static void getConvocatoria() {
-		try {
-			Evento evento = beanEvento.findById(952L);
-
-			Estudiante e1 = beanEvento.getEstudiante(1L);
-			Estudiante e2 = beanEvento.getEstudiante(2L);
-			Estudiante e3 = beanEvento.getEstudiante(3L);
-			
-			System.out.println("Evento 1");
-			List<Estudiante> lista = new LinkedList<Estudiante>();
-			lista.add(e1);
-			lista.add(e2);
-			lista.add(e3);
-			System.out.println(lista);
-			
-			try {
-				bo.create(evento, lista);
-				System.out.println("Asistencias registradas");
-			} catch (Exception e) {
-				System.out.println(e.getMessage());
-			}
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
+	private static void delete() {
+		String mensaje = bo.delete(1L, 3L);
+		System.out.println(mensaje);
 	}
 	
 }

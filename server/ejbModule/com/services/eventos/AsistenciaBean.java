@@ -59,7 +59,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
     	AsistenciaKey key = new AsistenciaKey(idEvento, idEstudiante);
     	Asistencia asistencia = em.find(Asistencia.class, key);
     	if (asistencia == null) throw new Exception("No se encontró el registro de Asistencia");
-    	System.out.println(asistencia);
+    	//TODO: ESTO DEJO DE FUNCIONAR, HAY QUE ARREGLARLO
     	em.remove(asistencia);
     	em.flush();
     	session.getTransaction().commit();
