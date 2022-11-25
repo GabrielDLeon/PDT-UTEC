@@ -56,11 +56,16 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
     public void delete(Long idEvento, Long idEstudiante) throws Exception {
     	session = factory.openSession();
     	session.beginTransaction();
+    	
+    	
     	AsistenciaKey key = new AsistenciaKey(idEvento, idEstudiante);
     	Asistencia asistencia = em.find(Asistencia.class, key);
     	if (asistencia == null) throw new Exception("No se encontró el registro de Asistencia");
-    	//TODO: ESTO DEJO DE FUNCIONAR, HAY QUE ARREGLARLO
+
+    	Evento evento = em.find(Evento.class, idEvento);
+    	evento.removeAsitencia(asistencia);
     	em.remove(asistencia);
+    	
     	em.flush();
     	session.getTransaction().commit();
 		session.close();

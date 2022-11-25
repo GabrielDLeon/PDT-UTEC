@@ -19,7 +19,10 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name="EVENTOS_ESTADOS")
-@NamedQuery(name="EventoEstado.findAll", query="SELECT e FROM EventoEstado e")
+@NamedQueries({
+	@NamedQuery(name="EventoEstado.findAll", query="SELECT e FROM EventoEstado e"),
+	@NamedQuery(name="EventoEstado.findAllByStatus", query="SELECT e FROM EventoEstado e WHERE e.activo = :status")
+})
 public class EventoEstado implements Serializable {
 	private static final long serialVersionUID = 1L;
 	   
@@ -32,6 +35,9 @@ public class EventoEstado implements Serializable {
 	@Column(unique = true, nullable = false)
 	private String nombre;
 
+	@Column(nullable = false)	
+	private boolean activo;
+	
 	@Override
 	public String toString() {
 		return nombre;

@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import com.app.controllers.EventoBO;
 import com.app.controllers.EventoEstadoBO;
 import com.app.singleton.BeanRemoteManager;
+import com.entities.Analista;
 import com.entities.Asistencia;
 import com.entities.Evento;
 import com.entities.EventoEstado;
@@ -47,13 +48,12 @@ public class EventoTest {
 	}
 
 	private static void workspace() {
-		/*
-		beanUsuario.findEstudiante(1L);
-		
-		EventoBO bo = new EventoBO(null);
-		List<Asistencia> asistencias;
-		Asistencia a1 = Asistencia.builder().estudiante(null)
-		bo.create(Evento.builder().nombre("Prueba").asistencias(null).build());
-		*/
+		EventoBO bo = new EventoBO(new Analista());
+		LocalDateTime date = LocalDateTime.now();
+		bo.create(Evento.builder()
+				.nombre("Prueba XD")
+				.tipo(EnumEventoTipo.DEFENSA_PROYECTO)
+				.fechaInicio(date)
+				.build());
 	}
 }

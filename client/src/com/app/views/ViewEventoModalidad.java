@@ -1,4 +1,4 @@
-package com.app.test;
+package com.app.views;
 
 import java.awt.EventQueue;
 
@@ -7,7 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import com.app.controllers.EventoEstadoBO;
+import com.app.controllers.EventoModalidadBO;
 import com.entities.EventoEstado;
+import com.entities.EventoModalidad;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import java.awt.GridBagLayout;
@@ -32,27 +34,27 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class ViewEventoEstado extends JFrame {
+public class ViewEventoModalidad extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField inputNombre;
-	private JButton btnCreate = new JButton("Crear Estado");
-	private JButton btnUpdate = new JButton("Modificar Estado");
-	private JButton btnDelete = new JButton("Eliminar Estado");
+	private JButton btnCreate = new JButton("Crear Modalidad");
+	private JButton btnUpdate = new JButton("Modificar Modalidad");
+	private JButton btnDelete = new JButton("Eliminar Modalidad");
 	
-	DefaultListModel<EventoEstado> model = new DefaultListModel();
-	private JList listEstado = new JList(model);
+	DefaultListModel<EventoModalidad> model = new DefaultListModel();
+	private JList listModalidad = new JList(model);
 	
-	private List<EventoEstado> estados = new ArrayList<EventoEstado>();
+	private List<EventoModalidad> modalidades = new ArrayList<EventoModalidad>();
 	
-	private EventoEstadoBO bo = new EventoEstadoBO();
+	private EventoModalidadBO bo = new EventoModalidadBO();
 	
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ViewEventoEstado frame = new ViewEventoEstado();
+					ViewEventoModalidad frame = new ViewEventoModalidad();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -62,36 +64,40 @@ public class ViewEventoEstado extends JFrame {
 	}
 
 	private void setup() {
-		estados = bo.findAll();
-		System.out.println(estados);
 		refreshList();
 	}
 	
 	private void create() {
 		String nombre = inputNombre.getText();
-		EventoEstado estado = EventoEstado.builder()
+		EventoModalidad modalidad = EventoModalidad.builder()
 				.nombre(nombre)
+				.activo(true)
 				.build();
-		String mensaje = bo.create(estado);
+		String mensaje = bo.create(modalidad);
 		refreshList();
 		inputNombre.setText("");
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
 	
+
 	private void update() {
-		EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
-		estado.setNombre(inputNombre.getText());
-		String mensaje = bo.update(estado);
-		refreshList();
-		inputNombre.setText("");
-		JOptionPane.showMessageDialog(null, mensaje);
+		EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
+		modalidad.setNombre(inputNombre.getText());
+		int option = JOptionPane.showConfirmDialog(null, "¿Desea modificar la Modalidad seleccionada?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		if (option == JOptionPane.YES_OPTION) {
+			String mensaje = bo.update(modalidad);
+			refreshList();
+			inputNombre.setText("");
+			JOptionPane.showMessageDialog(null, mensaje);
+		}
 	}
+	
 
 	private void delete() {
-		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar la Modalidad seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
-			EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
-			String mensaje = bo.delete(estado.getIdEstado());
+			EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
+			String mensaje = bo.delete(modalidad.getIdModalidad());
 			refreshList();
 			inputNombre.setText("");
 			JOptionPane.showMessageDialog(null, mensaje);
@@ -101,11 +107,11 @@ public class ViewEventoEstado extends JFrame {
 	
 	private void refreshList() {		
 		model.removeAllElements();
-		estados = bo.findAll();
-		model.addAll(estados);
+		modalidades = bo.findByStatus(true);
+		model.addAll(modalidades);
 	}
 	
-	public ViewEventoEstado() {
+	public ViewEventoModalidad() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 740, 420);
 		contentPane = new JPanel();
@@ -133,34 +139,34 @@ public class ViewEventoEstado extends JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		panel.add(scrollPane, BorderLayout.CENTER);
-		listEstado.addListSelectionListener(new ListSelectionListener() {
+		listModalidad.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent lse) {
 				if(!lse.getValueIsAdjusting()) {
-					int row = listEstado.getSelectedIndex();
+					int row = listModalidad.getSelectedIndex();
 					boolean state = (row >= 0) ? true : false;
                     btnUpdate.setEnabled(state);
                     btnDelete.setEnabled(state);
                     
                     if (state) {
-                    	EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
-                    	inputNombre.setText(estado.getNombre());
+                    	EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
+                    	inputNombre.setText(modalidad.getNombre());
                     }
 				}
 			}
 		});
-		listEstado.addKeyListener(new KeyAdapter() {
+		listModalidad.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				int key = e.getKeyChar();
 				if (key == 27) {
-					listEstado.clearSelection();
+					listModalidad.clearSelection();
 					inputNombre.setText("");
 				}
 			}
 		});
 		
-		scrollPane.setViewportView(listEstado);
+		scrollPane.setViewportView(listModalidad);
 		
 		JPanel panel_1 = new JPanel();
 		GridBagConstraints gbc_panel_1 = new GridBagConstraints();

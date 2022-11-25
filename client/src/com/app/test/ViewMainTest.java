@@ -8,7 +8,9 @@ import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
 import com.app.singleton.RobotoFont;
+import com.app.views.ViewEventoEstado;
 import com.app.views.ViewEventoMain;
+import com.app.views.ViewEventoModalidad;
 import com.entities.Analista;
 import com.entities.Estudiante;
 import com.entities.Tutor;

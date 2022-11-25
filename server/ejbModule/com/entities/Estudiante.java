@@ -39,7 +39,11 @@ public class Estudiante extends Usuario implements Serializable {
 	//bi-directional one-to-many association to Asistencia
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="estudiante")
+	@OneToMany(mappedBy="estudiante", orphanRemoval = true)
 	List<Asistencia> asistencias;
-	
+
+	public Estudiante removeAsitencia(Asistencia asistencia) {
+		asistencias.remove(asistencia);
+		return this;
+	}
 }

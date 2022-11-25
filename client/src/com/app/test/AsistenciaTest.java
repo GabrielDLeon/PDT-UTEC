@@ -62,7 +62,7 @@ public class AsistenciaTest {
 	}
 	
 	private static void delete() {
-		String mensaje = bo.delete(1L, 3L);
+		String mensaje = bo.delete(1L, 2L);
 		System.out.println(mensaje);
 	}
 	

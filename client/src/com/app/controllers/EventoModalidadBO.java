@@ -66,6 +66,11 @@ public class EventoModalidadBO {
 		}
 	}
 	
+	public List<EventoModalidad> findByStatus(boolean estado){
+		List<EventoModalidad> list = bean.findAllByStatus(estado);
+		return list;
+	}
+	
 	public List<EventoModalidad> findAll(){
 		List<EventoModalidad> list = bean.findAll();
 		return list;

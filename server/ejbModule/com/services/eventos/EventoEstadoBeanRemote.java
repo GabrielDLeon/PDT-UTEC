@@ -14,5 +14,6 @@ public interface EventoEstadoBeanRemote {
 	void delete(Long idEvento) throws Exception;
 	EventoEstado findById(Long idEstado) throws Exception;
 	List<EventoEstado> findAll();
+	List<EventoEstado> findAllByStatus(boolean estado);
 	
 }

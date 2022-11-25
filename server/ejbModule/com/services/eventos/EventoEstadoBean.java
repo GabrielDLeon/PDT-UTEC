@@ -9,6 +9,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import com.entities.EventoEstado;
+import com.entities.EventoModalidad;
 
 @Stateless
 public class EventoEstadoBean implements EventoEstadoBeanRemote {
@@ -35,7 +36,8 @@ public class EventoEstadoBean implements EventoEstadoBeanRemote {
 	@Override
 	public void delete(Long idEstado) throws Exception {
 		EventoEstado estado = em.find(EventoEstado.class, idEstado);
-		em.remove(estado);
+		estado.setActivo(false);
+		em.merge(estado);
 		em.flush();
 	}
 	
@@ -49,6 +51,13 @@ public class EventoEstadoBean implements EventoEstadoBeanRemote {
 	@Override
 	public List<EventoEstado> findAll() {
 		TypedQuery<EventoEstado> query = em.createNamedQuery("EventoEstado.findAll", EventoEstado.class);
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<EventoEstado> findAllByStatus(boolean estado) {
+		TypedQuery<EventoEstado> query = em.createNamedQuery("EventoEstado.findAllByStatus", EventoEstado.class);
+		query.setParameter("status", estado);
 		return query.getResultList();
 	}
 

@@ -11,6 +11,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.app.controllers.EventoBO;
+import com.app.controllers.EventoEstadoBO;
+import com.app.controllers.EventoModalidadBO;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
 import com.dto.EventoBusquedaVO;
@@ -88,6 +90,8 @@ public class ViewEventoMain extends JFrame {
 	
 	private Usuario user;
 	private EventoBO bo;
+	private EventoEstadoBO estadoBO = new EventoEstadoBO();
+	private EventoModalidadBO modalidadBO = new EventoModalidadBO();
 
 	private List<Evento> eventos;
 	
@@ -295,20 +299,22 @@ public class ViewEventoMain extends JFrame {
 		gbc_selectModalidad.gridx = 1;
 		gbc_selectModalidad.gridy = 8;
 		panel_1.add(selectModalidad, gbc_selectModalidad);
-		
-		GridBagConstraints gbc_lblItr = new GridBagConstraints();
-		gbc_lblItr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblItr.insets = new Insets(0, 0, 5, 5);
-		gbc_lblItr.gridx = 1;
-		gbc_lblItr.gridy = 9;
-		panel_1.add(lblItr, gbc_lblItr);
 
-		GridBagConstraints gbc_selectItr = new GridBagConstraints();
-		gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
-		gbc_selectItr.gridx = 1;
-		gbc_selectItr.gridy = 10;
-		panel_1.add(selectItr, gbc_selectItr);
+		if (selectItr.getItemCount() > 0) {
+			GridBagConstraints gbc_lblItr = new GridBagConstraints();
+			gbc_lblItr.fill = GridBagConstraints.HORIZONTAL;
+			gbc_lblItr.insets = new Insets(0, 0, 5, 5);
+			gbc_lblItr.gridx = 1;
+			gbc_lblItr.gridy = 9;
+			panel_1.add(lblItr, gbc_lblItr);
+			
+			GridBagConstraints gbc_selectItr = new GridBagConstraints();
+			gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
+			gbc_selectItr.insets = new Insets(0, 0, 5, 5);
+			gbc_selectItr.gridx = 1;
+			gbc_selectItr.gridy = 10;
+			panel_1.add(selectItr, gbc_selectItr);
+		}
 		
 		GridBagConstraints gbc_lblEstado = new GridBagConstraints();
 		gbc_lblEstado.fill = GridBagConstraints.HORIZONTAL;
@@ -324,7 +330,7 @@ public class ViewEventoMain extends JFrame {
 		gbc_selectEstado.gridy = 12;
 		panel_1.add(selectEstado, gbc_selectEstado);
 		
-		if (user.getClass().equals(Analista.class)) {
+		if (user.getClass().equals(Analista.class) && selectTutor.getItemCount() > 0) {
 			GridBagConstraints gbc_lblTutor = new GridBagConstraints();
 			gbc_lblTutor.anchor = GridBagConstraints.WEST;
 			gbc_lblTutor.insets = new Insets(0, 0, 5, 5);
@@ -392,10 +398,10 @@ public class ViewEventoMain extends JFrame {
 			List<Itr> itrs = BeanRemoteManager.getBeanItr().findAll();
 			selectItr = new JComboBox<Itr>(itrs.toArray(new Itr[itrs.size()]));
 			
-			List<EventoModalidad> modalidades = BeanRemoteManager.getBeanEventoModalidad().findAll();
+			List<EventoModalidad> modalidades = modalidadBO.findByStatus(true);
 			selectModalidad = new JComboBox<EventoModalidad>(modalidades.toArray(new EventoModalidad[modalidades.size()]));
 			
-			List<EventoEstado> estados = BeanRemoteManager.getBeanEventoEstado().findAll();
+			List<EventoEstado> estados = estadoBO.findByStatus(true);
 			selectEstado = new JComboBox<EventoEstado>(estados.toArray(new EventoEstado[estados.size()]));
 			
 			if (user.getClass().equals(Analista.class)) {

@@ -25,7 +25,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "EVENTOS", uniqueConstraints = { @UniqueConstraint(columnNames = { "NOMBRE", "FECHA_INICIO" }) })
+@Table(name = "EVENTOS", uniqueConstraints = { @UniqueConstraint(columnNames = { "NOMBRE" }) })
 @NamedQueries({ @NamedQuery(name = "Evento.findAll", query = "SELECT e FROM Evento e"),
 		@NamedQuery(name = "Evento.findByTutor", query = "SELECT e FROM Evento e JOIN e.tutores t WHERE t.idUsuario = :id ORDER BY e.idEvento"),
 		@NamedQuery(name = "Evento.findByItr", query = "SELECT e FROM Evento e JOIN e.itr i WHERE i.idItr = :idItr ORDER BY e.idEvento") })
@@ -70,7 +70,7 @@ public class Evento implements Serializable {
 	// bi-directional many-to-one association to Asistencia
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy = "evento", cascade = { CascadeType.PERSIST, CascadeType.REMOVE })
+	@OneToMany(mappedBy = "evento", cascade = { CascadeType.PERSIST, CascadeType.REMOVE }, orphanRemoval = true)
 	private List<Asistencia> asistencias;
 
 	// bi-directional many-to-one association to Constancia
@@ -95,6 +95,11 @@ public class Evento implements Serializable {
 	public String toStringAll() {
 		return "Evento [idEvento=" + idEvento + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin="
 				+ fechaFin + ", modalidad=" + modalidad + ", tipo=" + tipo + ", itr=" + itr + "]";
+	}
+	
+	public Evento removeAsitencia(Asistencia asistencia) {
+		asistencias.remove(asistencia);
+		return this;
 	}
 
 }

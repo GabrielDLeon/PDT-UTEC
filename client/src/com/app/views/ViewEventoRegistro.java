@@ -19,6 +19,8 @@ import com.formdev.flatlaf.FlatLaf;
 import com.services.users.ItrBeanRemote;
 import com.toedter.calendar.JDateChooser;
 import com.app.controllers.EventoBO;
+import com.app.controllers.EventoEstadoBO;
+import com.app.controllers.EventoModalidadBO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
@@ -70,6 +72,9 @@ public class ViewEventoRegistro extends JFrame {
 
 	private Usuario usuario = new Analista();
 	private EventoBO bo = new EventoBO(usuario);
+	private EventoEstadoBO estadoBO = new EventoEstadoBO();
+	private EventoModalidadBO modalidadBO = new EventoModalidadBO();
+	
 	private Evento editEvent;
 	
 	private List<Tutor> tutores = new ArrayList<Tutor>();
@@ -120,9 +125,9 @@ public class ViewEventoRegistro extends JFrame {
 	private void fillFields() {
 		inputNombre.setText(editEvent.getNombre());
 		inputLocalizacion.setText(editEvent.getLocalizacion());
-		if (editEvent.getFechaFin() != null)
-			dateInicio.setDate(convertToDateViaSqlDate(editEvent.getFechaInicio()));
 		if (editEvent.getFechaInicio() != null)
+			dateInicio.setDate(convertToDateViaSqlDate(editEvent.getFechaInicio()));
+		if (editEvent.getFechaFin() != null)
 			dateFin.setDate(convertToDateViaSqlDate(editEvent.getFechaFin()));
 		selectItr.setSelectedItem(editEvent.getItr());
 		selectModalidad.setSelectedItem(editEvent.getModalidad());
@@ -137,10 +142,10 @@ public class ViewEventoRegistro extends JFrame {
 			List<Itr> list = bean.findAll();
 			selectItr = new JComboBox<Itr>(list.toArray(new Itr[list.size()]));
 			
-			List<EventoModalidad> modalidades = BeanRemoteManager.getBeanEventoModalidad().findAll();
+			List<EventoModalidad> modalidades = modalidadBO.findByStatus(true);
 			selectModalidad = new JComboBox<EventoModalidad>(modalidades.toArray(new EventoModalidad[modalidades.size()]));
 			
-			List<EventoEstado> estados = BeanRemoteManager.getBeanEventoEstado().findAll();
+			List<EventoEstado> estados = estadoBO.findByStatus(true);
 			selectEstado = new JComboBox<EventoEstado>(estados.toArray(new EventoEstado[estados.size()]));
 		} catch (NamingException e) {
 			e.printStackTrace();
@@ -232,8 +237,8 @@ public class ViewEventoRegistro extends JFrame {
 	}
 	
 	protected void cancelar() {
-		// TODO Realizar la implementación del Cancelar()
-
+		dispose();
+		JOptionPane.showInternalMessageDialog(null, ((editEvent == null)?"El alta":"La modificación")+" de Evento fue cancelada con éxito.\nNo se guardarán los datos ingresados.");
 	}
 	
 	private Evento getEventoFromForm() throws NullPointerException {
@@ -447,20 +452,22 @@ public class ViewEventoRegistro extends JFrame {
 		gbc_selectEstado.gridy = 14;
 		panel.add(selectEstado, gbc_selectEstado);
 		
-		GridBagConstraints gbc_lblItr = new GridBagConstraints();
-		gbc_lblItr.gridwidth = 2;
-		gbc_lblItr.insets = new Insets(0, 0, 5, 5);
-		gbc_lblItr.gridx = 1;
-		gbc_lblItr.gridy = 15;
-		panel.add(lblItr, gbc_lblItr);
-		
-		GridBagConstraints gbc_selectItr = new GridBagConstraints();
-		gbc_selectItr.gridwidth = 2;
-		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
-		gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectItr.gridx = 1;
-		gbc_selectItr.gridy = 16;
-		panel.add(selectItr, gbc_selectItr);
+		if (selectItr.getItemCount() > 0) {
+			GridBagConstraints gbc_lblItr = new GridBagConstraints();
+			gbc_lblItr.gridwidth = 2;
+			gbc_lblItr.insets = new Insets(0, 0, 5, 5);
+			gbc_lblItr.gridx = 1;
+			gbc_lblItr.gridy = 15;
+			panel.add(lblItr, gbc_lblItr);
+			
+			GridBagConstraints gbc_selectItr = new GridBagConstraints();
+			gbc_selectItr.gridwidth = 2;
+			gbc_selectItr.insets = new Insets(0, 0, 5, 5);
+			gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
+			gbc_selectItr.gridx = 1;
+			gbc_selectItr.gridy = 16;
+			panel.add(selectItr, gbc_selectItr);
+		}
 		
 		GridBagConstraints gbc_lblLocalizacion = new GridBagConstraints();
 		gbc_lblLocalizacion.gridwidth = 2;

@@ -35,7 +35,8 @@ public class EventoModalidadBean implements EventoModalidadBeanRemote {
 	@Override
 	public void delete(Long idModalidad) throws Exception {
 		EventoModalidad modalidad = em.find(EventoModalidad.class, idModalidad);
-		em.remove(modalidad);
+		modalidad.setActivo(false);
+		em.merge(modalidad);
 		em.flush();
 	}
 	
@@ -49,6 +50,13 @@ public class EventoModalidadBean implements EventoModalidadBeanRemote {
 	@Override
 	public List<EventoModalidad> findAll() {
 		TypedQuery<EventoModalidad> query = em.createNamedQuery("EventoModalidad.findAll", EventoModalidad.class);
+		return query.getResultList();
+	}
+	
+	@Override
+	public List<EventoModalidad> findAllByStatus(boolean estado) {
+		TypedQuery<EventoModalidad> query = em.createNamedQuery("EventoModalidad.findAllByStatus", EventoModalidad.class);
+		query.setParameter("status", estado);
 		return query.getResultList();
 	}
 
