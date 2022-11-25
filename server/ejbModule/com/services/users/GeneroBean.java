@@ -3,18 +3,15 @@ package com.services.users;
 import java.util.List;
 
 import javax.ejb.Stateless;
-import javax.enterprise.context.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.entities.Genero;
-import com.entities.Itr;
 
 @Stateless
 public class GeneroBean implements GeneroBeanRemote {

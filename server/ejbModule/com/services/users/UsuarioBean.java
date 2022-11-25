@@ -7,14 +7,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
-
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.entities.Estudiante;
-
 import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumUsuarioEstado;
@@ -122,6 +120,13 @@ public class UsuarioBean implements UsuarioBeanRemote {
 			throw new Exception (e.getMessage());
 		}
 
+	}
+
+	@Override
+	public List<Usuario> findAll() {
+		TypedQuery<Usuario> query = em.createNamedQuery("Usuario.findAll", Usuario.class);
+		System.out.println(query.getResultList());
+		return query.getResultList();
 	}
 
 //	private Usuario buildGeneric(UsuarioVO vo) {

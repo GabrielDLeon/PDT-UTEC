@@ -1,44 +1,36 @@
 package com.app.test;
 
-import java.awt.EventQueue;
-
-import javax.naming.NamingException;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
-
-import com.app.controllers.UsuarioBO;
-import com.app.singleton.BeanRemoteManager;
-import com.app.singleton.RobotoFont;
-import com.app.views.ViewEventoRegistro;
-import com.entities.Evento;
-import com.entities.Tutor;
-import com.formdev.flatlaf.FlatDarkLaf;
-import com.services.eventos.AsistenciaBeanRemote;
-
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JScrollPane;
+import java.awt.EventQueue;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.swing.JTable;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.ListSelectionModel;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
-import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.app.controllers.UsuarioBO;
+import com.app.singleton.RobotoFont;
+import com.entities.Evento;
+import com.entities.Tutor;
+import com.formdev.flatlaf.FlatDarkLaf;
 
 public class ViewUsuarioSeleccion extends JFrame {
 

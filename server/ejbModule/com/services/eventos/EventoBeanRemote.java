@@ -8,9 +8,6 @@ import com.dto.EventoBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.Tutor;
-import com.enumerators.EnumEventoEstado;
-import com.enumerators.EnumEventoModalidad;
-import com.enumerators.EnumEventoTipo;
 
 @Remote
 public interface EventoBeanRemote {

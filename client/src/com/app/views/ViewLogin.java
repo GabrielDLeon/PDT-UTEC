@@ -1,36 +1,38 @@
 package com.app.views;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.naming.NamingException;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
-import com.formdev.flatlaf.FlatDarkLaf;
 import com.app.controllers.UsuarioBO;
 import com.app.singleton.RobotoFont;
 import com.entities.Analista;
 import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.entities.Usuario;
+import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JTextField;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.Color;
-
-import javax.naming.NamingException;
-import javax.swing.ImageIcon;
-import java.awt.Font;
+import toggle.ToggleAdapter;
 
 public class ViewLogin extends JFrame {
 
@@ -38,8 +40,9 @@ public class ViewLogin extends JFrame {
 	private JTextField inputUsuario;
 	private JPasswordField inputClave;
 	private JLabel lblRespuesta;
+
 	private UsuarioBO uBO = new UsuarioBO();
-	
+
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
 		UIManager.getLookAndFeelDefaults().put("defaultFont", RobotoFont.getNormal());
@@ -56,7 +59,7 @@ public class ViewLogin extends JFrame {
 	}
 
 	public ViewLogin() {
-		
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 450);
 		contentPane = new JPanel();
@@ -123,7 +126,7 @@ public class ViewLogin extends JFrame {
 		gbc_inputClave.gridx = 1;
 		gbc_inputClave.gridy = 6;
 		panel.add(inputClave, gbc_inputClave);
-		
+
 		lblRespuesta = new JLabel(" ");
 		lblRespuesta.setForeground(Color.RED);
 		GridBagConstraints gbc_lblRespuesta = new GridBagConstraints();
@@ -132,24 +135,24 @@ public class ViewLogin extends JFrame {
 		gbc_lblRespuesta.gridx = 1;
 		gbc_lblRespuesta.gridy = 7;
 		panel.add(lblRespuesta, gbc_lblRespuesta);
-		
-				JButton btnLogin = new JButton("Iniciar Sesión");
-				btnLogin.setFont(new Font("Roboto", Font.PLAIN, 12));
-				btnLogin.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Login.png")));
-				btnLogin.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						login();
-					}
-				});
-				
-				GridBagConstraints gbc_btnLogin = new GridBagConstraints();
-				gbc_btnLogin.gridwidth = 2;
-				gbc_btnLogin.fill = GridBagConstraints.HORIZONTAL;
-				gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
-				gbc_btnLogin.gridx = 1;
-				gbc_btnLogin.gridy = 8;
-				panel.add(btnLogin, gbc_btnLogin);
-		
+
+		JButton btnLogin = new JButton("Iniciar Sesión");
+		btnLogin.setFont(new Font("Roboto", Font.PLAIN, 12));
+		btnLogin.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Login.png")));
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				login();
+			}
+		});
+
+		GridBagConstraints gbc_btnLogin = new GridBagConstraints();
+		gbc_btnLogin.gridwidth = 2;
+		gbc_btnLogin.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnLogin.insets = new Insets(0, 0, 5, 5);
+		gbc_btnLogin.gridx = 1;
+		gbc_btnLogin.gridy = 8;
+		panel.add(btnLogin, gbc_btnLogin);
+
 		JLabel lblRegistro = new JLabel("Aun no estas registrado?");
 		lblRegistro.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_lblRegistro = new GridBagConstraints();
@@ -158,7 +161,7 @@ public class ViewLogin extends JFrame {
 		gbc_lblRegistro.gridx = 1;
 		gbc_lblRegistro.gridy = 9;
 		panel.add(lblRegistro, gbc_lblRegistro);
-		
+
 		JButton btnEstudiante = new JButton("Soy Estudiante");
 		btnEstudiante.setFont(new Font("Roboto", Font.PLAIN, 12));
 		btnEstudiante.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Estudiante.png")));
@@ -179,7 +182,7 @@ public class ViewLogin extends JFrame {
 		gbc_btnEstudiante.gridx = 1;
 		gbc_btnEstudiante.gridy = 10;
 		panel.add(btnEstudiante, gbc_btnEstudiante);
-		
+
 		JButton btnTutor = new JButton("Soy Tutor");
 		btnTutor.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -207,19 +210,25 @@ public class ViewLogin extends JFrame {
 
 		try {
 			Usuario u = uBO.login(inputUsuario.getText(), inputClave.getText());
-			
-			if(u.getClass().equals(Analista.class)) {
+
+			if (u.getClass().equals(Analista.class)) {
 				JOptionPane.showMessageDialog(null, "Analista");
+				Dashboard dash = new Dashboard(u);
+				dash.setVisible(true);
 			} else if (u.getClass().equals(Tutor.class)) {
 				JOptionPane.showMessageDialog(null, "Tutor");
+				Dashboard dash = new Dashboard(u);
+				dash.setVisible(true);
 			} else if (u.getClass().equals(Estudiante.class)) {
 				JOptionPane.showMessageDialog(null, "Estudiante");
+				Dashboard dash = new Dashboard(u);
+				dash.setVisible(true);
 			}
-			
+
 		} catch (Exception e) {
 			lblRespuesta.setText(e.getMessage());
 		}
-		
+
 	}
 
 }

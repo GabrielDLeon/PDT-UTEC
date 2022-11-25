@@ -12,7 +12,6 @@ import javax.persistence.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.entities.Departamento;
 import com.entities.Localidad;
 
 @Stateless

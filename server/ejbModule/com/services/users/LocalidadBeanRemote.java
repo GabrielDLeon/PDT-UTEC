@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.ejb.Remote;
 
-import com.entities.Departamento;
 import com.entities.Localidad;
 
 @Remote

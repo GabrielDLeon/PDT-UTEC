@@ -16,6 +16,7 @@ public interface UsuarioBeanRemote {
 	
 	List<Tutor> findAllTutores();
 	List<Estudiante> findAllEstudiantes();
+	List<Usuario> findAll();
 
 	Tutor findTutor(Long id);
 	Estudiante findEstudiante(Long id);

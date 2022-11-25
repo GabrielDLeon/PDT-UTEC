@@ -1,12 +1,23 @@
 package com.app.views;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.naming.NamingException;
 import javax.swing.DefaultCellEditor;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
@@ -18,19 +29,6 @@ import com.entities.Evento;
 import com.enumerators.EnumAsistenciaEstado;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.services.eventos.AsistenciaBeanRemote;
-
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JScrollPane;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.JTable;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import javax.swing.ListSelectionModel;
 
 public class ViewAsistenciaMain extends JFrame {
 

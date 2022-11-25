@@ -2,7 +2,12 @@ package com.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import com.enumerators.EnumTutorArea;
 import com.enumerators.EnumTutorTipo;

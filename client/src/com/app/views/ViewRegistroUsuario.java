@@ -1,12 +1,38 @@
 package com.app.views;
 
+import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
+import com.app.controllers.UsuarioBO;
+import com.app.singleton.RobotoFont;
 import com.entities.Analista;
 import com.entities.Departamento;
 import com.entities.Estudiante;
@@ -22,40 +48,8 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.GeneroBeanRemote;
 import com.services.users.ItrBeanRemote;
-import com.services.users.LocalidadBeanRemote;
-import com.services.users.UsuarioBeanRemote;
-import com.app.controllers.UsuarioBO;
-import com.app.singleton.RobotoFont;
-
-import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
-import javax.swing.JTextField;
-import javax.swing.UIManager;
-
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPasswordField;
-import javax.swing.JComboBox;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import com.toedter.calendar.JDateChooser;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.awt.event.ActionEvent;
 import com.toedter.calendar.JYearChooser;
-import javax.swing.SwingConstants;
 
 public class ViewRegistroUsuario extends JFrame {
 
@@ -163,8 +157,6 @@ public class ViewRegistroUsuario extends JFrame {
 		} catch (NamingException e) {
 			System.out.println("No se pudo cargar la lista de ITR");
 		}
-
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -529,7 +521,7 @@ public class ViewRegistroUsuario extends JFrame {
 				.build();
 			try {
 				bo.create(e);
-				JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente");
+				JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente, queda a la espera de ser habilitado por un Analista");
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
 			}
@@ -557,7 +549,7 @@ public class ViewRegistroUsuario extends JFrame {
 					.build();
 				try {
 					bo.create(t);
-					JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente");
+					JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente, queda a la espera de ser habilitado por un Analista");
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
 				}

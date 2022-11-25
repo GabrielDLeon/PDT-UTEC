@@ -6,7 +6,6 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import com.app.singleton.BeanRemoteManager;
-import com.entities.Asistencia;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.services.eventos.AsistenciaBeanRemote;

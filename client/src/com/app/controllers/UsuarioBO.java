@@ -27,6 +27,29 @@ public class UsuarioBO {
 		return tutor;
 	}
 	
+	public Usuario findUsuario(Long id) {
+		Usuario u = beanUsuario.findUsuario(id);
+		return u;
+	}
+	
+	public void update(Usuario u) {
+		try {
+			beanUsuario.update(u);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	public void delete(Long id) {
+		try {
+			beanUsuario.delete(id);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public List<Tutor> getAllTutores(){
 		List<Tutor> tutores = beanUsuario.findAllTutores();
 		return tutores;
@@ -35,6 +58,11 @@ public class UsuarioBO {
 	public List<Estudiante> getAllEstudiantes(){
 		List<Estudiante> estudiantes = beanUsuario.findAllEstudiantes();
 		return estudiantes;
+	}
+	
+	public List<Usuario> getAllUsuarios(){
+		List<Usuario> usuarios = beanUsuario.findAll();
+		return usuarios;
 	}
 	
 	public Usuario login(String user, String password) throws Exception{
