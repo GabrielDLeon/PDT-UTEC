@@ -109,7 +109,7 @@ public class ViewEventoMain extends JFrame {
 	
 	private void setup() {
 		// Si necesitas utilizar WindowBuilder tienes que comentar la llamada al método setupComboBox()
-		setupComboBox();
+//		setupComboBox();
 		setGridBagLayout();
 		eventos = bo.getList();
 		refreshTable();

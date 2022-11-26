@@ -17,6 +17,8 @@ import javax.swing.SwingConstants;
 
 import com.app.themes.Header;
 import com.entities.Analista;
+import com.entities.Estudiante;
+import com.entities.Tutor;
 import com.entities.Usuario;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -31,6 +33,7 @@ public class Dashboard extends JFrame {
 
 	private JPanel contentPane;
 	private DrawerController drawer;
+	private Usuario userType;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -48,6 +51,8 @@ public class Dashboard extends JFrame {
 	}
 
 	public Dashboard(Usuario u) {
+		
+		this.userType = u;
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 678);
@@ -95,6 +100,7 @@ public class Dashboard extends JFrame {
 		
 		Header h = new Header();
 		
+		if(userType.getClass() == Analista.class) {
 		drawer = Drawer.newDrawer(this)
 				.drawerBackground(new Color(65, 65, 65))
 		        .enableScroll(true)
@@ -114,7 +120,7 @@ public class Dashboard extends JFrame {
 						desktopPane.removeAll();
 						viewCrud vc;
 						try {
-							vc = new viewCrud();
+							vc = new viewCrud(u);
 							desktopPane.add(vc);
 							Dimension desktopSize = desktopPane.getSize();
 							Dimension FrameSize = vc.getSize();
@@ -134,25 +140,84 @@ public class Dashboard extends JFrame {
 
 		        .build();
 		
+		} else if (userType.getClass() == Tutor.class) {
+			drawer = Drawer.newDrawer(this)
+					.drawerBackground(new Color(65, 65, 65))
+			        .enableScroll(true)
+			        .header(h)
+			        .separator(2, new Color(75, 75, 75))
+			        .space(20)
+			        .addChild(d1.build())
+			        .addChild(d2.build())
+			        .addChild(d3.build())
+//			        .addChild(d4.build())
+			        .addFooter(d5.build())
+			        
+			        .event(new EventDrawer(){
+					@Override
+					public void selected(int index, DrawerItem item) {
+						if (item == d1) {
+							desktopPane.removeAll();
+							viewCrud vc;
+							try {
+								vc = new viewCrud(u);
+								desktopPane.add(vc);
+								Dimension desktopSize = desktopPane.getSize();
+								Dimension FrameSize = vc.getSize();
+								vc.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height - FrameSize.height)/2);
+								vc.show();
+							} catch (NamingException e) {
+								e.printStackTrace();
+							}
+					        drawer.hide();
+						} else if (item == d2) {
+							desktopPane.removeAll();
+						} else if (item == d5) {
+							dispose();
+						} 
+					}
+			        })
+
+			        .build();
+		} else if (userType.getClass() == Estudiante.class) {
+			drawer = Drawer.newDrawer(this)
+					.drawerBackground(new Color(65, 65, 65))
+			        .enableScroll(true)
+			        .header(h)
+			        .separator(2, new Color(75, 75, 75))
+			        .space(20)
+			        .addChild(d1.build())
+//			        .addChild(d2.build())
+			        .addChild(d3.build())
+//			        .addChild(d4.build())
+			        .addFooter(d5.build())
+			        
+			        .event(new EventDrawer(){
+					@Override
+					public void selected(int index, DrawerItem item) {
+						if (item == d1) {
+							desktopPane.removeAll();
+							viewCrud vc;
+							try {
+								vc = new viewCrud(u);
+								desktopPane.add(vc);
+								Dimension desktopSize = desktopPane.getSize();
+								Dimension FrameSize = vc.getSize();
+								vc.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height - FrameSize.height)/2);
+								vc.show();
+							} catch (NamingException e) {
+								e.printStackTrace();
+							}
+					        drawer.hide();
+						} else if (item == d2) {
+							desktopPane.removeAll();
+						} else if (item == d5) {
+							dispose();
+						} 
+					}
+			        })
+
+			        .build();
+		}
 	} 
 }
-
-/*
- * 		model.addColumn("ID");
-		model.addColumn("Nombre 1");
-		model.addColumn("Nombre 2");
-		model.addColumn("Apellido 1");
-		model.addColumn("Apellido 2");
-		model.addColumn("Genero");
-		model.addColumn("Fecha Nac.");
-		model.addColumn("Documento");
-		model.addColumn("Telefono");
-		model.addColumn("Correo");
-		model.addColumn("Departamento");
-		model.addColumn("Localidad");
-		model.addColumn("ITR");
-		model.addColumn("Usuario");
-		model.addColumn("Contraseña");
-		model.addColumn("Estado");
- * 
- * */

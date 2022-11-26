@@ -23,6 +23,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.JComboBox;
 
 import com.app.controllers.UsuarioBO;
+import com.entities.Analista;
 import com.entities.Departamento;
 import com.entities.Estudiante;
 import com.entities.Genero;
@@ -53,6 +54,7 @@ public class viewCrud extends JInternalFrame {
 
 	private DefaultTableModel model = new DefaultTableModel();
 	private UsuarioBO bo = new UsuarioBO();
+	private Usuario userType;
 
 	private JTextField txtNombre1;
 	private JTextField txtNombre2;
@@ -70,6 +72,9 @@ public class viewCrud extends JInternalFrame {
 	private JComboBox<Departamento> selectDepartamento;
 	private JComboBox<Localidad> selectLocalidad;
 	private JComboBox selectEstado;
+	private JButton btnListar;
+	private JButton btnModificar;
+	private JLabel lblUsuario;
 	
 	private List<Genero> generoList;
 	private List<Itr> itrList;
@@ -79,7 +84,8 @@ public class viewCrud extends JInternalFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					viewCrud frame = new viewCrud();
+					Usuario u = new Analista();
+					viewCrud frame = new viewCrud(u);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -107,7 +113,10 @@ public class viewCrud extends JInternalFrame {
 	}
 
 	@SuppressWarnings("unchecked")
-	public viewCrud() throws NamingException {
+	public viewCrud(Usuario u) throws NamingException {
+		
+		this.userType = u;
+		
 		setMaximizable(true);
 
 		model.addColumn("ID");
@@ -171,20 +180,25 @@ public class viewCrud extends JInternalFrame {
 		gbc_scrollPane.gridy = 1;
 		getContentPane().add(scrollPane, gbc_scrollPane);
 
-		table = new JTable(model);
-		scrollPane.setViewportView(table);
-		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent lse) {
-                if (!lse.getValueIsAdjusting()) {
-                    int row = table.getSelectedRow();
-                    if (row >= 0) {
-                    	fillInputFromTable(row);
-                    } else {
-                        limpiarInput();
-                    }
-                }
-            }
-        });
+		
+		if (userType.getClass() == Analista.class) {
+			
+			table = new JTable(model);
+			scrollPane.setViewportView(table);
+			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+				public void valueChanged(ListSelectionEvent lse) {
+					if (!lse.getValueIsAdjusting()) {
+						int row = table.getSelectedRow();
+						if (row >= 0) {
+							fillInputFromTable(row);
+						} else {
+							limpiarInput();
+						}
+					}
+				}
+			});
+		}
+		
 
 		JLabel lblNombre2 = new JLabel("Segundo Nombre");
 		lblNombre2.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -338,24 +352,28 @@ public class viewCrud extends JInternalFrame {
 		gbc_txtTelefono.gridy = 9;
 		getContentPane().add(txtTelefono, gbc_txtTelefono);
 
-		JLabel lblUsuario = new JLabel("Usuario");
-		lblUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
-		gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUsuario.gridx = 1;
-		gbc_lblUsuario.gridy = 10;
-		getContentPane().add(lblUsuario, gbc_lblUsuario);
+		if(userType.getClass() == Analista.class) {
+			lblUsuario = new JLabel("Usuario");
+			lblUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+			
+			txtUsuario = new JTextField();
+			txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+			txtUsuario.setColumns(10);
+			GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
+			gbc_lblUsuario.insets = new Insets(0, 0, 5, 5);
+			gbc_lblUsuario.gridx = 1;
+			gbc_lblUsuario.gridy = 10;
+			getContentPane().add(lblUsuario, gbc_lblUsuario);
+			GridBagConstraints gbc_txtUsuario = new GridBagConstraints();
+			gbc_txtUsuario.gridwidth = 3;
+			gbc_txtUsuario.insets = new Insets(0, 0, 5, 5);
+			gbc_txtUsuario.fill = GridBagConstraints.HORIZONTAL;
+			gbc_txtUsuario.gridx = 3;
+			gbc_txtUsuario.gridy = 10;
+			getContentPane().add(txtUsuario, gbc_txtUsuario);
+		}
+		
 
-		txtUsuario = new JTextField();
-		txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
-		txtUsuario.setColumns(10);
-		GridBagConstraints gbc_txtUsuario = new GridBagConstraints();
-		gbc_txtUsuario.gridwidth = 3;
-		gbc_txtUsuario.insets = new Insets(0, 0, 5, 5);
-		gbc_txtUsuario.fill = GridBagConstraints.HORIZONTAL;
-		gbc_txtUsuario.gridx = 3;
-		gbc_txtUsuario.gridy = 10;
-		getContentPane().add(txtUsuario, gbc_txtUsuario);
 
 		JLabel lblClave = new JLabel("Contraseña");
 		lblClave.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -440,77 +458,118 @@ public class viewCrud extends JInternalFrame {
 		gbc_selectLocalidad.gridy = 14;
 		getContentPane().add(selectLocalidad, gbc_selectLocalidad);
 
-		JButton btnListar = new JButton("Listar");
-		btnListar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				fillTable();
-			}
-		});
+		if (userType.getClass() == Analista.class) {
+			btnListar = new JButton("Listar");
+			GridBagConstraints gbc_btnListar = new GridBagConstraints();
+			gbc_btnListar.insets = new Insets(0, 0, 0, 5);
+			gbc_btnListar.gridx = 3;
+			gbc_btnListar.gridy = 17;
+			getContentPane().add(btnListar, gbc_btnListar);
+			btnListar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					fillTable();
+				}
+			});
+		}
 		
-		JLabel lblEstado = new JLabel("Estado");
-		lblEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_lblEstado = new GridBagConstraints();
-		gbc_lblEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEstado.gridx = 1;
-		gbc_lblEstado.gridy = 15;
-		getContentPane().add(lblEstado, gbc_lblEstado);
 		
-		selectEstado = new JComboBox(EnumUsuarioEstado.values());
-		selectEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_selectEstado = new GridBagConstraints();
-		gbc_selectEstado.gridwidth = 3;
-		gbc_selectEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_selectEstado.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectEstado.gridx = 3;
-		gbc_selectEstado.gridy = 15;
-		getContentPane().add(selectEstado, gbc_selectEstado);
-		GridBagConstraints gbc_btnListar = new GridBagConstraints();
-		gbc_btnListar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnListar.gridx = 3;
-		gbc_btnListar.gridy = 17;
-		getContentPane().add(btnListar, gbc_btnListar);
+		
+		if (userType.getClass() == Analista.class) {
+			selectEstado = new JComboBox(EnumUsuarioEstado.values());
+			selectEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
+			JLabel lblEstado = new JLabel("Estado");
+			lblEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
+			GridBagConstraints gbc_lblEstado = new GridBagConstraints();
+			gbc_lblEstado.insets = new Insets(0, 0, 5, 5);
+			gbc_lblEstado.gridx = 1;
+			gbc_lblEstado.gridy = 15;
+			getContentPane().add(lblEstado, gbc_lblEstado);
+			GridBagConstraints gbc_selectEstado = new GridBagConstraints();
+			gbc_selectEstado.gridwidth = 3;
+			gbc_selectEstado.insets = new Insets(0, 0, 5, 5);
+			gbc_selectEstado.fill = GridBagConstraints.HORIZONTAL;
+			gbc_selectEstado.gridx = 3;
+			gbc_selectEstado.gridy = 15;
+			getContentPane().add(selectEstado, gbc_selectEstado);
+		}
+		
+		
 
-		JButton btnModificar = new JButton("Modificar");
-		btnModificar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				Usuario u = bo.findUsuario(getIdFromTable());
-				u.setNombre1(txtNombre1.getText());
-				u.setNombre2(txtNombre2.getText());
-				u.setApellido1(txtApellido1.getText());
-				u.setApellido2(txtApellido2.getText());
-				u.setGenero((Genero) selectGenero.getSelectedItem());
-				u.setFechaNac(dateChooser.getDate());
-				u.setDocumento(txtCedula.getText());
-				u.setTelefono(txtTelefono.getText());
-				u.setMail(txtEmail.getText());
-				u.setDepartamento((Departamento) selectDepartamento.getSelectedItem());
-				u.setLocalidad((Localidad) selectLocalidad.getSelectedItem());
-				u.setItr((Itr) selectItr.getSelectedItem());
-				u.setUsuario(txtUsuario.getText());
-				u.setClave(passwordField.getText());
-				u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
-				
-				bo.update(u);
-				
-			}
-		});
+		if (userType.getClass() == Analista.class) {
+			
+			btnModificar = new JButton("Modificar");
+			btnModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Usuario u = bo.findUsuario(getIdFromTable());
+					u.setNombre1(txtNombre1.getText());
+					u.setNombre2(txtNombre2.getText());
+					u.setApellido1(txtApellido1.getText());
+					u.setApellido2(txtApellido2.getText());
+					u.setGenero((Genero) selectGenero.getSelectedItem());
+					u.setFechaNac(dateChooser.getDate());
+					u.setDocumento(txtCedula.getText());
+					u.setTelefono(txtTelefono.getText());
+					u.setMail(txtEmail.getText());
+					u.setDepartamento((Departamento) selectDepartamento.getSelectedItem());
+					u.setLocalidad((Localidad) selectLocalidad.getSelectedItem());
+					u.setItr((Itr) selectItr.getSelectedItem());
+					u.setUsuario(txtUsuario.getText());
+					u.setClave(passwordField.getText());
+					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
+					
+					bo.update(u);
+					
+				}
+			});
+		} else if (userType.getClass() == Tutor.class || userType.getClass() == Estudiante.class) {
+			btnModificar = new JButton("Modificar");
+			btnModificar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Usuario u = userType;
+					u.setNombre1(txtNombre1.getText());
+					u.setNombre2(txtNombre2.getText());
+					u.setApellido1(txtApellido1.getText());
+					u.setApellido2(txtApellido2.getText());
+					u.setGenero((Genero) selectGenero.getSelectedItem());
+					u.setFechaNac(dateChooser.getDate());
+					u.setDocumento(txtCedula.getText());
+					u.setTelefono(txtTelefono.getText());
+					u.setMail(txtEmail.getText());
+					u.setDepartamento((Departamento) selectDepartamento.getSelectedItem());
+					u.setLocalidad((Localidad) selectLocalidad.getSelectedItem());
+					u.setItr((Itr) selectItr.getSelectedItem());
+//					u.setUsuario(txtUsuario.getText());
+					u.setClave(passwordField.getText());
+//					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
+					
+					bo.update(u);
+					
+				}
+			});
+		} 
+		
+		
 		GridBagConstraints gbc_btnModificar = new GridBagConstraints();
 		gbc_btnModificar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnModificar.gridx = 4;
 		gbc_btnModificar.gridy = 17;
 		getContentPane().add(btnModificar, gbc_btnModificar);
 
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				bo.delete(getIdFromTable());
-			}
-		});
-		GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
-		gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnEliminar.gridx = 5;
-		gbc_btnEliminar.gridy = 17;
-		getContentPane().add(btnEliminar, gbc_btnEliminar);
+		if (userType.getClass() == Analista.class) {
+			
+			JButton btnEliminar = new JButton("Eliminar");
+			btnEliminar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					bo.delete(getIdFromTable());
+				}
+			});
+			GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
+			gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
+			gbc_btnEliminar.gridx = 5;
+			gbc_btnEliminar.gridy = 17;
+			getContentPane().add(btnEliminar, gbc_btnEliminar);
+		}
+		
 
 	}
 
