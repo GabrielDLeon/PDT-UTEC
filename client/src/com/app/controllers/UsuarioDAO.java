@@ -5,6 +5,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import com.app.singleton.BeanRemoteManager;
+import com.dto.UsuarioBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.entities.Usuario;
@@ -63,6 +64,11 @@ public class UsuarioDAO {
 	public List<Usuario> getAllUsuarios(){
 		List<Usuario> usuarios = beanUsuario.findAll();
 		return usuarios;
+	}
+	
+	public List<Usuario> search(UsuarioBusquedaVO vo) {
+		List<Usuario> result = beanUsuario.busqueda(vo);
+		return result;
 	}
 	
 	public Usuario login(String user, String password) throws Exception{

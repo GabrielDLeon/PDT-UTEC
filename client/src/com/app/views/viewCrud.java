@@ -30,6 +30,7 @@ import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
 import com.app.controllers.UsuarioDAO;
+import com.dto.UsuarioBusquedaVO;
 import com.entities.Analista;
 import com.entities.Departamento;
 import com.entities.Estudiante;
@@ -49,7 +50,7 @@ public class viewCrud extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 
 	private DefaultTableModel model = new DefaultTableModel();
-	private UsuarioDAO bo = new UsuarioDAO();
+	private UsuarioDAO dao = new UsuarioDAO();
 	private Usuario userType;
 
 	private JTextField txtNombre1;
@@ -61,7 +62,7 @@ public class viewCrud extends JInternalFrame {
 	private JTextField txtTelefono;
 	private JTextField txtUsuario;
 	private JPasswordField passwordField;
-	private JTable table;
+	private CustomTable table;
 	private JComboBox<Genero> selectGenero;
 	private JDateChooser dateChooser;
 	private JComboBox<Itr> selectItr;
@@ -71,6 +72,11 @@ public class viewCrud extends JInternalFrame {
 	private JButton btnListar;
 	private JButton btnModificar;
 	private JLabel lblUsuario;
+	
+	private List<Usuario> usuarios;
+	
+	private JComboBox filterItr;
+	private JComboBox filterEstado;
 	
 	private List<Genero> generoList;
 	private List<Itr> itrList;
@@ -107,6 +113,47 @@ public class viewCrud extends JInternalFrame {
 				.doLookup("ejb:/PDT-Server/DepartamentoBean!com.services.users.DepartamentoBeanRemote");
 		return departamentoList = beanDepartamento.findAll();
 	}
+	
+	public void refreshTable(UsuarioBusquedaVO vo) {
+		table.model.setRowCount(0);
+		if (vo != null) {
+			usuarios = dao.search(vo);
+		} else {
+			fillTable();
+		}
+	}
+	
+	public void search() {
+		UsuarioBusquedaVO vo = UsuarioBusquedaVO.builder()
+				.itr((Itr) filterItr.getSelectedItem())
+				.estado((EnumUsuarioEstado) filterEstado.getSelectedItem())
+				.build();
+		refreshTable(vo);
+	}
+	
+	protected void fillFilteredTable() {
+		table.model.setRowCount(0);
+		for (Usuario u : usuarios) {
+			Object[] row = new Object[16];
+			row[0] = u.getIdUsuario();
+			row[1] = u.getNombre1();
+			row[2] = u.getNombre2();
+			row[3] = u.getApellido1();
+			row[4] = u.getApellido2();
+			row[5] = u.getGenero();
+			row[6] = u.getFechaNac();
+			row[7] = u.getDocumento();
+			row[8] = u.getTelefono();
+			row[9] = u.getMail();
+			row[10] = u.getDepartamento();
+			row[11] = u.getLocalidad();
+			row[12] = u.getItr();
+			row[13] = u.getUsuario();
+			row[14] = u.getClave();
+			row[15] = u.getEstado();
+			table.model.addRow(row);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	public viewCrud(Usuario u) throws NamingException {
@@ -115,31 +162,14 @@ public class viewCrud extends JInternalFrame {
 		
 		setMaximizable(true);
 
-		model.addColumn("ID");
-		model.addColumn("Nombre 1");
-		model.addColumn("Nombre 2");
-		model.addColumn("Apellido 1");
-		model.addColumn("Apellido 2");
-		model.addColumn("Genero");
-		model.addColumn("Fecha Nac.");
-		model.addColumn("Documento");
-		model.addColumn("Telefono");
-		model.addColumn("Correo");
-		model.addColumn("Departamento");
-		model.addColumn("Localidad");
-		model.addColumn("ITR");
-		model.addColumn("Usuario");
-		model.addColumn("Contraseña");
-		model.addColumn("Estado");
-
 		getContentPane().setFont(new Font("Roboto", Font.PLAIN, 12));
 		setBounds(100, 100, 1001, 650);
 		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 30, 30, 0, 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 30, 30, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0, 0, 0, 0, 0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
 		this.setBorder(null);
@@ -160,7 +190,7 @@ public class viewCrud extends JInternalFrame {
 		txtNombre1.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtNombre1.setColumns(10);
 		GridBagConstraints gbc_txtNombre1 = new GridBagConstraints();
-		gbc_txtNombre1.gridwidth = 3;
+		gbc_txtNombre1.gridwidth = 4;
 		gbc_txtNombre1.insets = new Insets(0, 0, 5, 5);
 		gbc_txtNombre1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtNombre1.gridx = 3;
@@ -170,16 +200,17 @@ public class viewCrud extends JInternalFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.gridheight = 17;
-		gbc_scrollPane.insets = new Insets(0, 0, 0, 5);
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane.gridx = 7;
+		gbc_scrollPane.gridx = 8;
 		gbc_scrollPane.gridy = 1;
 		getContentPane().add(scrollPane, gbc_scrollPane);
 
 		
 		if (userType.getClass() == Analista.class) {
 			
-			table = new JTable(model);
+			table = new CustomTable();
+			table.setColumns("ID","Nombre1","Nombre2","Apellido1","Apellido2","Genero","Fecha Nac.","Documento","Telefono","Correo","Departamento","Localidad","ITR","Usuario","Contrasenia","Estado");
 			scrollPane.setViewportView(table);
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
@@ -209,7 +240,7 @@ public class viewCrud extends JInternalFrame {
 		txtNombre2.setColumns(10);
 		GridBagConstraints gbc_txtNombre2 = new GridBagConstraints();
 		gbc_txtNombre2.anchor = GridBagConstraints.NORTH;
-		gbc_txtNombre2.gridwidth = 3;
+		gbc_txtNombre2.gridwidth = 4;
 		gbc_txtNombre2.insets = new Insets(0, 0, 5, 5);
 		gbc_txtNombre2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtNombre2.gridx = 3;
@@ -228,7 +259,7 @@ public class viewCrud extends JInternalFrame {
 		txtApellido1.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtApellido1.setColumns(10);
 		GridBagConstraints gbc_txtApellido1 = new GridBagConstraints();
-		gbc_txtApellido1.gridwidth = 3;
+		gbc_txtApellido1.gridwidth = 4;
 		gbc_txtApellido1.insets = new Insets(0, 0, 5, 5);
 		gbc_txtApellido1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtApellido1.gridx = 3;
@@ -247,7 +278,7 @@ public class viewCrud extends JInternalFrame {
 		txtApellido2.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtApellido2.setColumns(10);
 		GridBagConstraints gbc_txtApellido2 = new GridBagConstraints();
-		gbc_txtApellido2.gridwidth = 3;
+		gbc_txtApellido2.gridwidth = 4;
 		gbc_txtApellido2.insets = new Insets(0, 0, 5, 5);
 		gbc_txtApellido2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtApellido2.gridx = 3;
@@ -267,7 +298,7 @@ public class viewCrud extends JInternalFrame {
 		selectGenero = new JComboBox(generos.toArray());
 		selectGenero.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_selectGenero = new GridBagConstraints();
-		gbc_selectGenero.gridwidth = 3;
+		gbc_selectGenero.gridwidth = 4;
 		gbc_selectGenero.insets = new Insets(0, 0, 5, 5);
 		gbc_selectGenero.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectGenero.gridx = 3;
@@ -284,7 +315,7 @@ public class viewCrud extends JInternalFrame {
 
 		dateChooser = new JDateChooser();
 		GridBagConstraints gbc_dateChooser = new GridBagConstraints();
-		gbc_dateChooser.gridwidth = 3;
+		gbc_dateChooser.gridwidth = 4;
 		gbc_dateChooser.insets = new Insets(0, 0, 5, 5);
 		gbc_dateChooser.fill = GridBagConstraints.BOTH;
 		gbc_dateChooser.gridx = 3;
@@ -303,7 +334,7 @@ public class viewCrud extends JInternalFrame {
 		txtCedula.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtCedula.setColumns(10);
 		GridBagConstraints gbc_txtCedula = new GridBagConstraints();
-		gbc_txtCedula.gridwidth = 3;
+		gbc_txtCedula.gridwidth = 4;
 		gbc_txtCedula.insets = new Insets(0, 0, 5, 5);
 		gbc_txtCedula.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtCedula.gridx = 3;
@@ -322,7 +353,7 @@ public class viewCrud extends JInternalFrame {
 		txtEmail.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtEmail.setColumns(10);
 		GridBagConstraints gbc_txtEmail = new GridBagConstraints();
-		gbc_txtEmail.gridwidth = 3;
+		gbc_txtEmail.gridwidth = 4;
 		gbc_txtEmail.insets = new Insets(0, 0, 5, 5);
 		gbc_txtEmail.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtEmail.gridx = 3;
@@ -341,7 +372,7 @@ public class viewCrud extends JInternalFrame {
 		txtTelefono.setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtTelefono.setColumns(10);
 		GridBagConstraints gbc_txtTelefono = new GridBagConstraints();
-		gbc_txtTelefono.gridwidth = 3;
+		gbc_txtTelefono.gridwidth = 4;
 		gbc_txtTelefono.insets = new Insets(0, 0, 5, 5);
 		gbc_txtTelefono.fill = GridBagConstraints.HORIZONTAL;
 		gbc_txtTelefono.gridx = 3;
@@ -382,7 +413,7 @@ public class viewCrud extends JInternalFrame {
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.gridwidth = 3;
+		gbc_passwordField.gridwidth = 4;
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.gridx = 3;
@@ -402,7 +433,7 @@ public class viewCrud extends JInternalFrame {
 		selectItr = new JComboBox(itrs.toArray());
 		selectItr.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_selectItr = new GridBagConstraints();
-		gbc_selectItr.gridwidth = 3;
+		gbc_selectItr.gridwidth = 4;
 		gbc_selectItr.insets = new Insets(0, 0, 5, 5);
 		gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectItr.gridx = 3;
@@ -429,7 +460,7 @@ public class viewCrud extends JInternalFrame {
 			}
 		});
 		GridBagConstraints gbc_selectDepartamento = new GridBagConstraints();
-		gbc_selectDepartamento.gridwidth = 3;
+		gbc_selectDepartamento.gridwidth = 4;
 		gbc_selectDepartamento.insets = new Insets(0, 0, 5, 5);
 		gbc_selectDepartamento.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectDepartamento.gridx = 3;
@@ -447,7 +478,7 @@ public class viewCrud extends JInternalFrame {
 		selectLocalidad = new JComboBox<Localidad>();
 		selectLocalidad.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_selectLocalidad = new GridBagConstraints();
-		gbc_selectLocalidad.gridwidth = 3;
+		gbc_selectLocalidad.gridwidth = 4;
 		gbc_selectLocalidad.insets = new Insets(0, 0, 5, 5);
 		gbc_selectLocalidad.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectLocalidad.gridx = 3;
@@ -496,7 +527,7 @@ public class viewCrud extends JInternalFrame {
 			btnModificar = new JButton("Modificar");
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					Usuario u = bo.findUsuario(getIdFromTable());
+					Usuario u = dao.findUsuario(getIdFromTable());
 					u.setNombre1(txtNombre1.getText());
 					u.setNombre2(txtNombre2.getText());
 					u.setApellido1(txtApellido1.getText());
@@ -513,10 +544,11 @@ public class viewCrud extends JInternalFrame {
 					u.setClave(passwordField.getText());
 					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
 					
-					bo.update(u);
+					dao.update(u);
 					
 				}
 			});
+			
 		} else if (userType.getClass() == Tutor.class || userType.getClass() == Estudiante.class) {
 			btnModificar = new JButton("Modificar");
 			btnModificar.addActionListener(new ActionListener() {
@@ -538,7 +570,7 @@ public class viewCrud extends JInternalFrame {
 					u.setClave(passwordField.getText());
 //					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
 					
-					bo.update(u);
+					dao.update(u);
 					
 				}
 			});
@@ -550,13 +582,80 @@ public class viewCrud extends JInternalFrame {
 		gbc_btnModificar.gridx = 4;
 		gbc_btnModificar.gridy = 17;
 		getContentPane().add(btnModificar, gbc_btnModificar);
+		
+		JLabel lblFiltrar = new JLabel("Filtrar");
+		GridBagConstraints gbc_lblFiltrar = new GridBagConstraints();
+		gbc_lblFiltrar.gridwidth = 4;
+		gbc_lblFiltrar.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFiltrar.gridx = 1;
+		gbc_lblFiltrar.gridy = 18;
+		getContentPane().add(lblFiltrar, gbc_lblFiltrar);
+		
+		JLabel lblItr = new JLabel("Filtrar por ITR");
+		GridBagConstraints gbc_lblItr = new GridBagConstraints();
+		gbc_lblItr.insets = new Insets(0, 0, 5, 5);
+		gbc_lblItr.gridx = 1;
+		gbc_lblItr.gridy = 19;
+		getContentPane().add(lblItr, gbc_lblItr);
+		
+		filterItr = new JComboBox(itrs.toArray());
+		filterItr.setFont(new Font("Roboto", Font.PLAIN, 12));
+		GridBagConstraints gbc_filterItr = new GridBagConstraints();
+		gbc_filterItr.gridwidth = 2;
+		gbc_filterItr.insets = new Insets(0, 0, 5, 5);
+		gbc_filterItr.fill = GridBagConstraints.HORIZONTAL;
+		gbc_filterItr.gridx = 3;
+		gbc_filterItr.gridy = 19;
+		getContentPane().add(filterItr, gbc_filterItr);
+		
+		JLabel lblFiltrarPorEstado = new JLabel("Filtrar por Estado");
+		GridBagConstraints gbc_lblFiltrarPorEstado = new GridBagConstraints();
+		gbc_lblFiltrarPorEstado.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFiltrarPorEstado.gridx = 1;
+		gbc_lblFiltrarPorEstado.gridy = 20;
+		getContentPane().add(lblFiltrarPorEstado, gbc_lblFiltrarPorEstado);
+		
+		filterEstado = new JComboBox(EnumUsuarioEstado.values());
+		filterEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
+		GridBagConstraints gbc_filterEstado = new GridBagConstraints();
+		gbc_filterEstado.gridwidth = 2;
+		gbc_filterEstado.insets = new Insets(0, 0, 5, 5);
+		gbc_filterEstado.fill = GridBagConstraints.HORIZONTAL;
+		gbc_filterEstado.gridx = 3;
+		gbc_filterEstado.gridy = 20;
+		getContentPane().add(filterEstado, gbc_filterEstado);
+		
+		JButton btnFiltar = new JButton("Filtrar");
+		btnFiltar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				search();
+				fillFilteredTable();
+			}
+		});
+		GridBagConstraints gbc_btnFiltar = new GridBagConstraints();
+		gbc_btnFiltar.insets = new Insets(0, 0, 0, 5);
+		gbc_btnFiltar.gridx = 3;
+		gbc_btnFiltar.gridy = 21;
+		getContentPane().add(btnFiltar, gbc_btnFiltar);
+		
+		JButton btnLimpiar = new JButton("Limpiar Filtros");
+		btnLimpiar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				refreshTable(null);
+			}
+		});
+		GridBagConstraints gbc_btnLimpiar = new GridBagConstraints();
+		gbc_btnLimpiar.insets = new Insets(0, 0, 0, 5);
+		gbc_btnLimpiar.gridx = 4;
+		gbc_btnLimpiar.gridy = 21;
+		getContentPane().add(btnLimpiar, gbc_btnLimpiar);
 
 		if (userType.getClass() == Analista.class) {
 			
 			JButton btnEliminar = new JButton("Eliminar");
 			btnEliminar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					bo.delete(getIdFromTable());
+					dao.delete(getIdFromTable());
 				}
 			});
 			GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
@@ -571,13 +670,13 @@ public class viewCrud extends JInternalFrame {
 
 	protected void fillTable() {
 
-		ArrayList<Estudiante> estudiantes = (ArrayList<Estudiante>) bo.getAllEstudiantes();
+		ArrayList<Estudiante> estudiantes = (ArrayList<Estudiante>) dao.getAllEstudiantes();
 			ArrayList<Estudiante> est = new ArrayList<>(estudiantes);
 		
-		ArrayList<Tutor> tutores = (ArrayList<Tutor>) bo.getAllTutores();
+		ArrayList<Tutor> tutores = (ArrayList<Tutor>) dao.getAllTutores();
 			ArrayList<Tutor> tut = new ArrayList<>(tutores);
 
-		model.setRowCount(0);
+		table.model.setRowCount(0);
 		
 		for (Usuario u : est) {
 
@@ -598,7 +697,7 @@ public class viewCrud extends JInternalFrame {
 			row[13] = u.getUsuario();
 			row[14] = u.getClave();
 			row[15] = u.getEstado();
-			model.addRow(row);
+			table.model.addRow(row);
 
 		}
 
@@ -621,7 +720,7 @@ public class viewCrud extends JInternalFrame {
 			row[13] = u.getUsuario();
 			row[14] = u.getClave();
 			row[15] = u.getEstado();
-			model.addRow(row);
+			table.model.addRow(row);
 
 		}
 	}

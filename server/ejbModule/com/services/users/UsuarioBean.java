@@ -1,5 +1,6 @@
 package com.services.users;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,11 +9,17 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Predicate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import com.dto.UsuarioBusquedaVO;
 import com.entities.Estudiante;
+import com.entities.Evento;
+import com.entities.Itr;
 import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumUsuarioEstado;
@@ -128,42 +135,33 @@ public class UsuarioBean implements UsuarioBeanRemote {
 		return query.getResultList();
 	}
 
-//	private Usuario buildGeneric(UsuarioVO vo) {
-//		Usuario user = null;
-//		user.setUsuario(null);
-//		user.setClave(null);
-//		user.setUsuario(vo.getUsuario());
-//		user.setClave(vo.getClave());
-//		user.setDocumento(vo.getDocumento());
-//		user.setNombre1(vo.getNombre1());
-//		user.setNombre2(vo.getNombre2());
-//		user.setApellido1(vo.getApellido1());
-//		user.setApellido2(vo.getApellido2());
-//		user.setFechaNac(vo.getFechaNac());
-//		user.setMail(vo.getMail());
-//		user.setMailUtec(vo.getMailUtec());
-//		user.setTelefono(vo.getTelefono());
-//		user.setGenero(vo.getGenero());
-//		user.setItr(vo.getItr());
-//		user.setLocalidad(vo.getLocalidad());
-//		user.setDepartamento(vo.getDepartamento());
-//		return user;
-//	}
-//	
-//	private Usuario buildEstudiante(EstudianteVO vo) {
-//		Usuario estudiante = buildGeneric(vo);
-//		estudiante = Estudiante.builder()
-//				.generacion(vo.getGeneracion())
-//				.build();
-//		return estudiante;
-//	}
-//	
-//	private Usuario buildTutor(TutorVO vo) {
-//		Usuario tutor = buildGeneric(vo);
-//		tutor = Tutor.builder()
-//				.area(vo.getArea())
-//				.tipo(vo.getTipo())
-//				.build();
-//		return tutor;
-//	}
+	@Override
+	public List<Usuario> busqueda(UsuarioBusquedaVO vo) {
+		var qb = em.getCriteriaBuilder();
+		var query = qb.createQuery(Usuario.class);
+		var root = query.from(Usuario.class);
+		query.select(root);
+		
+		List<Predicate> predicates = new ArrayList<Predicate>();
+		
+		if (vo.getItr() != null) {
+			Join<Usuario, Itr> joinItr = root.join("itr", JoinType.INNER);
+			predicates.add(qb.equal(joinItr.get("idItr"), vo.getItr().getIdItr()));
+		}
+		
+		EnumUsuarioEstado estado = vo.getEstado();
+		if (estado != null) {
+			if(estado.equals(EnumUsuarioEstado.ACTIVO)) {
+				predicates.add(qb.equal(root.get("estado"), vo.getEstado()));
+			} else if(estado.equals(EnumUsuarioEstado.PENDIENTE)) {
+				predicates.add(qb.equal(root.get("estado"), vo.getEstado()));
+			} else if(estado.equals(EnumUsuarioEstado.ELIMINADO)) {
+				predicates.add(qb.equal(root.get("estado"), vo.getEstado()));
+			}
+		}
+		
+		query.where(qb.and(predicates.toArray(new Predicate[predicates.size()])));
+		return em.createQuery(query).getResultList();
+	}
+
 }
