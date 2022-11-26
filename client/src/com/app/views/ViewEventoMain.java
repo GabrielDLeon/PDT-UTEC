@@ -23,6 +23,7 @@ import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.entities.Usuario;
+import com.enumerators.EnumEventoEstado;
 import com.enumerators.EnumEventoTipo;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -48,18 +49,10 @@ import javax.swing.JTextField;
 @SuppressWarnings("serial")
 public class ViewEventoMain extends JFrame {
 	
-	private DefaultTableModel model = new DefaultTableModel() {
-		@Override
-	    public boolean isCellEditable(int row, int column) {
-	       return false;
-	    }
-	};
-
 	private JPanel panel = new JPanel();
 	private JPanel contentPane;
-	private JPanel panel_1;
 	
-	private JTable tEvento;
+	private CustomTable tEvento;
 	private JScrollPane scrollPane = new JScrollPane();
 	
 	private JButton btnConvocatoria;
@@ -69,32 +62,14 @@ public class ViewEventoMain extends JFrame {
 	private JButton btnBuscar;
 	private JButton btnClean;
 	
-	private JLabel lblTipo = new JLabel("Tipo de Evento");
-	private JLabel lblModalidad = new JLabel("Modalidad");
-	private JLabel lblItr = new JLabel("ITR");
-	private JLabel lblEstado = new JLabel("Estado del Evento");
-	private JLabel lblFiltro = new JLabel("Filtros de búsqueda");
-	private JLabel lblBuscador =  new JLabel("Nombre");
-	private JLabel lblTutor = new JLabel("Tutor");
-
-	private JTextField inputBuscador = new JTextField();
-
-	private JComboBox<Itr> selectItr = new JComboBox<Itr>();
-	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
-	private JComboBox<EventoModalidad> selectModalidad = new JComboBox<EventoModalidad>();
-	private JComboBox<EventoEstado> selectEstado= new JComboBox<EventoEstado>();
-	private JComboBox<Tutor> selectTutor = new JComboBox<Tutor>();
-	
 	// Para cambiar la perspectiva de usuario se debe modificar el new User() por el tipo de usuario deseado
 	// Por ejemplo, si queremos usar la vista Analista: Usuario user = new Analista();
-	
 	private Usuario user;
 	private EventoBO bo;
-	private EventoEstadoBO estadoBO = new EventoEstadoBO();
-	private EventoModalidadBO modalidadBO = new EventoModalidadBO();
 
 	private List<Evento> eventos;
-	
+	private final JTextField textField = new JTextField();
+	private PanelEventoFiltro panelFiltro;
 	
 	// Este método main después se borra
 	// Solo se utiliza en desarrollo
@@ -116,7 +91,7 @@ public class ViewEventoMain extends JFrame {
 	
 	private void setup() {
 		// Si necesitas utilizar WindowBuilder tienes que comentar la llamada al método setupComboBox()
-		setupComboBox();
+//		setupComboBox();
 		setGridBagLayout();
 		eventos = bo.getList();
 		refreshTable(null);
@@ -124,8 +99,11 @@ public class ViewEventoMain extends JFrame {
 	}
 	
 	public ViewEventoMain(Usuario user) {
+		textField.setColumns(10);
 		this.user = user;
 		this.bo = new EventoBO(user);
+		
+		panelFiltro = new PanelEventoFiltro(user);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 900, 606);
@@ -135,21 +113,8 @@ public class ViewEventoMain extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		contentPane.add(panel, BorderLayout.CENTER);
 		
-		lblFiltro.setFont(RobotoFont.getSubTitulo());
-		panel_1 = new JPanel();
-		
-		model.addColumn("ID");
-		model.addColumn("Título");
-		model.addColumn("Tipo");
-		model.addColumn("Modalidad");
-		model.addColumn("Estado");
-		model.addColumn("Inicio");
-		model.addColumn("Fin");
-		model.addColumn("ITR");
-		
-		tEvento = new JTable(model);
-		tEvento.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		tEvento.setFillsViewportHeight(true);
+		tEvento = new CustomTable();
+		tEvento.setColumns("ID", "Título","Tipo", "Modalidad", "Estado", "Inicio", "Fin", "ITR");
 		scrollPane.setViewportView(tEvento);
 		tEvento.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent lse) {
@@ -162,15 +127,6 @@ public class ViewEventoMain extends JFrame {
                 }
             }
         });
-		tEvento.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				int key = e.getKeyChar();
-				if (key == 27) {
-					tEvento.clearSelection();
-				}
-			}
-		});
 		
 		btnConvocatoria = new JButton("Convocatoria");
 		btnConvocatoria.setEnabled(false);
@@ -213,18 +169,18 @@ public class ViewEventoMain extends JFrame {
 		btnClean = new JButton("Limpiar Filtros");
 		btnClean.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				cleanFilters();
+				clean();
 			}
 		});
 		
 		setup();
 	}
-
+	
 	private void setGridBagLayout() {
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 50, 50, 50, 0, 200, 0, 0};
 		gbl_panel.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_panel.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, 2.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.columnWeights = new double[]{0.0, 1.0, 1.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_panel.rowWeights = new double[]{0.0, 1.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
@@ -236,129 +192,12 @@ public class ViewEventoMain extends JFrame {
 		gbc_scrollPane.gridy = 1;
 		panel.add(scrollPane, gbc_scrollPane);
 		
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.gridheight = 4;
-		gbc_panel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_panel_1.gridx = 5;
-		gbc_panel_1.gridy = 1;
-		panel.add(panel_1, gbc_panel_1);
-		
-		GridBagLayout gbl_panel_1 = new GridBagLayout();
-		gbl_panel_1.columnWidths = new int[]{20, 0, 20, 0};
-		gbl_panel_1.rowHeights = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_panel_1.columnWeights = new double[]{1.0, 5.0, 1.0, Double.MIN_VALUE};
-		gbl_panel_1.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		panel_1.setLayout(gbl_panel_1);
-		
-		GridBagConstraints gbc_lblFiltro = new GridBagConstraints();
-		gbc_lblFiltro.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFiltro.gridx = 1;
-		gbc_lblFiltro.gridy = 1;
-		panel_1.add(lblFiltro, gbc_lblFiltro);
-		
-		GridBagConstraints gbc_lblBuscador = new GridBagConstraints();
-		gbc_lblBuscador.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblBuscador.insets = new Insets(0, 0, 5, 5);
-		gbc_lblBuscador.gridx = 1;
-		gbc_lblBuscador.gridy = 3;
-		panel_1.add(lblBuscador, gbc_lblBuscador);
-		
-		GridBagConstraints gbc_inputBuscador = new GridBagConstraints();
-		gbc_inputBuscador.fill = GridBagConstraints.HORIZONTAL;
-		gbc_inputBuscador.insets = new Insets(0, 0, 5, 5);
-		gbc_inputBuscador.gridx = 1;
-		gbc_inputBuscador.gridy = 4;
-		panel_1.add(inputBuscador, gbc_inputBuscador);
-		inputBuscador.setColumns(10);
-		
-		GridBagConstraints gbc_lblTipo = new GridBagConstraints();
-		gbc_lblTipo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblTipo.insets = new Insets(0, 0, 5, 5);
-		gbc_lblTipo.gridx = 1;
-		gbc_lblTipo.gridy = 5;
-		panel_1.add(lblTipo, gbc_lblTipo);
-		
-		GridBagConstraints gbc_selectTipo = new GridBagConstraints();
-		gbc_selectTipo.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectTipo.insets = new Insets(0, 0, 5, 5);
-		gbc_selectTipo.gridx = 1;
-		gbc_selectTipo.gridy = 6;
-		panel_1.add(selectTipo, gbc_selectTipo);
-		
-		GridBagConstraints gbc_lblModalidad = new GridBagConstraints();
-		gbc_lblModalidad.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblModalidad.insets = new Insets(0, 0, 5, 5);
-		gbc_lblModalidad.gridx = 1;
-		gbc_lblModalidad.gridy = 7;
-		panel_1.add(lblModalidad, gbc_lblModalidad);
-		
-		GridBagConstraints gbc_selectModalidad = new GridBagConstraints();
-		gbc_selectModalidad.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectModalidad.insets = new Insets(0, 0, 5, 5);
-		gbc_selectModalidad.gridx = 1;
-		gbc_selectModalidad.gridy = 8;
-		panel_1.add(selectModalidad, gbc_selectModalidad);
-
-		if (selectItr.getItemCount() > 0) {
-			GridBagConstraints gbc_lblItr = new GridBagConstraints();
-			gbc_lblItr.fill = GridBagConstraints.HORIZONTAL;
-			gbc_lblItr.insets = new Insets(0, 0, 5, 5);
-			gbc_lblItr.gridx = 1;
-			gbc_lblItr.gridy = 9;
-			panel_1.add(lblItr, gbc_lblItr);
-			
-			GridBagConstraints gbc_selectItr = new GridBagConstraints();
-			gbc_selectItr.fill = GridBagConstraints.HORIZONTAL;
-			gbc_selectItr.insets = new Insets(0, 0, 5, 5);
-			gbc_selectItr.gridx = 1;
-			gbc_selectItr.gridy = 10;
-			panel_1.add(selectItr, gbc_selectItr);
-		}
-		
-		GridBagConstraints gbc_lblEstado = new GridBagConstraints();
-		gbc_lblEstado.fill = GridBagConstraints.HORIZONTAL;
-		gbc_lblEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_lblEstado.gridx = 1;
-		gbc_lblEstado.gridy = 11;
-		panel_1.add(lblEstado, gbc_lblEstado);
-		
-		GridBagConstraints gbc_selectEstado = new GridBagConstraints();
-		gbc_selectEstado.fill = GridBagConstraints.HORIZONTAL;
-		gbc_selectEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_selectEstado.gridx = 1;
-		gbc_selectEstado.gridy = 12;
-		panel_1.add(selectEstado, gbc_selectEstado);
-		
-		if (user.getClass().equals(Analista.class) && selectTutor.getItemCount() > 0) {
-			GridBagConstraints gbc_lblTutor = new GridBagConstraints();
-			gbc_lblTutor.anchor = GridBagConstraints.WEST;
-			gbc_lblTutor.insets = new Insets(0, 0, 5, 5);
-			gbc_lblTutor.gridx = 1;
-			gbc_lblTutor.gridy = 13;
-			panel_1.add(lblTutor, gbc_lblTutor);
-			
-			GridBagConstraints gbc_selectTutor = new GridBagConstraints();
-			gbc_selectTutor.insets = new Insets(0, 0, 5, 5);
-			gbc_selectTutor.fill = GridBagConstraints.HORIZONTAL;
-			gbc_selectTutor.gridx = 1;
-			gbc_selectTutor.gridy = 14;
-			panel_1.add(selectTutor, gbc_selectTutor);
-		}
-		
-		GridBagConstraints gbc_btnClean = new GridBagConstraints();
-		gbc_btnClean.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnClean.insets = new Insets(0, 0, 5, 5);
-		gbc_btnClean.gridx = 1;
-		gbc_btnClean.gridy = 15;
-		panel_1.add(btnClean, gbc_btnClean);
-		
-		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
-		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnBuscar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnBuscar.gridx = 1;
-		gbc_btnBuscar.gridy = 16;
-		panel_1.add(btnBuscar, gbc_btnBuscar);
+		GridBagConstraints gbc_panelFiltro = new GridBagConstraints();
+		gbc_panelFiltro.insets = new Insets(0, 0, 5, 5);
+		gbc_panelFiltro.fill = GridBagConstraints.BOTH;
+		gbc_panelFiltro.gridx = 5;
+		gbc_panelFiltro.gridy = 1;
+		panel.add(panelFiltro, gbc_panelFiltro);
 		
 		GridBagConstraints gbc_btnConvocatoria = new GridBagConstraints();
 		gbc_btnConvocatoria.gridwidth = 3;
@@ -367,6 +206,20 @@ public class ViewEventoMain extends JFrame {
 		gbc_btnConvocatoria.gridx = 1;
 		gbc_btnConvocatoria.gridy = 2;
 		panel.add(btnConvocatoria, gbc_btnConvocatoria);
+		
+		GridBagConstraints gbc_btnBuscar = new GridBagConstraints();
+		gbc_btnBuscar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnBuscar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnBuscar.gridx = 5;
+		gbc_btnBuscar.gridy = 2;
+		panel.add(btnBuscar, gbc_btnBuscar);
+		
+		GridBagConstraints gbc_btnLimpiar = new GridBagConstraints();
+		gbc_btnLimpiar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnLimpiar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnLimpiar.gridx = 5;
+		gbc_btnLimpiar.gridy = 3;
+		panel.add(btnClean, gbc_btnLimpiar);
 		
 		if (user.getClass().equals(Analista.class)) {
 			GridBagConstraints gbc_btnCreate = new GridBagConstraints();
@@ -391,34 +244,11 @@ public class ViewEventoMain extends JFrame {
 			panel.add(btnDelete, gbc_btnDelete);
 		}
 	}
-
-	private void setupComboBox() {
-		selectTipo = new JComboBox<EnumEventoTipo>(EnumEventoTipo.values());
-		try {
-			List<Itr> itrs = BeanRemoteManager.getBeanItr().findAll();
-			selectItr = new JComboBox<Itr>(itrs.toArray(new Itr[itrs.size()]));
-			
-			List<EventoModalidad> modalidades = modalidadBO.findByStatus(true);
-			selectModalidad = new JComboBox<EventoModalidad>(modalidades.toArray(new EventoModalidad[modalidades.size()]));
-			
-			List<EventoEstado> estados = estadoBO.findByStatus(true);
-			selectEstado = new JComboBox<EventoEstado>(estados.toArray(new EventoEstado[estados.size()]));
-			
-			if (user.getClass().equals(Analista.class)) {
-				List<Tutor> tutores = BeanRemoteManager.getBeanUsuario().findAllTutores();
-				selectTutor = new JComboBox<Tutor>(tutores.toArray(new Tutor[tutores.size()]));
-			}
-		} catch (NamingException e) {
-			e.printStackTrace();
-		}
-		cleanFilters();
-	}
-	
 	
 	// Funciones sobre el Tablero
 	
 	public void refreshTable(EventoBusquedaVO vo) {
-		model.setRowCount(0);
+		tEvento.model.setRowCount(0);
 		if (vo != null) {
 			eventos = bo.search(vo);
 		} else {
@@ -436,7 +266,7 @@ public class ViewEventoMain extends JFrame {
 				row[5] = evento.getFechaInicio();
 				row[6] = evento.getFechaFin();
 				row[7] = evento.getItr();
-				model.addRow(row);
+				tEvento.model.addRow(row);
 			}
 		} catch (NullPointerException e) {
 			JOptionPane.showMessageDialog(null, e.getMessage());
@@ -451,41 +281,15 @@ public class ViewEventoMain extends JFrame {
 	}
 	
 	private void search() {
-		String nombre = inputBuscador.getText();
-		EnumEventoTipo tipo = (EnumEventoTipo) selectTipo.getSelectedItem();
-		EventoModalidad modalidad = (EventoModalidad) selectModalidad.getSelectedItem();
-		EventoEstado estado = (EventoEstado) selectEstado.getSelectedItem();
-		Itr itr = (Itr) selectItr.getSelectedItem();
-		
-		Tutor tutor = (user.getClass().equals(Tutor.class))
-				? (Tutor) user
-				: (Tutor) selectTutor.getSelectedItem();
-		
-		EventoBusquedaVO vo = EventoBusquedaVO.builder()
-				.nombre(nombre)
-				.tipo(tipo)
-				.modalidad(modalidad)
-				.estado(estado)
-				.itr(itr)
-				.tutor(tutor)
-				.build();
-		
-		eventos = bo.search(vo);
+		EventoBusquedaVO vo = panelFiltro.search();
 		refreshTable(vo);
 	}
 	
-	private void cleanFilters() {
-		inputBuscador.setText("");
-		selectTipo.setSelectedItem(null);
-		selectModalidad.setSelectedItem(null);
-		selectItr.setSelectedItem(null);
-		selectEstado.setSelectedItem(null);
-		selectTutor.setSelectedItem(null);
-		
-		eventos = bo.getList();
+	
+	private void clean() {
+		panelFiltro.cleanFilters();
 		refreshTable(null);
 	}
-	
 	
 	// Funciones de DDL
 
@@ -494,6 +298,7 @@ public class ViewEventoMain extends JFrame {
 		viewRegistro.setVisible(true);
 		viewRegistro.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
+	
 
 	private void update() {
 		Evento evento = getEventoFromTable();
@@ -501,6 +306,7 @@ public class ViewEventoMain extends JFrame {
 		viewRegistro.setVisible(true);
 		viewRegistro.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
+	
 
 	private void delete() {
 		int row = tEvento.getSelectedRow();
@@ -513,6 +319,7 @@ public class ViewEventoMain extends JFrame {
 			JOptionPane.showMessageDialog(null, mensaje);
 		}
 	}
+	
 	
 	private void showConvocatoria() {
 		Evento evento = getEventoFromTable();

@@ -3,9 +3,6 @@ package com.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,7 +35,6 @@ public class Estudiante extends Usuario implements Serializable {
 
 	//bi-directional one-to-many association to Asistencia
 	@ToString.Exclude
-	@LazyCollection(LazyCollectionOption.FALSE)
 	@OneToMany(mappedBy="estudiante", orphanRemoval = true)
 	List<Asistencia> asistencias;
 

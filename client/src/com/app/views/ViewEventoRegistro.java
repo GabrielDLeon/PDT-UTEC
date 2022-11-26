@@ -24,7 +24,7 @@ import com.app.controllers.EventoModalidadBO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
-import com.app.test.ViewUsuarioSeleccion;
+import com.app.test.ViewEventoResponsables;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -44,7 +44,9 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
@@ -60,7 +62,7 @@ public class ViewEventoRegistro extends JFrame {
 	private JDateChooser dateInicio = new JDateChooser();
 	private JDateChooser dateFin = new JDateChooser();
 	
-	private ViewUsuarioSeleccion viewUsuarioSeleccion;
+	private ViewEventoResponsables viewResponsables;
 	private ViewEventoMain eventoTable;
 
 	private JComboBox<EnumEventoTipo> selectTipo = new JComboBox<EnumEventoTipo>();
@@ -77,7 +79,7 @@ public class ViewEventoRegistro extends JFrame {
 	
 	private Evento editEvent;
 	
-	private List<Tutor> tutores = new ArrayList<Tutor>();
+	private Set<Tutor> tutores = new HashSet<Tutor>();
 	
 	// Este método main después se borra
 	// Solo se utiliza en desarrollo
@@ -103,6 +105,7 @@ public class ViewEventoRegistro extends JFrame {
 	 */
 	public ViewEventoRegistro(ViewEventoMain eventoTable) {
 		this.eventoTable = eventoTable;
+		viewResponsables = new ViewEventoResponsables(null, null);
 		init();
 		setupComboBox();
 		cleanForm();
@@ -113,6 +116,7 @@ public class ViewEventoRegistro extends JFrame {
 		this.eventoTable = eventoTable;
 		this.editEvent = evento;
 		this.tutores = evento.getTutores();
+		viewResponsables = new ViewEventoResponsables(tutores, evento);
 		init();
 		setupComboBox();
 		fillFields();
@@ -209,10 +213,11 @@ public class ViewEventoRegistro extends JFrame {
 		if (result) {
 			try {
 				Evento evento = getEventoFromForm();
-//				evento.setTutores(viewUsuarioSeleccion.getTutores());
+				evento.setTutores(viewResponsables.getSeleccionados());
 				if (editEvent == null) {
 					bo.create(evento);					
 				} else {
+					System.out.println(evento.getTutores());
 					evento.setIdEvento(editEvent.getIdEvento());
 					evento.setEstado((EventoEstado) selectEstado.getSelectedItem());
 					bo.update(evento);
@@ -225,13 +230,13 @@ public class ViewEventoRegistro extends JFrame {
 			
 			JOptionPane.showMessageDialog(null, (editEvent == null)
 					? "Se insertó el Evento correctamente en el Sistema"
-							: "Se modificó el Evento correctamente en el Sistema"
-					);
+					: "Se modificó el Evento correctamente en el Sistema"
+			);
 			
 			if (editEvent == null) {
 				cleanForm();
-				viewUsuarioSeleccion.dispose();
-				viewUsuarioSeleccion = new ViewUsuarioSeleccion();
+				viewResponsables.dispose();
+				viewResponsables = new ViewEventoResponsables(null, null);
 			}
 		}
 	}
@@ -262,14 +267,11 @@ public class ViewEventoRegistro extends JFrame {
 	// Manejadores de UI
 
 	protected void responsables() {
-		viewUsuarioSeleccion.setVisible(true);
-//		viewUsuarioSeleccion.getTutores();
-		viewUsuarioSeleccion.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		viewResponsables.setVisible(true);
+		viewResponsables.setDefaultCloseOperation(HIDE_ON_CLOSE);
 	}
 	
 	private void init() {
-		viewUsuarioSeleccion = new ViewUsuarioSeleccion();
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 520, 585);
 		
@@ -283,24 +285,17 @@ public class ViewEventoRegistro extends JFrame {
 		
 		// Labels
 		
-		lblTitulo = new JLabel((editEvent == null)
-				? "Alta de Evento"
-				: "Modificación de Evento"
-		);
+		lblTitulo = new JLabel((editEvent == null) ? "Alta de Evento" : "Modificación de Evento");
 		lblTitulo.setFont(RobotoFont.getTitulo());
 		
-		lblItr = new JLabel("ITR");
-		
-		lblLocalizacion = new JLabel("Localización");
-		
+		lblNombre = new JLabel("Título del Evento (*)");
 		lblTipo = new JLabel("Tipo de Evento");
+		lblFechaInicio = new JLabel("Fecha de Inicio (*)");
+		lblFechaFinal = new JLabel("Fecha de Fin");
 		lblModalidad = new JLabel("Modalidad del Evento");
-		
-		lblFechaInicio = new JLabel("Inicio");
-		lblFechaFinal = new JLabel("Final");
-
+		lblItr = new JLabel("ITR");
+		lblLocalizacion = new JLabel("Localización");
 		lblEstado = new JLabel("Estado del Evento");
-		lblNombre = new JLabel("Nombre del Evento");
 		
 		lblResNombre = new JLabel(" ");
 		lblResNombre.setForeground(Color.RED);
@@ -322,6 +317,23 @@ public class ViewEventoRegistro extends JFrame {
 
 		inputLocalizacion = new JTextField();
 		inputLocalizacion.setColumns(10);
+		
+		
+		// Buttons
+		
+		btnCreate = new JButton((editEvent == null) ? "Ingresar Evento" : "Modificar Evento");
+		btnCreate.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				create();
+			}
+		});
+		
+		btnCancel = new JButton("Cancelar");
+		btnCancel.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				cancelar();
+			}
+		});
 		
 		btnResponsables = new JButton();
 		btnResponsables.setText("Administrar Encargados");
@@ -499,32 +511,12 @@ public class ViewEventoRegistro extends JFrame {
 		gbc_btnResponsables.gridy = 20;
 		panel.add(btnResponsables, gbc_btnResponsables);
 		
-				
-				// Buttons
-				
-				btnCreate = new JButton((editEvent == null)
-						? "Ingresar Evento"
-						: "Modificar Evento"
-				);
-				btnCreate.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						create();
-					}
-				});
-				
-				GridBagConstraints gbc_btnIngresar = new GridBagConstraints();
-				gbc_btnIngresar.fill = GridBagConstraints.HORIZONTAL;
-				gbc_btnIngresar.insets = new Insets(0, 0, 5, 5);
-				gbc_btnIngresar.gridx = 1;
-				gbc_btnIngresar.gridy = 21;
-				panel.add(btnCreate, gbc_btnIngresar);
-		
-		btnCancel = new JButton("Cancelar");
-		btnCancel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				cancelar();
-			}
-		});
+		GridBagConstraints gbc_btnIngresar = new GridBagConstraints();
+		gbc_btnIngresar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnIngresar.insets = new Insets(0, 0, 5, 5);
+		gbc_btnIngresar.gridx = 1;
+		gbc_btnIngresar.gridy = 21;
+		panel.add(btnCreate, gbc_btnIngresar);
 		
 		GridBagConstraints gbc_btnCancelar = new GridBagConstraints();
 		gbc_btnCancelar.fill = GridBagConstraints.HORIZONTAL;

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.ejb.Remote;
 
-import com.dto.UsuarioVO;
 import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.entities.Usuario;

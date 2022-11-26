@@ -1,7 +1,6 @@
 package com.app.controllers;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -11,7 +10,6 @@ import com.entities.Asistencia;
 import com.entities.AsistenciaKey;
 import com.entities.Estudiante;
 import com.entities.Evento;
-import com.entities.Usuario;
 import com.enumerators.EnumAsistenciaEstado;
 import com.services.eventos.AsistenciaBeanRemote;
 import com.services.eventos.EventoBeanRemote;

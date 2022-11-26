@@ -5,7 +5,6 @@ import java.util.List;
 import javax.ejb.Remote;
 
 import com.entities.Asistencia;
-import com.entities.Estudiante;
 import com.entities.Evento;
 import com.enumerators.EnumAsistenciaEstado;
 
@@ -24,6 +23,7 @@ public interface AsistenciaBeanRemote {
 	void findById(Long idEvento, Long idEstudiante);
 	List<Asistencia> findByEvento(Long idEvento);
 	List<Asistencia> findByStatus(Long idEvento, EnumAsistenciaEstado status);
+	List<Asistencia> findByEstudiante(Long idEstudiante);
 	void clear(Evento evento);
 	
 }

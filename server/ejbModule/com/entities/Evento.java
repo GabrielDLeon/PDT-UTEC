@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -18,6 +19,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -76,21 +78,21 @@ public class Evento implements Serializable {
 	// bi-directional many-to-one association to Constancia
 	@ToString.Exclude
 	@OneToMany(mappedBy = "evento")
-	private List<Constancia> constancias;
+	private Set<Constancia> constancias;
 
 	// bi-directional many-to-many association to Analista
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ToString.Exclude
 	@ManyToMany(mappedBy = "eventos")
-	private List<Analista> analistas;
+	private Set<Analista> analistas;
 
 	// uni-directional many-to-many association to Tutor
-	@ManyToMany
+	@ManyToMany(cascade = CascadeType.REMOVE)
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@ToString.Exclude
 	@JoinTable(name = "RESPONSABLES", joinColumns = { @JoinColumn(name = "EVENTO") }, inverseJoinColumns = {
 			@JoinColumn(name = "TUTOR") })
-	private List<Tutor> tutores;
+	private Set<Tutor> tutores;
 
 	public String toStringAll() {
 		return "Evento [idEvento=" + idEvento + ", nombre=" + nombre + ", fechaInicio=" + fechaInicio + ", fechaFin="
@@ -99,6 +101,12 @@ public class Evento implements Serializable {
 	
 	public Evento removeAsitencia(Asistencia asistencia) {
 		asistencias.remove(asistencia);
+		return this;
+	}
+
+	// TODO: Revisar esto que no anda
+	public Evento removeTutor(Tutor tutor) {
+		tutores.remove(tutor);
 		return this;
 	}
 

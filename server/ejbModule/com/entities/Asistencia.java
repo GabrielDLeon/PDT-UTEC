@@ -26,8 +26,9 @@ import java.math.BigDecimal;
 @Table(name = "ASISTENCIAS")
 @NamedQueries({
 		@NamedQuery(name = "Asistencia.find", query = "SELECT a FROM Asistencia a WHERE a.id.idEvento = :idEvento AND a.id.idEstudiante = :idEstudiante"),
-		@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id"),
-		@NamedQuery(name = "Asistencia.findByStatus", query = "SELECT a FROM Asistencia a JOIN FETCH a.evento e WHERE e.idEvento = :id AND a.estado = :status") })
+		@NamedQuery(name = "Asistencia.findByEvento", query = "SELECT a FROM Asistencia a JOIN a.evento e WHERE e.idEvento = :id"),
+		@NamedQuery(name = "Asistencia.findByEstudiante", query = "SELECT a FROM Asistencia a JOIN a.estudiante e WHERE e.idUsuario = :id"),
+		@NamedQuery(name = "Asistencia.findByStatus", query = "SELECT a FROM Asistencia a JOIN a.evento e WHERE e.idEvento = :id AND a.estado = :status") })
 public class Asistencia implements Serializable {
 	private static final long serialVersionUID = 1L;
 

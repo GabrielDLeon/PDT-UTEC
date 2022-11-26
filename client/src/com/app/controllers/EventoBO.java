@@ -10,14 +10,7 @@ import com.app.singleton.BeanRemoteManager;
 import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
-import com.entities.EventoEstado;
-import com.entities.EventoModalidad;
-import com.entities.Itr;
-import com.entities.Tutor;
 import com.entities.Usuario;
-import com.enumerators.EnumEventoEstado;
-import com.enumerators.EnumEventoModalidad;
-import com.enumerators.EnumEventoTipo;
 import com.services.eventos.EventoBeanRemote;
 
 public class EventoBO {

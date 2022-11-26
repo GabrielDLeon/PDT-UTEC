@@ -9,7 +9,6 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
 import com.entities.EventoEstado;
-import com.entities.EventoModalidad;
 
 @Stateless
 public class EventoEstadoBean implements EventoEstadoBeanRemote {

@@ -1,11 +1,13 @@
 package com.dto;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 import com.entities.EventoEstado;
 import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
+import com.enumerators.EnumEventoEstado;
 import com.enumerators.EnumEventoTipo;
 
 import lombok.AllArgsConstructor;
@@ -29,5 +31,7 @@ public class EventoBusquedaVO implements Serializable {
 	private EnumEventoTipo tipo;
 	private Itr itr;
 	private Tutor tutor;
+	private LocalDateTime fechaInicio;
+	private EnumEventoEstado fechaEstado;
 	
 }

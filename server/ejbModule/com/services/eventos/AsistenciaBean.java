@@ -1,13 +1,11 @@
 package com.services.eventos;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
@@ -15,7 +13,6 @@ import org.hibernate.SessionFactory;
 
 import com.entities.Asistencia;
 import com.entities.AsistenciaKey;
-import com.entities.Estudiante;
 import com.entities.Evento;
 import com.enumerators.EnumAsistenciaEstado;
 
@@ -57,7 +54,6 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
     	session = factory.openSession();
     	session.beginTransaction();
     	
-    	
     	AsistenciaKey key = new AsistenciaKey(idEvento, idEstudiante);
     	Asistencia asistencia = em.find(Asistencia.class, key);
     	if (asistencia == null) throw new Exception("No se encontró el registro de Asistencia");
@@ -78,6 +74,13 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
     	query.setParameter("idEstudiante", query);
     }
 
+    @Override
+	public List<Asistencia> findByEstudiante(Long idEstudiante) {
+		TypedQuery<Asistencia> query = em.createNamedQuery("Asistencia.findByEstudiante", Asistencia.class);
+		query.setParameter("id", idEstudiante);
+		return query.getResultList();
+	}
+    
 	@Override
 	public List<Asistencia> findByEvento(Long idEvento) {
 		TypedQuery<Asistencia> query = em.createNamedQuery("Asistencia.findByEvento", Asistencia.class);

@@ -11,6 +11,7 @@ import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Path;
 import javax.persistence.criteria.Predicate;
 
 import org.hibernate.Session;
@@ -24,6 +25,7 @@ import com.entities.EventoModalidad;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.enumerators.EnumAsistenciaEstado;
+import com.enumerators.EnumEventoEstado;
 
 @Stateless
 public class EventoBean implements EventoBeanRemote {
@@ -108,22 +110,19 @@ public class EventoBean implements EventoBeanRemote {
 		if (vo.getTipo() != null)
 			predicates.add(qb.equal(root.get("tipo"), vo.getTipo()));
 		
-		/*
-		EnumEventoEstado estado = vo.getEstado();
+		EnumEventoEstado estado = vo.getFechaEstado();
 		if (estado != null) {
 			Path<LocalDateTime> dateStartPath = root.get("fechaInicio");
 			Path<LocalDateTime> dateFinishPath = root.get("fechaFin");
-			LocalDateTime now = LocalDateTime.now();
-			if (estado.equals(EnumEventoEstado.FUTURO)){
-				predicates.add(qb.greaterThan(dateStartPath, now));
-			} else if (estado.equals(EnumEventoEstado.CORRIENTE)) {
-				predicates.add(qb.lessThan(dateStartPath, now));
-				predicates.add(qb.greaterThan(dateFinishPath, now));
-			} else if (estado.equals(EnumEventoEstado.FINALIZADO)) {
-				predicates.add(qb.lessThan(dateFinishPath, now));
+			if (estado.equals(EnumEventoEstado.DESDE)){
+				predicates.add(qb.greaterThan(dateStartPath, vo.getFechaInicio()));
+			} else if (estado.equals(EnumEventoEstado.EXACTA)) {
+				predicates.add(qb.lessThan(dateStartPath, vo.getFechaInicio()));
+				predicates.add(qb.greaterThan(dateFinishPath, vo.getFechaInicio()));
+			} else if (estado.equals(EnumEventoEstado.HASTA)) {
+				predicates.add(qb.lessThan(dateFinishPath, vo.getFechaInicio()));
 			}
 		}
-		*/
 		
 		if (vo.getEstado() != null) {
 			Join<Evento, EventoEstado> joinEstado = root.join("estado", JoinType.INNER);

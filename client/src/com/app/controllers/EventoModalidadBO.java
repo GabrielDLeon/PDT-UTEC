@@ -5,9 +5,7 @@ import java.util.List;
 import javax.naming.NamingException;
 
 import com.app.singleton.BeanRemoteManager;
-import com.entities.EventoEstado;
 import com.entities.EventoModalidad;
-import com.services.eventos.EventoEstadoBeanRemote;
 import com.services.eventos.EventoModalidadBeanRemote;
 
 public class EventoModalidadBO {
