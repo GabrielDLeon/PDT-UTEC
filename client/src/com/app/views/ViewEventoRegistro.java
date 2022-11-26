@@ -49,7 +49,7 @@ import java.util.Set;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class ViewEventoRegistro extends JInternalFrame {
+public class ViewEventoRegistro extends JFrame {
 	
 	private JPanel panel;
 	private JPanel contentPane;

@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
-public class ViewEventoResponsables extends JInternalFrame {
+public class ViewEventoResponsables extends JFrame {
 
 	private JPanel contentPane;
 	private CustomTable table;

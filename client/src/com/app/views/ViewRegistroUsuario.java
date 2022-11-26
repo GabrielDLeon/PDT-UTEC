@@ -31,7 +31,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import com.app.controllers.UsuarioBO;
+import com.app.controllers.UsuarioDAO;
 import com.app.singleton.RobotoFont;
 import com.entities.Analista;
 import com.entities.Departamento;
@@ -97,7 +97,7 @@ public class ViewRegistroUsuario extends JFrame {
 	private JComboBox selectArea;
 	private JComboBox selectTipo;
 	
-	private UsuarioBO bo = new UsuarioBO();
+	private UsuarioDAO bo = new UsuarioDAO();
 
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();

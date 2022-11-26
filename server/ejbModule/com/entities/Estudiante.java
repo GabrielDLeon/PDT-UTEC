@@ -12,7 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,7 +25,7 @@ public class Estudiante extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(length = 20)
-	private String generacion;
+	private int generacion;
 
 	//bi-directional many-to-one association to Constancia
 	@ToString.Exclude

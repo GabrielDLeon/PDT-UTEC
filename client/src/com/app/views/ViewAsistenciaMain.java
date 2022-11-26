@@ -148,7 +148,7 @@ public class ViewAsistenciaMain extends JInternalFrame {
 		double calificacion = (double) tAsistencia.getValueAt(row, 3);
 		inputNombre.setText(nombre + " " + apellido);
 		inputDocumento.setText(e.getDocumento());
-		inputGeneracion.setText(e.getGeneracion());
+//		inputGeneracion.setText(e.getGeneracion());
 		if (e.getItr() != null)
 			inputItr.setText(e.getItr().toString());
 		

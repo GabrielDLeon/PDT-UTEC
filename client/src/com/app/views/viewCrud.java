@@ -29,7 +29,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
 
-import com.app.controllers.UsuarioBO;
+import com.app.controllers.UsuarioDAO;
 import com.entities.Analista;
 import com.entities.Departamento;
 import com.entities.Estudiante;
@@ -49,7 +49,7 @@ public class viewCrud extends JInternalFrame {
 	private static final long serialVersionUID = 1L;
 
 	private DefaultTableModel model = new DefaultTableModel();
-	private UsuarioBO bo = new UsuarioBO();
+	private UsuarioDAO bo = new UsuarioDAO();
 	private Usuario userType;
 
 	private JTextField txtNombre1;

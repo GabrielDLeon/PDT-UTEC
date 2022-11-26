@@ -79,6 +79,7 @@ public class ViewItrAux extends JInternalFrame {
 	 * @throws NamingException 
 	 */
 	public ViewItrAux() throws NamingException {
+		
 		setBounds(100, 100, 880, 670);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

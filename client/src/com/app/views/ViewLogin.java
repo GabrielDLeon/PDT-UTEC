@@ -23,7 +23,7 @@ import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
 
-import com.app.controllers.UsuarioBO;
+import com.app.controllers.UsuarioDAO;
 import com.app.singleton.RobotoFont;
 import com.entities.Analista;
 import com.entities.Estudiante;
@@ -38,7 +38,7 @@ public class ViewLogin extends JFrame {
 	private JPasswordField inputClave;
 	private JLabel lblRespuesta;
 
-	private UsuarioBO uBO = new UsuarioBO();
+	private UsuarioDAO uBO = new UsuarioDAO();
 
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
