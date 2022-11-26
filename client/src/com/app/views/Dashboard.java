@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -27,7 +28,6 @@ import javaswingdev.drawer.DrawerController;
 import javaswingdev.drawer.DrawerItem;
 import javaswingdev.drawer.EventDrawer;
 import net.miginfocom.swing.MigLayout;
-import java.awt.GridBagLayout;
 
 public class Dashboard extends JFrame {
 
@@ -98,6 +98,8 @@ public class Dashboard extends JFrame {
 		
 		DrawerItem d5 = new DrawerItem("Salir").icon(new ImageIcon(getClass().getResource("/com/app/themes/Logout.png")));
 		
+		DrawerItem d6 = new DrawerItem("ITR").icon(new ImageIcon(getClass().getResource("/com/app/themes/Estudiante.png")));
+		
 		Header h = new Header();
 		
 		if(userType.getClass() == Analista.class) {
@@ -109,6 +111,7 @@ public class Dashboard extends JFrame {
 		        .space(20)
 		        .addChild(d1.build())
 		        .addChild(d2.build())
+		        .addChild(d6.build())
 		        .addChild(d3.build())
 		        .addChild(d4.build())
 		        .addFooter(d5.build())
@@ -134,6 +137,20 @@ public class Dashboard extends JFrame {
 						desktopPane.removeAll();
 					} else if (item == d5) {
 						dispose();
+					} else if (item == d6) {
+						desktopPane.removeAll();
+						ViewItrAux via;
+						try {
+							via = new ViewItrAux();
+							desktopPane.add(via);
+							Dimension desktopSize = desktopPane.getSize();
+							Dimension FrameSize = via.getSize();
+							via.setLocation((desktopSize.width - FrameSize.width)/2, (desktopSize.height - FrameSize.height)/2);
+							via.show();
+						} catch (NamingException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					} 
 				}
 		        })
@@ -189,7 +206,7 @@ public class Dashboard extends JFrame {
 			        .addChild(d1.build())
 //			        .addChild(d2.build())
 			        .addChild(d3.build())
-//			        .addChild(d4.build())
+			        .addChild(d4.build())
 			        .addFooter(d5.build())
 			        
 			        .event(new EventDrawer(){

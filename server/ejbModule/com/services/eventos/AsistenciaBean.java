@@ -22,13 +22,13 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
 	EntityManager em = emf.createEntityManager();
-	
+
 	Session session = em.unwrap(org.hibernate.Session.class);
 	SessionFactory factory = session.getSessionFactory();
-	
-    public AsistenciaBean() {
-        // TODO Auto-generated constructor stub
-    }
+
+	public AsistenciaBean() {
+		// TODO Auto-generated constructor stub
+	}
 
 	@Override
 	public void create(Evento evento, List<Estudiante> convocados) throws Exception {
@@ -40,11 +40,8 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 				System.out.println(evento.getIdEvento());
 				System.out.println(estudiante.getUsuario());
 				Asistencia a = Asistencia.builder()
-						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getIdUsuario()))
-						.estudiante(estudiante)
-						.evento(evento)
-						.estado(EnumAsistenciaEstado.CONVOCADO)
-						.build();
+						.id(new AsistenciaKey(evento.getIdEvento(), estudiante.getIdUsuario())).estudiante(estudiante)
+						.evento(evento).estado(EnumAsistenciaEstado.CONVOCADO).build();
 				em.merge(a);
 				session.getTransaction().commit();
 			}
@@ -58,10 +55,10 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 	@Override
 	public void update(List<Asistencia> asistencias) throws Exception {
 		try {
-			for (Asistencia asistencia : asistencias) {				
+			for (Asistencia asistencia : asistencias) {
 				em.merge(asistencia);
 			}
-			em.flush();	
+			em.flush();
 		} catch (Exception e) {
 			throw new Exception("No se pudo actualizar la Asistencia");
 		}
@@ -81,13 +78,11 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
 		query.setParameter("status", status);
 		return query.getResultList();
 	}
-	
+
 	@Override
 	public void clear(Evento evento) {
 		// TODO Auto-generated method stub
-		
-	}
 
-	
+	}
 
 }

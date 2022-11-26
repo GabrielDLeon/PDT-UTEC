@@ -25,15 +25,15 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name="CONSTANCIAS_TIPO")
-@NamedQuery(name="ConstanciasTipo.findAll", query="SELECT c FROM ConstanciasTipo c")
+@Table(name = "CONSTANCIAS_TIPO")
+@NamedQuery(name = "ConstanciasTipo.findAll", query = "SELECT c FROM ConstanciasTipo c")
 public class ConstanciasTipo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="CONSTANCIAS_TIPO_IDTIPO_GENERATOR", sequenceName="SEQ_CONSTANCIAS_TIPO")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CONSTANCIAS_TIPO_IDTIPO_GENERATOR")
-	@Column(name="ID_TIPO")
+	@SequenceGenerator(name = "CONSTANCIAS_TIPO_IDTIPO_GENERATOR", sequenceName = "SEQ_CONSTANCIAS_TIPO")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CONSTANCIAS_TIPO_IDTIPO_GENERATOR")
+	@Column(name = "ID_TIPO")
 	private long idTipo;
 
 	private String nombre;

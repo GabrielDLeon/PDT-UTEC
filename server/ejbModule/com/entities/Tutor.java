@@ -26,9 +26,9 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @Entity
-@Table(name="USER_TUTORES")
+@Table(name = "USER_TUTORES")
 @PrimaryKeyJoinColumn(name = "USUARIO")
-@NamedQuery(name="Tutor.findAll", query="SELECT t FROM Tutor t")
+@NamedQuery(name = "Tutor.findAll", query = "SELECT t FROM Tutor t")
 public class Tutor extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 

@@ -30,16 +30,16 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name="DEPARTAMENTOS")
-@NamedQuery(name="Departamento.findAll", query="SELECT d FROM Departamento d")
-@NamedQuery(name ="Localidad.findByDepartamento", query="SELECT l.idLocalidad, l.nombre FROM Localidad l JOIN Departamento d WHERE d.idDepartamento = :id")
+@Table(name = "DEPARTAMENTOS")
+@NamedQuery(name = "Departamento.findAll", query = "SELECT d FROM Departamento d")
+@NamedQuery(name = "Localidad.findByDepartamento", query = "SELECT l.idLocalidad, l.nombre FROM Localidad l JOIN Departamento d WHERE d.idDepartamento = :id")
 public class Departamento implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="DEPARTAMENTOS_IDDEPARTAMENTO_GENERATOR", sequenceName="SEQ_DEPARTAMENTOS")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="DEPARTAMENTOS_IDDEPARTAMENTO_GENERATOR")
-	@Column(name="ID_DEPARTAMENTO")
+	@SequenceGenerator(name = "DEPARTAMENTOS_IDDEPARTAMENTO_GENERATOR", sequenceName = "SEQ_DEPARTAMENTOS")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "DEPARTAMENTOS_IDDEPARTAMENTO_GENERATOR")
+	@Column(name = "ID_DEPARTAMENTO")
 	private long idDepartamento;
 
 	@Column(unique = true, nullable = false)
@@ -47,14 +47,14 @@ public class Departamento implements Serializable {
 
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="departamento")
+	@OneToMany(mappedBy = "departamento")
 	private List<Itr> itrs;
 
 	@ToString.Exclude
 	@LazyCollection(LazyCollectionOption.FALSE)
-	@OneToMany(mappedBy="departamento")
+	@OneToMany(mappedBy = "departamento")
 	private List<Localidad> localidades;
-	
+
 	@Override
 	public String toString() {
 		return nombre;

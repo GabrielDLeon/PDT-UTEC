@@ -32,15 +32,15 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name="CONSTANCIAS")
-@NamedQuery(name="Constancia.findAll", query="SELECT c FROM Constancia c")
+@Table(name = "CONSTANCIAS")
+@NamedQuery(name = "Constancia.findAll", query = "SELECT c FROM Constancia c")
 public class Constancia implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name="CONSTANCIAS_IDCONSTANCIA_GENERATOR", sequenceName="SEQ_CONSTANCIAS")
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="CONSTANCIAS_IDCONSTANCIA_GENERATOR")
-	@Column(name="ID_CONSTANCIA")
+	@SequenceGenerator(name = "CONSTANCIAS_IDCONSTANCIA_GENERATOR", sequenceName = "SEQ_CONSTANCIAS")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "CONSTANCIAS_IDCONSTANCIA_GENERATOR")
+	@Column(name = "ID_CONSTANCIA")
 	private long idConstancia;
 
 	private String detalle;
@@ -48,31 +48,31 @@ public class Constancia implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date fecha;
 
-	//bi-directional many-to-one association to AccionConstancia
-	@OneToMany(mappedBy="constancia")
+	// bi-directional many-to-one association to AccionConstancia
+	@OneToMany(mappedBy = "constancia")
 	private List<AccionConstancia> acciones;
 
-	//uni-directional many-to-one association to ConstanciasTipo
+	// uni-directional many-to-one association to ConstanciasTipo
 	@ManyToOne
-	@JoinColumn(name="TIPO")
+	@JoinColumn(name = "TIPO")
 	private ConstanciasTipo tipo;
 
-	//uni-directional many-to-one association to EstadoConstancia
+	// uni-directional many-to-one association to EstadoConstancia
 	@ManyToOne
-	@JoinColumn(name="ESTADO")
+	@JoinColumn(name = "ESTADO")
 	private EstadoConstancia estado;
 
-	//bi-directional many-to-one association to Evento
+	// bi-directional many-to-one association to Evento
 	@ManyToOne
-	@JoinColumn(name="EVENTO")
+	@JoinColumn(name = "EVENTO")
 	private Evento evento;
 
-	//bi-directional many-to-one association to Estudiante
+	// bi-directional many-to-one association to Estudiante
 	@ManyToOne
-	@JoinColumn(name="ESTUDIANTE")
+	@JoinColumn(name = "ESTUDIANTE")
 	private Estudiante estudiante;
 
-	//Esto se generó automaticamente
+	// Esto se generó automaticamente
 	public AccionConstancia addAccione(AccionConstancia accione) {
 		getAcciones().add(accione);
 		accione.setConstancia(this);

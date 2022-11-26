@@ -20,5 +20,5 @@ public class TutorVO extends UsuarioVO {
 	private EnumTutorArea area;
 
 	private String tipo;
-	
+
 }

@@ -1,26 +1,33 @@
 package com.app.views;
 
 import java.awt.EventQueue;
-
-import javax.swing.JInternalFrame;
-import java.awt.GridBagLayout;
 import java.awt.Font;
-import javax.swing.JLabel;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.plaf.basic.BasicInternalFrameUI;
 import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDateChooser;
-
-import javax.swing.JComboBox;
 
 import com.app.controllers.UsuarioBO;
 import com.entities.Analista;
@@ -35,18 +42,7 @@ import com.enumerators.EnumUsuarioEstado;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.GeneroBeanRemote;
 import com.services.users.ItrBeanRemote;
-
-import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.ActionEvent;
+import com.toedter.calendar.JDateChooser;
 
 public class viewCrud extends JInternalFrame {
 

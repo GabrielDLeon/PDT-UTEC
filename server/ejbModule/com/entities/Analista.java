@@ -26,27 +26,20 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @Entity
-@Table(name="USER_ANALISTAS")
+@Table(name = "USER_ANALISTAS")
 @PrimaryKeyJoinColumn(name = "USUARIO")
-@NamedQuery(name="Analista.findAll", query="SELECT a FROM Analista a")
+@NamedQuery(name = "Analista.findAll", query = "SELECT a FROM Analista a")
 public class Analista extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	//bi-directional many-to-one association to AccionConstancia
-	@OneToMany(mappedBy="analista")
+	// bi-directional many-to-one association to AccionConstancia
+	@OneToMany(mappedBy = "analista")
 	private List<AccionConstancia> accionCons;
 
-	//bi-directional many-to-many association to Evento
+	// bi-directional many-to-many association to Evento
 	@ManyToMany
-	@JoinTable(
-		name="GESTIONES"
-		, joinColumns={
-			@JoinColumn(name="ANALISTA")
-			}
-		, inverseJoinColumns={
-			@JoinColumn(name="EVENTO")
-			}
-		)
+	@JoinTable(name = "GESTIONES", joinColumns = { @JoinColumn(name = "ANALISTA") }, inverseJoinColumns = {
+			@JoinColumn(name = "EVENTO") })
 	private List<Evento> eventos;
 
 }

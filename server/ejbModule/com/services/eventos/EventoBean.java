@@ -28,15 +28,15 @@ import com.enumerators.EnumEventoEstado;
 @Stateless
 public class EventoBean implements EventoBeanRemote {
 	AsistenciaBean asistenciaBean = new AsistenciaBean();
-	
+
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
 	EntityManager em = emf.createEntityManager();
-	
+
 	Session session = em.unwrap(org.hibernate.Session.class);
 	SessionFactory factory = session.getSessionFactory();
-	
-    public EventoBean() {
-    }
+
+	public EventoBean() {
+	}
 
 	@Override
 	public void create(Evento evento) throws Exception {
@@ -45,7 +45,7 @@ public class EventoBean implements EventoBeanRemote {
 		try {
 			em.persist(evento);
 			session.getTransaction().commit();
-			em.flush();			
+			em.flush();
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -61,7 +61,7 @@ public class EventoBean implements EventoBeanRemote {
 			session.getTransaction().commit();
 			em.flush();
 		} catch (Exception e) {
-			 throw new Exception("No se pudo actualizar el Evento");
+			throw new Exception("No se pudo actualizar el Evento");
 		}
 		session.close();
 	}
@@ -69,19 +69,23 @@ public class EventoBean implements EventoBeanRemote {
 	@Override
 	public void delete(Long id) throws Exception {
 		Evento evento = findById(id);
-		
+
 		// empezado, es true cuando el evento ya empezó
 		boolean empezado = evento.getFechaInicio().isBefore(LocalDateTime.now());
-		
-		// participaron, es true cuando el evento ya cuenta con estudiantes el estado TRUE (1) en el campo ASISTENCIA
+
+		// participaron, es true cuando el evento ya cuenta con estudiantes el estado
+		// TRUE (1) en el campo ASISTENCIA
 		boolean participaron = asistenciaBean.findByStatus(id, EnumAsistenciaEstado.ASISTENCIA).size() > 0;
-		
-		// Verifica que el evento no haya empezado y no tenga estudiantes participando (1)
+
+		// Verifica que el evento no haya empezado y no tenga estudiantes participando
+		// (1)
 		if (empezado && participaron) {
-			System.out.println("No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
-			throw new Exception("No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
+			System.out.println(
+					"No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
+			throw new Exception(
+					"No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
 		}
-		
+
 		try {
 			em.remove(evento);
 			em.flush();
@@ -90,30 +94,30 @@ public class EventoBean implements EventoBeanRemote {
 			throw new Exception("No se pudo eliminar el evento");
 		}
 	}
-	
+
 	@Override
-	public List<Evento> search(EventoBusquedaVO vo){
+	public List<Evento> search(EventoBusquedaVO vo) {
 		var qb = em.getCriteriaBuilder();
 		var query = qb.createQuery(Evento.class);
 		var root = query.from(Evento.class);
 		query.select(root);
-		
+
 		List<Predicate> predicates = new ArrayList<Predicate>();
 		if (!vo.getNombre().trim().isEmpty())
-	    	predicates.add(qb.like(root.get("nombre"), vo.getNombre()+"%"));
-	    
+			predicates.add(qb.like(root.get("nombre"), vo.getNombre() + "%"));
+
 		if (vo.getModalidad() != null)
-	    	predicates.add(qb.equal(root.get("modalidad"), vo.getModalidad()));
-	    
+			predicates.add(qb.equal(root.get("modalidad"), vo.getModalidad()));
+
 		if (vo.getTipo() != null)
 			predicates.add(qb.equal(root.get("tipo"), vo.getTipo()));
-		
+
 		EnumEventoEstado estado = vo.getEstado();
 		if (estado != null) {
 			Path<LocalDateTime> dateStartPath = root.get("fechaInicio");
 			Path<LocalDateTime> dateFinishPath = root.get("fechaFin");
 			LocalDateTime now = LocalDateTime.now();
-			if (estado.equals(EnumEventoEstado.FUTURO)){
+			if (estado.equals(EnumEventoEstado.FUTURO)) {
 				predicates.add(qb.greaterThan(dateStartPath, now));
 			} else if (estado.equals(EnumEventoEstado.CORRIENTE)) {
 				predicates.add(qb.lessThan(dateStartPath, now));
@@ -122,17 +126,17 @@ public class EventoBean implements EventoBeanRemote {
 				predicates.add(qb.lessThan(dateFinishPath, now));
 			}
 		}
-		
+
 		if (vo.getItr() != null) {
 			Join<Evento, Itr> joinItr = root.join("itr", JoinType.INNER);
 			predicates.add(qb.equal(joinItr.get("idItr"), vo.getItr().getIdItr()));
 		}
-		
+
 		if (vo.getTutor() != null) {
 			Join<Evento, Tutor> joinTutor = root.join("tutores", JoinType.INNER);
 			predicates.add(qb.equal(joinTutor.get("idUsuario"), vo.getTutor().getIdUsuario()));
 		}
-		
+
 		query.where(qb.and(predicates.toArray(new Predicate[predicates.size()])));
 		return em.createQuery(query).getResultList();
 	}
@@ -148,7 +152,7 @@ public class EventoBean implements EventoBeanRemote {
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findAll", Evento.class);
 		return query.getResultList();
 	}
-	
+
 	// Si eres Tutor, llamas a este método
 	@Override
 	public List<Evento> findByTutor(Long idTutor) {
@@ -157,24 +161,22 @@ public class EventoBean implements EventoBeanRemote {
 		query.setParameter("id", idTutor);
 		return query.getResultList();
 	}
-	
+
 	@Override
 	public List<Evento> findByItr(Long idItr) {
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByItr", Evento.class);
 		query.setParameter("idItr", idItr);
 		return query.getResultList();
 	}
-	
+
 	// TODO Borrar luego de finalizar el desarrollo y las pruebas
-	public Tutor getTutor(Long id){
+	public Tutor getTutor(Long id) {
 		return (Tutor) em.find(Tutor.class, id);
 	}
 
 	// TODO Borrar luego de finalizar el desarrollo y las pruebas
-	public Estudiante getEstudiante(Long id){
+	public Estudiante getEstudiante(Long id) {
 		return (Estudiante) em.find(Estudiante.class, id);
 	}
-
-	
 
 }

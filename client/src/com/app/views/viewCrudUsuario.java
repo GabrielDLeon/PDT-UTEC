@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,9 +23,10 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.border.EmptyBorder;
@@ -44,16 +44,12 @@ import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumTutorArea;
 import com.enumerators.EnumTutorTipo;
-import com.enumerators.EnumUsuarioEstado;
 import com.formdev.flatlaf.FlatDarkLaf;
 import com.services.users.DepartamentoBeanRemote;
 import com.services.users.GeneroBeanRemote;
 import com.services.users.ItrBeanRemote;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JYearChooser;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import net.miginfocom.swing.MigLayout;
 
 public class viewCrudUsuario extends JFrame {
 

@@ -20,14 +20,14 @@ import lombok.Setter;
 @Getter
 @Builder
 public class EventoBusquedaVO implements Serializable {
-	
+
 	private static final long serialVersionUID = 2463961227341807754L;
-	
+
 	private String nombre;
 	private EnumEventoEstado estado;
 	private EnumEventoModalidad modalidad;
 	private EnumEventoTipo tipo;
 	private Itr itr;
 	private Tutor tutor;
-	
+
 }

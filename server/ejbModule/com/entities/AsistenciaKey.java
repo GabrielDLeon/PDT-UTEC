@@ -18,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Embeddable
 public class AsistenciaKey implements Serializable {
-	//default serial version id, required for serializable classes.
+	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
 	public AsistenciaKey(long idEvento, long idEstudiante) {
@@ -26,7 +26,7 @@ public class AsistenciaKey implements Serializable {
 		this.idEvento = idEvento;
 		this.idEstudiante = idEstudiante;
 	}
-	
+
 	@Column(name = "EVENTO")
 	private long idEvento;
 
@@ -40,10 +40,8 @@ public class AsistenciaKey implements Serializable {
 		if (!(other instanceof AsistenciaKey)) {
 			return false;
 		}
-		AsistenciaKey castOther = (AsistenciaKey)other;
-		return 
-			(this.idEvento == castOther.idEvento)
-			&& (this.idEstudiante == castOther.idEstudiante);
+		AsistenciaKey castOther = (AsistenciaKey) other;
+		return (this.idEvento == castOther.idEvento) && (this.idEstudiante == castOther.idEstudiante);
 	}
 
 	public int hashCode() {
@@ -51,7 +49,7 @@ public class AsistenciaKey implements Serializable {
 		int hash = 17;
 		hash = hash * prime + ((int) (this.idEvento ^ (this.idEvento >>> 32)));
 		hash = hash * prime + ((int) (this.idEstudiante ^ (this.idEstudiante >>> 32)));
-		
+
 		return hash;
 	}
 }

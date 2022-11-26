@@ -23,22 +23,22 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @Entity
-@Table(name="USER_ESTUDIANTES")
+@Table(name = "USER_ESTUDIANTES")
 @PrimaryKeyJoinColumn(name = "USUARIO")
-@NamedQuery(name="Estudiante.findAll", query="SELECT e FROM Estudiante e")
+@NamedQuery(name = "Estudiante.findAll", query = "SELECT e FROM Estudiante e")
 public class Estudiante extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private int generacion;
 
-	//bi-directional many-to-one association to Constancia
+	// bi-directional many-to-one association to Constancia
 	@ToString.Exclude
-	@OneToMany(mappedBy="estudiante")
+	@OneToMany(mappedBy = "estudiante")
 	private List<Constancia> constancias;
 
-	//bi-directional one-to-many association to Asistencia
+	// bi-directional one-to-many association to Asistencia
 	@ToString.Exclude
-	@OneToMany(mappedBy="estudiante")
+	@OneToMany(mappedBy = "estudiante")
 	List<Asistencia> asistencias;
-	
+
 }

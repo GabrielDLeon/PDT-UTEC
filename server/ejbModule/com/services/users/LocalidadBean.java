@@ -17,7 +17,8 @@ import com.entities.Localidad;
 @Stateless
 public class LocalidadBean implements LocalidadBeanRemote {
 
-	public LocalidadBean() {}
+	public LocalidadBean() {
+	}
 
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("PDT-Server");
 
@@ -28,7 +29,7 @@ public class LocalidadBean implements LocalidadBeanRemote {
 	SessionFactory factory = (SessionFactory) session.getSessionFactory();
 
 	@Override
-	public void create(Localidad l) { 
+	public void create(Localidad l) {
 		session = factory.openSession();
 		session.beginTransaction();
 		em.persist(l);

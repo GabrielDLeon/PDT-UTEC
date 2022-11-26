@@ -117,7 +117,7 @@ public class UsuarioBean implements UsuarioBeanRemote {
 
 		} catch (Exception e) {
 			session.close();
-			throw new Exception (e.getMessage());
+			throw new Exception(e.getMessage());
 		}
 
 	}

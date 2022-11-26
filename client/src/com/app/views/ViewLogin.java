@@ -19,8 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import com.app.controllers.UsuarioBO;
@@ -30,9 +30,6 @@ import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.entities.Usuario;
 import com.formdev.flatlaf.FlatDarkLaf;
-import com.formdev.flatlaf.FlatLightLaf;
-
-import toggle.ToggleAdapter;
 
 public class ViewLogin extends JFrame {
 
@@ -78,7 +75,8 @@ public class ViewLogin extends JFrame {
 		panel.setLayout(gbl_panel);
 
 		JLabel lblTitulo = new JLabel("Inicio de Sesión");
-		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 14));
+		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 22));
 		GridBagConstraints gbc_lblTitulo = new GridBagConstraints();
 		gbc_lblTitulo.gridwidth = 2;
 		gbc_lblTitulo.insets = new Insets(0, 0, 5, 5);
@@ -87,6 +85,7 @@ public class ViewLogin extends JFrame {
 		panel.add(lblTitulo, gbc_lblTitulo);
 
 		JLabel lblUsuario = new JLabel("Usuario");
+		lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
 		lblUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
 		lblUsuario.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/UsuarioLogin.png")));
 		GridBagConstraints gbc_lblUsuario = new GridBagConstraints();
@@ -108,6 +107,7 @@ public class ViewLogin extends JFrame {
 		inputUsuario.setColumns(10);
 
 		JLabel lblClave = new JLabel("Contraseña");
+		lblClave.setHorizontalAlignment(SwingConstants.CENTER);
 		lblClave.setFont(new Font("Roboto", Font.PLAIN, 12));
 		lblClave.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Contraseña.png")));
 		GridBagConstraints gbc_lblClave = new GridBagConstraints();
@@ -138,7 +138,7 @@ public class ViewLogin extends JFrame {
 
 		JButton btnLogin = new JButton("Iniciar Sesión");
 		btnLogin.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnLogin.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Login.png")));
+//		btnLogin.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Login.png")));
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				login();
@@ -164,7 +164,7 @@ public class ViewLogin extends JFrame {
 
 		JButton btnEstudiante = new JButton("Soy Estudiante");
 		btnEstudiante.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnEstudiante.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Estudiante.png")));
+//		btnEstudiante.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Estudiante.png")));
 		btnEstudiante.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -196,7 +196,7 @@ public class ViewLogin extends JFrame {
 			}
 		});
 		btnTutor.setFont(new Font("Roboto", Font.PLAIN, 12));
-		btnTutor.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Tutor.png")));
+//		btnTutor.setIcon(new ImageIcon(ViewLogin.class.getResource("/com/app/themes/Tutor.png")));
 		GridBagConstraints gbc_btnTutor = new GridBagConstraints();
 		gbc_btnTutor.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnTutor.insets = new Insets(0, 0, 0, 5);

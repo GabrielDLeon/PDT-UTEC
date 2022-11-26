@@ -56,7 +56,7 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 			em.remove(departamento);
 			em.flush();
 		} catch (Exception e) {
-			throw new Exception("Error: "+e);
+			throw new Exception("Error: " + e);
 		}
 	}
 
@@ -79,7 +79,8 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 
 	@Override
 	public List<Localidad> findByDepartamento(Long id) {
-		List<Localidad> list = (List<Localidad>) em.createNamedQuery("Localidad.findByDepartamento", Localidad.class).setParameter("id", id).getResultList();
+		List<Localidad> list = (List<Localidad>) em.createNamedQuery("Localidad.findByDepartamento", Localidad.class)
+				.setParameter("id", id).getResultList();
 		return list;
 	}
 
