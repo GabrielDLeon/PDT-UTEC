@@ -8,11 +8,11 @@ import com.app.singleton.BeanRemoteManager;
 import com.entities.EventoEstado;
 import com.services.eventos.EventoEstadoBeanRemote;
 
-public class EventoEstadoBO {
+public class EventoEstadoDAO {
 	
 	private EventoEstadoBeanRemote bean;
 	
-	public EventoEstadoBO() {
+	public EventoEstadoDAO() {
 		try {
 			bean = BeanRemoteManager.getBeanEventoEstado();
 		} catch (NamingException e) {

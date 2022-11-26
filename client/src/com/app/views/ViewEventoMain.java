@@ -3,28 +3,19 @@ package com.app.views;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.DefaultTableModel;
 
-import com.app.controllers.EventoBO;
-import com.app.controllers.EventoEstadoBO;
-import com.app.controllers.EventoModalidadBO;
-import com.app.singleton.BeanRemoteManager;
-import com.app.singleton.RobotoFont;
+import com.app.controllers.EventoDAO;
+import com.app.views.panels.PanelEventoFiltro;
 import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
 import com.entities.Evento;
-import com.entities.EventoEstado;
-import com.entities.EventoModalidad;
-import com.entities.Itr;
-import com.entities.Tutor;
 import com.entities.Usuario;
-import com.enumerators.EnumEventoEstado;
-import com.enumerators.EnumEventoTipo;
 import com.formdev.flatlaf.FlatDarkLaf;
 
 import java.awt.BorderLayout;
@@ -34,20 +25,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.List;
 
-import javax.swing.JTable;
-import javax.naming.NamingException;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.ActionEvent;
-import javax.swing.ListSelectionModel;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
-public class ViewEventoMain extends JFrame {
+public class ViewEventoMain extends JInternalFrame {
 	
 	private JPanel panel = new JPanel();
 	private JPanel contentPane;
@@ -65,7 +49,7 @@ public class ViewEventoMain extends JFrame {
 	// Para cambiar la perspectiva de usuario se debe modificar el new User() por el tipo de usuario deseado
 	// Por ejemplo, si queremos usar la vista Analista: Usuario user = new Analista();
 	private Usuario user;
-	private EventoBO bo;
+	private EventoDAO dao;
 
 	private List<Evento> eventos;
 	private final JTextField textField = new JTextField();
@@ -93,7 +77,7 @@ public class ViewEventoMain extends JFrame {
 		// Si necesitas utilizar WindowBuilder tienes que comentar la llamada al método setupComboBox()
 //		setupComboBox();
 		setGridBagLayout();
-		eventos = bo.getList();
+		eventos = dao.getList();
 		refreshTable(null);
 		setVisible(true);
 	}
@@ -101,7 +85,7 @@ public class ViewEventoMain extends JFrame {
 	public ViewEventoMain(Usuario user) {
 		textField.setColumns(10);
 		this.user = user;
-		this.bo = new EventoBO(user);
+		this.dao = new EventoDAO(user);
 		
 		panelFiltro = new PanelEventoFiltro(user);
 		
@@ -250,9 +234,9 @@ public class ViewEventoMain extends JFrame {
 	public void refreshTable(EventoBusquedaVO vo) {
 		tEvento.model.setRowCount(0);
 		if (vo != null) {
-			eventos = bo.search(vo);
+			eventos = dao.search(vo);
 		} else {
-			eventos = bo.getList();
+			eventos = dao.getList();
 		}
 		
 		try {
@@ -276,7 +260,7 @@ public class ViewEventoMain extends JFrame {
 	public Evento getEventoFromTable() {
 		int row = tEvento.getSelectedRow();
 		Long id = (Long) tEvento.getValueAt(row, 0);
-		Evento evento = bo.find(id);
+		Evento evento = dao.find(id);
 		return evento;
 	}
 	
@@ -313,8 +297,8 @@ public class ViewEventoMain extends JFrame {
 		Long id = (Long) tEvento.getValueAt(row, 0);
 		int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Evento seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
 		if(dialogResult == JOptionPane.YES_OPTION){
-			String mensaje = bo.delete(id);
-			eventos = bo.getList();
+			String mensaje = dao.delete(id);
+			eventos = dao.getList();
 			refreshTable(null);
 			JOptionPane.showMessageDialog(null, mensaje);
 		}

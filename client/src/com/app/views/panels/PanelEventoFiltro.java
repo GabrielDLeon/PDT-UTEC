@@ -1,4 +1,4 @@
-package com.app.views;
+package com.app.views.panels;
 
 import javax.naming.NamingException;
 import javax.swing.JButton;
@@ -7,8 +7,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.app.controllers.EventoEstadoBO;
-import com.app.controllers.EventoModalidadBO;
+import com.app.controllers.EventoEstadoDAO;
+import com.app.controllers.EventoModalidadDAO;
 import com.app.singleton.BeanRemoteManager;
 import com.dto.EventoBusquedaVO;
 import com.entities.Analista;
@@ -57,8 +57,8 @@ public class PanelEventoFiltro extends JPanel {
 	private JComboBox<EnumEventoEstado> selectFechaInicio = new JComboBox<EnumEventoEstado>();
 	
 	private Usuario user;
-	private EventoEstadoBO estadoBO = new EventoEstadoBO();
-	private EventoModalidadBO modalidadBO = new EventoModalidadBO();
+	private EventoEstadoDAO estadoBO = new EventoEstadoDAO();
+	private EventoModalidadDAO modalidadBO = new EventoModalidadDAO();
 	
 	public PanelEventoFiltro(Usuario user) {
 		this.user = user;

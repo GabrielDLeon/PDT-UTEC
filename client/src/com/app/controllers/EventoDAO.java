@@ -13,12 +13,12 @@ import com.entities.Evento;
 import com.entities.Usuario;
 import com.services.eventos.EventoBeanRemote;
 
-public class EventoBO {
+public class EventoDAO {
 
 	private EventoBeanRemote beanEvento;
 	private Usuario usuario;
 
-	public EventoBO(Usuario usuario) {
+	public EventoDAO(Usuario usuario) {
 		this.usuario = usuario;
 		try {
 			beanEvento = BeanRemoteManager.getBeanEvento();

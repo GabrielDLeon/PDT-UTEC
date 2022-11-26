@@ -14,12 +14,12 @@ import com.enumerators.EnumAsistenciaEstado;
 import com.services.eventos.AsistenciaBeanRemote;
 import com.services.eventos.EventoBeanRemote;
 
-public class AsistenciaBO {
+public class AsistenciaDAO {
 	
 	private AsistenciaBeanRemote beanAsistencia;
 	private EventoBeanRemote beanEvento;
 
-	public AsistenciaBO() {
+	public AsistenciaDAO() {
 		try {
 			beanAsistencia = BeanRemoteManager.getBeanAsistencia();
 			beanEvento = BeanRemoteManager.getBeanEvento();

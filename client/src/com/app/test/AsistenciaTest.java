@@ -7,7 +7,7 @@ import javax.naming.NamingException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.app.controllers.AsistenciaBO;
+import com.app.controllers.AsistenciaDAO;
 import com.app.singleton.BeanRemoteManager;
 import com.entities.Asistencia;
 import com.entities.Estudiante;
@@ -18,7 +18,7 @@ public class AsistenciaTest {
 
 	static AsistenciaBeanRemote beanAsistencia;
 	static EventoBeanRemote beanEvento;
-	static AsistenciaBO bo = new AsistenciaBO();
+	static AsistenciaDAO bo = new AsistenciaDAO();
 	
 	public static void main(String[] args) {
 		try {

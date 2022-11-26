@@ -66,7 +66,6 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 		session.beginTransaction();
 		TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findAll", Departamento.class);
 		List<Departamento> list = query.getResultList();
-		System.out.println(list.size());
 		session.getTransaction().commit();
 		session.close();
 		return list;

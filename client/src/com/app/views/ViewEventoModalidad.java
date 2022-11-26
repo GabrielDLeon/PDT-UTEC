@@ -3,12 +3,11 @@ package com.app.views;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.app.controllers.EventoEstadoBO;
-import com.app.controllers.EventoModalidadBO;
-import com.entities.EventoEstado;
+import com.app.controllers.EventoModalidadDAO;
 import com.entities.EventoModalidad;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -20,7 +19,6 @@ import javax.swing.JScrollPane;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -34,7 +32,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class ViewEventoModalidad extends JFrame {
+public class ViewEventoModalidad extends JInternalFrame {
 
 	private JPanel contentPane;
 	private JTextField inputNombre;
@@ -47,7 +45,7 @@ public class ViewEventoModalidad extends JFrame {
 	
 	private List<EventoModalidad> modalidades = new ArrayList<EventoModalidad>();
 	
-	private EventoModalidadBO bo = new EventoModalidadBO();
+	private EventoModalidadDAO dao = new EventoModalidadDAO();
 	
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
@@ -73,7 +71,7 @@ public class ViewEventoModalidad extends JFrame {
 				.nombre(nombre)
 				.activo(true)
 				.build();
-		String mensaje = bo.create(modalidad);
+		String mensaje = dao.create(modalidad);
 		refreshList();
 		inputNombre.setText("");
 		JOptionPane.showMessageDialog(null, mensaje);
@@ -85,7 +83,7 @@ public class ViewEventoModalidad extends JFrame {
 		modalidad.setNombre(inputNombre.getText());
 		int option = JOptionPane.showConfirmDialog(null, "¿Desea modificar la Modalidad seleccionada?", "Confirmación", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
-			String mensaje = bo.update(modalidad);
+			String mensaje = dao.update(modalidad);
 			refreshList();
 			inputNombre.setText("");
 			JOptionPane.showMessageDialog(null, mensaje);
@@ -97,7 +95,7 @@ public class ViewEventoModalidad extends JFrame {
 		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar la Modalidad seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
 			EventoModalidad modalidad = (EventoModalidad) listModalidad.getSelectedValue();
-			String mensaje = bo.delete(modalidad.getIdModalidad());
+			String mensaje = dao.delete(modalidad.getIdModalidad());
 			refreshList();
 			inputNombre.setText("");
 			JOptionPane.showMessageDialog(null, mensaje);
@@ -107,7 +105,7 @@ public class ViewEventoModalidad extends JFrame {
 	
 	private void refreshList() {		
 		model.removeAllElements();
-		modalidades = bo.findByStatus(true);
+		modalidades = dao.findByStatus(true);
 		model.addAll(modalidades);
 	}
 	

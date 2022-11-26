@@ -72,7 +72,6 @@ public class UsuarioBean implements UsuarioBeanRemote {
 	@Override
 	public List<Estudiante> findAllEstudiantes() {
 		TypedQuery<Estudiante> query = em.createNamedQuery("Estudiante.findAll", Estudiante.class);
-		System.out.println(query.getResultList());
 		return query.getResultList();
 	}
 	

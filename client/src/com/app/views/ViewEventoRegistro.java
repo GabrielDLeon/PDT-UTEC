@@ -3,6 +3,7 @@ package com.app.views;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -18,13 +19,12 @@ import com.formdev.flatlaf.FlatDarkLaf;
 import com.formdev.flatlaf.FlatLaf;
 import com.services.users.ItrBeanRemote;
 import com.toedter.calendar.JDateChooser;
-import com.app.controllers.EventoBO;
-import com.app.controllers.EventoEstadoBO;
-import com.app.controllers.EventoModalidadBO;
+import com.app.controllers.EventoDAO;
+import com.app.controllers.EventoEstadoDAO;
+import com.app.controllers.EventoModalidadDAO;
 import com.app.exceptions.TextFieldException;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
-import com.app.test.ViewEventoResponsables;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagLayout;
@@ -42,7 +42,6 @@ import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -50,7 +49,7 @@ import java.util.Set;
 import java.awt.event.ActionEvent;
 
 @SuppressWarnings("serial")
-public class ViewEventoRegistro extends JFrame {
+public class ViewEventoRegistro extends JInternalFrame {
 	
 	private JPanel panel;
 	private JPanel contentPane;
@@ -73,9 +72,9 @@ public class ViewEventoRegistro extends JFrame {
 	private JButton btnResponsables;
 
 	private Usuario usuario = new Analista();
-	private EventoBO bo = new EventoBO(usuario);
-	private EventoEstadoBO estadoBO = new EventoEstadoBO();
-	private EventoModalidadBO modalidadBO = new EventoModalidadBO();
+	private EventoDAO dao = new EventoDAO(usuario);
+	private EventoEstadoDAO estadoBO = new EventoEstadoDAO();
+	private EventoModalidadDAO modalidadBO = new EventoModalidadDAO();
 	
 	private Evento editEvent;
 	
@@ -184,14 +183,14 @@ public class ViewEventoRegistro extends JFrame {
 		boolean result = true;
 		try {
 			TextFieldException eNombre = new TextFieldException(inputNombre, lblResNombre);
-			bo.validarNombre(eNombre);
+			dao.validarNombre(eNombre);
 		} catch (TextFieldException e) {
 			result = false;
 		}
 		
 		try {
 			TextFieldException eLocalizacion = new TextFieldException(inputLocalizacion, lblResLocalizacion);
-			bo.validarLocalizacion(eLocalizacion);
+			dao.validarLocalizacion(eLocalizacion);
 		} catch (TextFieldException e) {
 			result = false;
 		}
@@ -199,7 +198,7 @@ public class ViewEventoRegistro extends JFrame {
 		try {
 			LocalDateTime fechaInicio = convertToLocalDateTime(dateInicio.getDate());
 			LocalDateTime fechaFin = convertToLocalDateTime(dateFin.getDate());
-			bo.validarFechas(fechaInicio, fechaFin);
+			dao.validarFechas(fechaInicio, fechaFin);
 		} catch (Exception e) {
 			result = false;
 		}
@@ -215,12 +214,12 @@ public class ViewEventoRegistro extends JFrame {
 				Evento evento = getEventoFromForm();
 				evento.setTutores(viewResponsables.getSeleccionados());
 				if (editEvent == null) {
-					bo.create(evento);					
+					dao.create(evento);					
 				} else {
 					System.out.println(evento.getTutores());
 					evento.setIdEvento(editEvent.getIdEvento());
 					evento.setEstado((EventoEstado) selectEstado.getSelectedItem());
-					bo.update(evento);
+					dao.update(evento);
 				}
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());

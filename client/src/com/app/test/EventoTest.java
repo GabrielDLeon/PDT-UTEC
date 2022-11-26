@@ -8,8 +8,8 @@ import java.util.List;
 import javax.naming.NamingException;
 import javax.swing.JOptionPane;
 
-import com.app.controllers.EventoBO;
-import com.app.controllers.EventoEstadoBO;
+import com.app.controllers.EventoDAO;
+import com.app.controllers.EventoEstadoDAO;
 import com.app.singleton.BeanRemoteManager;
 import com.entities.Analista;
 import com.entities.Asistencia;
@@ -48,7 +48,7 @@ public class EventoTest {
 	}
 
 	private static void workspace() {
-		EventoBO bo = new EventoBO(new Analista());
+		EventoDAO bo = new EventoDAO(new Analista());
 		LocalDateTime date = LocalDateTime.now();
 		bo.create(Evento.builder()
 				.nombre("Prueba XD")

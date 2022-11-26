@@ -1,8 +1,9 @@
-package com.app.test;
+package com.app.views;
 
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.GridBagLayout;
@@ -12,9 +13,9 @@ import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
-import com.app.controllers.UsuarioBO;
+import com.app.controllers.UsuarioDAO;
 import com.app.singleton.RobotoFont;
-import com.app.views.CustomTable;
+import com.app.views.panels.PanelUsuarioFiltro;
 import com.entities.Evento;
 import com.entities.Tutor;
 import com.formdev.flatlaf.FlatLightLaf;
@@ -31,7 +32,7 @@ import java.util.Map;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
-public class ViewEventoResponsables extends JFrame {
+public class ViewEventoResponsables extends JInternalFrame {
 
 	private JPanel contentPane;
 	private CustomTable table;
@@ -67,7 +68,7 @@ public class ViewEventoResponsables extends JFrame {
 
 
 	protected void refreshTable() {
-		UsuarioBO bo = new UsuarioBO();
+		UsuarioDAO bo = new UsuarioDAO();
 		List<Tutor> tutores = bo.getAllTutores();
 		for (Tutor tutor : tutores) {
 			Object[] row = new Object[3];
@@ -152,7 +153,7 @@ public class ViewEventoResponsables extends JFrame {
 		gbl_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
-		PanelUsuarioFiltro panelUsuarioFiltro = new PanelUsuarioFiltro();
+		PanelUsuarioFiltro panelUsuarioFiltro = new PanelUsuarioFiltro(new Tutor());
 		GridBagConstraints gbc_panelUsuarioFiltro = new GridBagConstraints();
 		gbc_panelUsuarioFiltro.fill = GridBagConstraints.BOTH;
 		gbc_panelUsuarioFiltro.insets = new Insets(0, 0, 5, 5);

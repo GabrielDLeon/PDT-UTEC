@@ -9,11 +9,11 @@ import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.services.users.UsuarioBeanRemote;
 
-public class UsuarioBO {
+public class UsuarioDAO {
 
 	private UsuarioBeanRemote beanUsuario;
 	
-	public UsuarioBO() {
+	public UsuarioDAO() {
 		try {
 			beanUsuario = BeanRemoteManager.getBeanUsuario();
 		} catch (NamingException e) {

@@ -80,7 +80,6 @@ public class EventoBean implements EventoBeanRemote {
 		
 		// Verifica que el evento no haya empezado y no tenga estudiantes participando (1)
 		if (empezado && participaron) {
-			System.out.println("No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
 			throw new Exception("No se pudo eliminar el evento. El evento ya inició y ya cuenta con participación de los estudiantes.");
 		}
 		
@@ -164,7 +163,6 @@ public class EventoBean implements EventoBeanRemote {
 	public List<Evento> findByTutor(Long idTutor) {
 		// Si eres Tutor, llamas a este método
 		TypedQuery<Evento> query = em.createNamedQuery("Evento.findByTutor", Evento.class);
-		System.out.println(idTutor);
 		query.setParameter("id", idTutor);
 		return query.getResultList();
 	}

@@ -3,10 +3,11 @@ package com.app.views;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import com.app.controllers.EventoEstadoBO;
+import com.app.controllers.EventoEstadoDAO;
 import com.entities.EventoEstado;
 import com.formdev.flatlaf.FlatDarkLaf;
 
@@ -32,7 +33,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.ListSelectionEvent;
 
-public class ViewEventoEstado extends JFrame {
+public class ViewEventoEstado extends JInternalFrame {
 
 	private JPanel contentPane;
 	private JTextField inputNombre;
@@ -45,7 +46,7 @@ public class ViewEventoEstado extends JFrame {
 	
 	private List<EventoEstado> estados = new ArrayList<EventoEstado>();
 	
-	private EventoEstadoBO bo = new EventoEstadoBO();
+	private EventoEstadoDAO dao = new EventoEstadoDAO();
 	
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
@@ -62,7 +63,7 @@ public class ViewEventoEstado extends JFrame {
 	}
 
 	private void setup() {
-		estados = bo.findAll();
+		estados = dao.findAll();
 		System.out.println(estados);
 		refreshList();
 	}
@@ -73,7 +74,7 @@ public class ViewEventoEstado extends JFrame {
 				.nombre(nombre)
 				.activo(true)
 				.build();
-		String mensaje = bo.create(estado);
+		String mensaje = dao.create(estado);
 		refreshList();
 		inputNombre.setText("");
 		JOptionPane.showMessageDialog(null, mensaje);
@@ -84,7 +85,7 @@ public class ViewEventoEstado extends JFrame {
 		estado.setNombre(inputNombre.getText());
 		int option = JOptionPane.showConfirmDialog(null, "¿Desea modificar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
-			String mensaje = bo.update(estado);
+			String mensaje = dao.update(estado);
 			refreshList();
 			inputNombre.setText("");
 			JOptionPane.showMessageDialog(null, mensaje);
@@ -95,7 +96,7 @@ public class ViewEventoEstado extends JFrame {
 		int option = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Estado seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
 		if (option == JOptionPane.YES_OPTION) {
 			EventoEstado estado = (EventoEstado) listEstado.getSelectedValue();
-			String mensaje = bo.delete(estado.getIdEstado());
+			String mensaje = dao.delete(estado.getIdEstado());
 			refreshList();
 			inputNombre.setText("");
 			JOptionPane.showMessageDialog(null, mensaje);
@@ -104,7 +105,7 @@ public class ViewEventoEstado extends JFrame {
 	
 	private void refreshList() {		
 		model.removeAllElements();
-		estados = bo.findByStatus(true);
+		estados = dao.findByStatus(true);
 		model.addAll(estados);
 	}
 	

@@ -6,6 +6,7 @@ import javax.naming.NamingException;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -13,7 +14,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
-import com.app.controllers.AsistenciaBO;
+import com.app.controllers.AsistenciaDAO;
 import com.app.singleton.BeanRemoteManager;
 import com.app.singleton.RobotoFont;
 import com.entities.Analista;
@@ -48,7 +49,7 @@ import java.awt.GridLayout;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-public class ViewAsistenciaMain extends JFrame {
+public class ViewAsistenciaMain extends JInternalFrame {
 
 	private JPanel panel;
 	private JPanel contentPane;
@@ -70,7 +71,7 @@ public class ViewAsistenciaMain extends JFrame {
 	private JComboBox<EnumAsistenciaEstado> selectEstado;
 	
 	private Evento evento;
-	private AsistenciaBO bo = new AsistenciaBO();
+	private AsistenciaDAO dao = new AsistenciaDAO();
 	
 	private JSpinner inputNota;
 	private JTextField inputNombre;
@@ -118,7 +119,7 @@ public class ViewAsistenciaMain extends JFrame {
 	
 	private void refreshTable() {
 		model.setRowCount(0);
-		convocados = bo.findByEvento(evento.getIdEvento());
+		convocados = dao.findByEvento(evento.getIdEvento());
 		for (Asistencia a : convocados) {
 			Object[] row = new Object[4];
 			row[0] = a;
@@ -162,7 +163,7 @@ public class ViewAsistenciaMain extends JFrame {
 		Asistencia a = (Asistencia) tAsistencia.getValueAt(row, 0);		
 		a.setEstado((EnumAsistenciaEstado) selectEstado.getSelectedItem());
 		a.setCalificacion((double) inputNota.getValue());
-		String mensaje = bo.update(a);
+		String mensaje = dao.update(a);
 		refreshTable();
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
@@ -179,7 +180,7 @@ public class ViewAsistenciaMain extends JFrame {
 		System.out.println(idEvento);
 		long idEstudiante = a.getEstudiante().getIdUsuario();
 		System.out.println(idEstudiante);
-		String mensaje = bo.delete(idEvento, idEstudiante);
+		String mensaje = dao.delete(idEvento, idEstudiante);
 		refreshTable();
 		JOptionPane.showMessageDialog(null, mensaje);
 	}
