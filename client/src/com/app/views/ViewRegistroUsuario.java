@@ -78,12 +78,14 @@ public class ViewRegistroUsuario extends JFrame {
 	private List<Genero> generoList;
 	private List<Localidad> localidades;
 	
+	private JComboBox<Departamento> selectDepartamento = new JComboBox<Departamento>();
+	private JComboBox<Genero> selectGenero = new JComboBox<Genero>();
+	private JComboBox<EnumTutorArea> selectArea = new JComboBox<EnumTutorArea>();
+	private JComboBox<EnumTutorTipo> selectTipo = new JComboBox<EnumTutorTipo>();
 	
-	private JComboBox selectDepartamento;
 	private JLabel lblDepartamento;
 	private JComboBox<Localidad> selectLocalidad = new JComboBox<Localidad>();
 	private JLabel lblLocalidad;
-	private JComboBox selectGenero;
 	private JLabel lblGenero;
 	private JLabel lblNacimiento;
 	private JDateChooser dateChooser;
@@ -94,8 +96,6 @@ public class ViewRegistroUsuario extends JFrame {
 	private JLabel lblGeneracion;
 	private JLabel lblArea;
 	private JLabel lblTipo;
-	private JComboBox selectArea;
-	private JComboBox selectTipo;
 	
 	private UsuarioDAO bo = new UsuarioDAO();
 
@@ -147,7 +147,6 @@ public class ViewRegistroUsuario extends JFrame {
 	}
 	
 	public ViewRegistroUsuario(Usuario u) throws NamingException {
-		
 		this.userType = u;
 		
 		try {
@@ -395,11 +394,13 @@ public class ViewRegistroUsuario extends JFrame {
 		panel.add(lblDepartamento, gbc_lblDepartamento);
 		
 		selectDepartamento = new JComboBox(departamentos.toArray());
+		selectDepartamento.setSelectedItem(null);
 		selectDepartamento.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
 				Departamento d = (Departamento) selectDepartamento.getSelectedItem();
 				List<Localidad> lista = d.getLocalidades();
 				selectLocalidad.setModel(new DefaultComboBoxModel<Localidad>(lista.toArray(new Localidad[0])));
+				
 			}
 		});
 		GridBagConstraints gbc_selectDepartamento = new GridBagConstraints();
@@ -490,6 +491,7 @@ public class ViewRegistroUsuario extends JFrame {
 		gbc_btnCrear.gridy = 20;
 		panel.add(btnCrear, gbc_btnCrear);
 
+		limpiarInput();
 	}
 
 	public LocalDateTime convertToLocalDateTime(Date dateToConvert) {
@@ -521,6 +523,7 @@ public class ViewRegistroUsuario extends JFrame {
 				.build();
 			try {
 				bo.create(e);
+				limpiarInput();
 				JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente, queda a la espera de ser habilitado por un Analista");
 			} catch (Exception e1) {
 				JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
@@ -549,6 +552,7 @@ public class ViewRegistroUsuario extends JFrame {
 					.build();
 				try {
 					bo.create(t);
+					limpiarInput();
 					JOptionPane.showMessageDialog(null, "Se ha creado el usuario exitosamente, queda a la espera de ser habilitado por un Analista");
 				} catch (Exception e1) {
 					JOptionPane.showMessageDialog(null, "No se a podido crear el usuario " + e1.getMessage());
@@ -557,4 +561,21 @@ public class ViewRegistroUsuario extends JFrame {
 		}
 	}
 
+	private void limpiarInput() {
+		inputNombre1.setText("");
+		inputNombre2.setText("");
+		inputApellido1.setText("");
+		inputApellido2.setText("");
+		inputCedula.setText("");
+		inputEmail.setText("");
+		inputTelefono.setText("");
+		inputUsuario.setText("");
+		inputClave.setText("");
+		selectTipo.setSelectedItem(null);
+		selectGenero.setSelectedItem(null);
+		selectArea.setSelectedItem(null);
+		selectDepartamento.setSelectedItem(null);
+		selectItr.setSelectedItem(null);
+	}
+	
 }

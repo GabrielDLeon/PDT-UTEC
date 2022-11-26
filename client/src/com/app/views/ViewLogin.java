@@ -56,7 +56,6 @@ public class ViewLogin extends JFrame {
 	}
 
 	public ViewLogin() {
-
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 450);
 		contentPane = new JPanel();
@@ -207,24 +206,11 @@ public class ViewLogin extends JFrame {
 
 	@SuppressWarnings("deprecation")
 	protected void login() {
-
 		try {
 			Usuario u = uBO.login(inputUsuario.getText(), inputClave.getText());
-
-			if (u.getClass().equals(Analista.class)) {
-				JOptionPane.showMessageDialog(null, "Analista");
-				Dashboard dash = new Dashboard(u);
-				dash.setVisible(true);
-			} else if (u.getClass().equals(Tutor.class)) {
-				JOptionPane.showMessageDialog(null, "Tutor");
-				Dashboard dash = new Dashboard(u);
-				dash.setVisible(true);
-			} else if (u.getClass().equals(Estudiante.class)) {
-				JOptionPane.showMessageDialog(null, "Estudiante");
-				Dashboard dash = new Dashboard(u);
-				dash.setVisible(true);
-			}
-
+			Dashboard dash = new Dashboard(u);
+			dash.setVisible(true);
+			dispose();
 		} catch (Exception e) {
 			lblRespuesta.setText(e.getMessage());
 		}

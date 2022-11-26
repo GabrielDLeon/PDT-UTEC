@@ -49,7 +49,7 @@ import java.awt.GridLayout;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
-public class ViewAsistenciaMain extends JInternalFrame {
+public class ViewAsistenciaMain extends JFrame {
 
 	private JPanel panel;
 	private JPanel contentPane;

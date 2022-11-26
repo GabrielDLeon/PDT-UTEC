@@ -181,7 +181,7 @@ public class Dashboard extends JFrame {
 							} else if (item == d6) {
 								JOptionPane.showMessageDialog(null, "Proximamente");
 							} else if (item == exit) {
-								dispose();
+								exit();
 							}
 						}
 					})
@@ -223,7 +223,7 @@ public class Dashboard extends JFrame {
 							} else if (item == d6) {
 								JOptionPane.showMessageDialog(null, "Proximamente");
 							} else if (item == exit) {
-								dispose();
+								exit();
 							}
 						}
 					})
@@ -256,12 +256,18 @@ public class Dashboard extends JFrame {
 							} else if (item == d6) {
 								JOptionPane.showMessageDialog(null, "Proximamente");
 							} else if (item == exit) {
-								dispose();
+								exit();
 							}
 						}
 					})
 
 					.build();
 		}
+	}
+	
+	private void exit() {
+		ViewLogin login = new ViewLogin();
+		login.setVisible(true);
+		dispose();
 	}
 }
