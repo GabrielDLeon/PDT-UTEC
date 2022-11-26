@@ -4,6 +4,7 @@ import javax.naming.NamingException;
 
 import com.app.singleton.BeanRemoteManager;
 import com.dto.EstudianteVO;
+import com.entities.Usuario;
 import com.services.users.UsuarioBeanRemote;
 
 public class UsuarioTest {
@@ -13,7 +14,10 @@ public class UsuarioTest {
 	public static void main(String[] args) {
 		try {
 			bean = BeanRemoteManager.getBeanUsuario();
-			create();
+//			create();
+			Usuario u = bean.login("admin", "admin");
+			System.out.println(u.getClass());
+			
 		} catch (NamingException e) {
 			e.printStackTrace();
 		} catch (Exception e) {

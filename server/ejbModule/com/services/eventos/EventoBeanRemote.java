@@ -12,16 +12,24 @@ import com.entities.Tutor;
 @Remote
 public interface EventoBeanRemote {
 	void create(Evento evento) throws Exception;
+
 	void update(Evento evento) throws Exception;
+
 	void delete(Long id) throws Exception;
+
 	Evento findById(Long id);
+
 	List<Evento> findAll();
+
 	List<Evento> findByTutor(Long idTutor);
+
 	List<Evento> findByItr(Long idItr);
-	
+
 	// Esto después se borra
 	Tutor getTutor(Long id);
+
 	Estudiante getEstudiante(Long id);
+
 	List<Evento> search(EventoBusquedaVO vo);
-	
+
 }

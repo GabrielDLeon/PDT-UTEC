@@ -14,7 +14,7 @@ public class EstudianteVO extends UsuarioVO {
 	public EstudianteVO(UsuarioVOBuilder<?, ?> b) {
 		super(b);
 	}
-	
+
 	private String generacion;
 
 }

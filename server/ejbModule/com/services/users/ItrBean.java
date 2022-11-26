@@ -28,20 +28,36 @@ public class ItrBean implements ItrBeanRemote {
 
 	@Override
 	public void create(Itr itr) throws Exception {
-		// TODO Auto-generated method stub
-
+		try {
+			em.persist(itr);
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
 	public void update(Itr itr) throws Exception {
-		// TODO Auto-generated method stub
-
+		try {
+			em.merge(itr);
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 	}
 
 	@Override
 	public void delete(Long id) throws Exception {
-		// TODO Auto-generated method stub
-
+		Itr itr = em.find(Itr.class, id);
+		if (itr == null) {
+			throw new Exception("No se encontró el departamento");
+		}
+		try {
+			em.remove(itr);
+			em.flush();
+		} catch (Exception e) {
+			throw new Exception("Error: " + e);
+		}
 	}
 
 	@Override

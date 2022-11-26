@@ -2,9 +2,7 @@ package com.enumerators;
 
 public enum EnumEventoTipo {
 
-	JORNADA_PRESENCIAL("Jornada Presencial"),
-	PRUEBA_FINAL("Prueba Final"),
-	EXAMEN("Exámen"),
+	JORNADA_PRESENCIAL("Jornada Presencial"), PRUEBA_FINAL("Prueba Final"), EXAMEN("Exámen"),
 	DEFENSA_PROYECTO("Defensa de Proyecto");
 
 	private String nombre;
@@ -17,5 +15,5 @@ public enum EnumEventoTipo {
 	public String toString() {
 		return this.nombre;
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package com.app.test;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import com.entities.Evento;
 import com.entities.EventoEstado;
 import com.entities.Itr;
 import com.entities.Tutor;
-import com.enumerators.EnumAsistenciaEstado;
 import com.enumerators.EnumEventoModalidad;
 import com.enumerators.EnumEventoTipo;
 import com.services.eventos.AsistenciaBeanRemote;

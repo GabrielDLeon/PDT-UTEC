@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.entities.Departamento;
+import com.entities.Localidad;
 
 @Stateless
 public class DepartamentoBean implements DepartamentoBeanRemote {
@@ -53,10 +54,9 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 		}
 		try {
 			em.remove(departamento);
-			departamento.setNombre("DURAZNOOO");
 			em.flush();
 		} catch (Exception e) {
-			throw new Exception("Error: "+e);
+			throw new Exception("Error: " + e);
 		}
 	}
 
@@ -68,6 +68,18 @@ public class DepartamentoBean implements DepartamentoBeanRemote {
 		List<Departamento> list = query.getResultList();
 		session.getTransaction().commit();
 		session.close();
+		return list;
+	}
+
+	@Override
+	public Departamento findById(Long id) {
+		return (Departamento) em.find(Departamento.class, id);
+	}
+
+	@Override
+	public List<Localidad> findByDepartamento(Long id) {
+		List<Localidad> list = (List<Localidad>) em.createNamedQuery("Localidad.findByDepartamento", Localidad.class)
+				.setParameter("id", id).getResultList();
 		return list;
 	}
 

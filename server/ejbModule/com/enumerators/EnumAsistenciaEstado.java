@@ -2,10 +2,7 @@ package com.enumerators;
 
 public enum EnumAsistenciaEstado {
 
-	CONVOCADO("Convocado"),
-	ASISTENCIA("Asistencia"),
-	MEDIA_ASISTENCIA("Media Asistencia"),
-	AUSENCIA("Ausencia"),
+	CONVOCADO("Convocado"), ASISTENCIA("Asistencia"), MEDIA_ASISTENCIA("Media Asistencia"), AUSENCIA("Ausencia"),
 	AUSENCIA_JUSTIFICADA("Ausencia Justificada");
 
 	private String nombre;

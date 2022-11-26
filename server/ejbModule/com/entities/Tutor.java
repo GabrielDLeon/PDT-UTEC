@@ -2,9 +2,15 @@ package com.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.NamedQuery;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 
 import com.enumerators.EnumTutorArea;
+import com.enumerators.EnumTutorTipo;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,13 +26,14 @@ import lombok.experimental.SuperBuilder;
 @ToString
 @SuperBuilder
 @Entity
-@Table(name="USER_TUTORES")
+@Table(name = "USER_TUTORES")
 @PrimaryKeyJoinColumn(name = "USUARIO")
-@NamedQuery(name="Tutor.findAll", query="SELECT t FROM Tutor t")
+@NamedQuery(name = "Tutor.findAll", query = "SELECT t FROM Tutor t")
 public class Tutor extends Usuario implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private String tipo;
+	@Enumerated(EnumType.STRING)
+	private EnumTutorTipo tipo;
 
 	@Enumerated(EnumType.STRING)
 	private EnumTutorArea area;

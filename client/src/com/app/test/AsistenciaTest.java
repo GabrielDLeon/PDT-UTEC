@@ -9,7 +9,6 @@ import java.util.LinkedList;
 
 import com.app.controllers.AsistenciaDAO;
 import com.app.singleton.BeanRemoteManager;
-import com.entities.Asistencia;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.services.eventos.AsistenciaBeanRemote;
