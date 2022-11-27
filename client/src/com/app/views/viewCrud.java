@@ -583,6 +583,8 @@ public class viewCrud extends JInternalFrame {
 		gbc_btnModificar.gridy = 17;
 		getContentPane().add(btnModificar, gbc_btnModificar);
 		
+		if(userType.getClass() == Analista.class) {
+		
 		JLabel lblFiltrar = new JLabel("Filtrar");
 		GridBagConstraints gbc_lblFiltrar = new GridBagConstraints();
 		gbc_lblFiltrar.gridwidth = 4;
@@ -665,6 +667,7 @@ public class viewCrud extends JInternalFrame {
 			getContentPane().add(btnEliminar, gbc_btnEliminar);
 		}
 		
+		}
 
 	}
 

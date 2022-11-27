@@ -33,6 +33,11 @@ public class UsuarioDAO {
 		return u;
 	}
 	
+	public Estudiante findEstudiante(Long id) {
+		Estudiante e = beanUsuario.findEstudiante(id);
+		return e;
+	}
+	
 	public void update(Usuario u) {
 		try {
 			beanUsuario.update(u);

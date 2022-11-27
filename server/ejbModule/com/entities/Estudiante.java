@@ -22,6 +22,7 @@ import java.util.List;
 @PrimaryKeyJoinColumn(name = "USUARIO")
 @NamedQuery(name="Estudiante.findAll", query="SELECT e FROM Estudiante e")
 public class Estudiante extends Usuario implements Serializable {
+	
 	private static final long serialVersionUID = 1L;
 
 	@Column(length = 20)

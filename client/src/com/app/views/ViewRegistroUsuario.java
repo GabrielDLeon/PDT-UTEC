@@ -154,6 +154,15 @@ public class ViewRegistroUsuario extends JFrame {
 		this.userType = u;
 		setup();
 		setBounds(100, 100, 640, 640);
+//		
+//		try {
+//			getItr();
+//			getDepartamento();
+//			getGenero();
+//		} catch (NamingException e) {
+//			System.out.println("No se pudo cargar la lista de ITR");
+//		}
+		setBounds(100, 100, 800, 600);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -601,6 +610,7 @@ public class ViewRegistroUsuario extends JFrame {
 		selectTipo.setSelectedItem(null);
 		selectGenero.setSelectedItem(null);
 		selectArea.setSelectedItem(null);
+//		selectDepartamento.setSelectedItem(null);
 		selectItr.setSelectedItem(null);
 	}
 	

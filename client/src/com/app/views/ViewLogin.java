@@ -42,7 +42,7 @@ public class ViewLogin extends JFrame {
 
 	public static void main(String[] args) {
 		FlatDarkLaf.setup();
-		UIManager.getLookAndFeelDefaults().put("defaultFont", RobotoFont.getNormal());
+//		UIManager.getLookAndFeelDefaults().put("defaultFont", RobotoFont.getNormal());
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {

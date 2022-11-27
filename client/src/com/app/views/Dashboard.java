@@ -4,7 +4,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -17,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import com.app.test.ViewEscolaridad;
 import com.app.themes.Header;
 import com.entities.Analista;
 import com.entities.Estudiante;
@@ -53,6 +56,10 @@ public class Dashboard extends JFrame {
 
 	public Dashboard(Usuario u) {
 		setLocationRelativeTo(null);
+	
+		ImageIcon icon = new ImageIcon(this.getClass().getResource("/com/app/themes/background.jpg"));
+		Image img = icon.getImage();
+
 		this.userType = u;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -79,7 +86,11 @@ public class Dashboard extends JFrame {
 		lblMenu.setIcon(new ImageIcon(Dashboard.class.getResource("/com/app/themes/Menu.png")));
 		lblMenu.setFont(new Font("Roboto", Font.PLAIN, 12));
 
-		JDesktopPane desktopPane = new JDesktopPane();
+		JDesktopPane desktopPane = new JDesktopPane() {
+			public void paintComponent(Graphics g) {
+				g.drawImage(img, 0, 0, getWidth(), getHeight(), this);
+			}
+		};
 		desktopPane.setBorder(null);
 		contentPane.add(desktopPane, "cell 1 0,grow");
 		GridBagLayout gbl_desktopPane = new GridBagLayout();
@@ -179,7 +190,14 @@ public class Dashboard extends JFrame {
 										(desktopSize.height - FrameSize.height) / 2);
 								vem.show();
 							} else if (item == d6) {
-								JOptionPane.showMessageDialog(null, "Proximamente");
+								desktopPane.removeAll();
+								ViewEscolaridad ve = new ViewEscolaridad(u);
+								desktopPane.add(ve);
+								Dimension desktopSize = desktopPane.getSize();
+								Dimension FrameSize = ve.getSize();
+								ve.setLocation((desktopSize.width - FrameSize.width) / 2,
+										(desktopSize.height - FrameSize.height) / 2);
+								ve.show();
 							} else if (item == exit) {
 								exit();
 							}
@@ -221,7 +239,14 @@ public class Dashboard extends JFrame {
 										(desktopSize.height - FrameSize.height) / 2);
 								vem.show();
 							} else if (item == d6) {
-								JOptionPane.showMessageDialog(null, "Proximamente");
+								desktopPane.removeAll();
+								ViewEscolaridad ve = new ViewEscolaridad(u);
+								desktopPane.add(ve);
+								Dimension desktopSize = desktopPane.getSize();
+								Dimension FrameSize = ve.getSize();
+								ve.setLocation((desktopSize.width - FrameSize.width) / 2,
+										(desktopSize.height - FrameSize.height) / 2);
+								ve.show();
 							} else if (item == exit) {
 								exit();
 							}
@@ -254,7 +279,14 @@ public class Dashboard extends JFrame {
 								}
 								drawer.hide();
 							} else if (item == d6) {
-								JOptionPane.showMessageDialog(null, "Proximamente");
+								desktopPane.removeAll();
+								ViewEscolaridad ve = new ViewEscolaridad(u);
+								desktopPane.add(ve);
+								Dimension desktopSize = desktopPane.getSize();
+								Dimension FrameSize = ve.getSize();
+								ve.setLocation((desktopSize.width - FrameSize.width) / 2,
+										(desktopSize.height - FrameSize.height) / 2);
+								ve.show();
 							} else if (item == exit) {
 								exit();
 							}
