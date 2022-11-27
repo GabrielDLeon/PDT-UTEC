@@ -56,6 +56,7 @@ public class ViewLogin extends JFrame {
 	}
 
 	public ViewLogin() {
+		setLocationRelativeTo(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 500, 450);
 		contentPane = new JPanel();

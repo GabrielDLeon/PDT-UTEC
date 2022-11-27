@@ -83,14 +83,15 @@ public class UsuarioDAO {
 		}
 	}
 
-	public void create(Usuario u) {
-		// TODO Auto-generated method stub
-		try {
-			beanUsuario.create(u);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void create(Usuario u) throws Exception {
+		if (checkIsEmpty(u.getNombre1()) || checkIsEmpty(u.getApellido1()) || checkIsEmpty(u.getClave()) || checkIsEmpty(u.getUsuario()) || checkIsEmpty(u.getDocumento())) {
+			throw new Exception("No pueden existir campos obligatorios vacíos");
 		}
+		beanUsuario.create(u);
+	}
+	
+	private boolean checkIsEmpty(String s) {
+		return s.trim().isEmpty();
 	}
 	
 }

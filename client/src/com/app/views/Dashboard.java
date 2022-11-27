@@ -52,7 +52,7 @@ public class Dashboard extends JFrame {
 	}
 
 	public Dashboard(Usuario u) {
-
+		setLocationRelativeTo(null);
 		this.userType = u;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
