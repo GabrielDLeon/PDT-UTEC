@@ -45,7 +45,7 @@ import com.services.users.GeneroBeanRemote;
 import com.services.users.ItrBeanRemote;
 import com.toedter.calendar.JDateChooser;
 
-public class viewCrud extends JInternalFrame {
+public class ViewUsuarioMain extends JInternalFrame {
 
 	private static final long serialVersionUID = 1L;
 
@@ -87,7 +87,7 @@ public class viewCrud extends JInternalFrame {
 			public void run() {
 				try {
 					Usuario u = new Analista();
-					viewCrud frame = new viewCrud(u);
+					ViewUsuarioMain frame = new ViewUsuarioMain(u);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -134,29 +134,18 @@ public class viewCrud extends JInternalFrame {
 	protected void fillFilteredTable() {
 		table.model.setRowCount(0);
 		for (Usuario u : usuarios) {
-			Object[] row = new Object[16];
-			row[0] = u.getIdUsuario();
-			row[1] = u.getNombre1();
-			row[2] = u.getNombre2();
-			row[3] = u.getApellido1();
-			row[4] = u.getApellido2();
-			row[5] = u.getGenero();
-			row[6] = u.getFechaNac();
-			row[7] = u.getDocumento();
-			row[8] = u.getTelefono();
-			row[9] = u.getMail();
-			row[10] = u.getDepartamento();
-			row[11] = u.getLocalidad();
-			row[12] = u.getItr();
-			row[13] = u.getUsuario();
-			row[14] = u.getClave();
-			row[15] = u.getEstado();
+			Object[] row = new Object[5];
+			row[0] = u;
+			row[1] = u.getIdUsuario();
+			row[2] = u.getDocumento();
+			row[3] = u.getNombre1() + u.getApellido1();
+			row[4] = u.getEstado();
 			table.model.addRow(row);
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public viewCrud(Usuario u) throws NamingException {
+	public ViewUsuarioMain(Usuario u) throws NamingException {
 		
 		this.userType = u;
 		
@@ -208,9 +197,8 @@ public class viewCrud extends JInternalFrame {
 
 		
 		if (userType.getClass() == Analista.class) {
-			
 			table = new CustomTable();
-			table.setColumns("ID","Nombre1","Nombre2","Apellido1","Apellido2","Genero","Fecha Nac.","Documento","Telefono","Correo","Departamento","Localidad","ITR","Usuario","Contrasenia","Estado");
+			table.setColumns("Usuario","ID","Documento","Nombre","Estado");
 			scrollPane.setViewportView(table);
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
@@ -682,26 +670,13 @@ public class viewCrud extends JInternalFrame {
 		table.model.setRowCount(0);
 		
 		for (Usuario u : est) {
-
-			Object[] row = new Object[16];
-			row[0] = u.getIdUsuario();
-			row[1] = u.getNombre1();
-			row[2] = u.getNombre2();
-			row[3] = u.getApellido1();
-			row[4] = u.getApellido2();
-			row[5] = u.getGenero();
-			row[6] = u.getFechaNac();
-			row[7] = u.getDocumento();
-			row[8] = u.getTelefono();
-			row[9] = u.getMail();
-			row[10] = u.getDepartamento();
-			row[11] = u.getLocalidad();
-			row[12] = u.getItr();
-			row[13] = u.getUsuario();
-			row[14] = u.getClave();
-			row[15] = u.getEstado();
+			Object[] row = new Object[5];
+			row[0] = u;
+			row[1] = u.getIdUsuario();
+			row[2] = u.getDocumento();
+			row[3] = u.getNombre1() + u.getApellido1();
+			row[4] = u.getEstado();
 			table.model.addRow(row);
-
 		}
 
 		for (Usuario u : tut) {
@@ -742,24 +717,25 @@ public class viewCrud extends JInternalFrame {
 	
 	
 	public void fillInputFromTable(int row) {
-		txtNombre1.setText(table.getValueAt(row, 1) + "");
-		txtNombre2.setText(table.getValueAt(row, 2) + "");
-		txtApellido1.setText(table.getValueAt(row, 3) + "");
-		txtApellido2.setText(table.getValueAt(row, 4) + "");
-		dateChooser.setDate((Date) table.getValueAt(row, 6));
-		txtCedula.setText(table.getValueAt(row, 7) + "");
-		txtTelefono.setText(table.getValueAt(row, 8) + "");
-		txtEmail.setText(table.getValueAt(row, 9) + "");
-		txtUsuario.setText(table.getValueAt(row, 13) + "");
-		passwordField.setText(table.getValueAt(row, 14) + "");
+		Usuario usuario = (Usuario) table.getValueAt(0, row);
+		txtNombre1.setText(usuario.getNombre1());
+		txtNombre2.setText(usuario.getNombre2());
+		txtApellido1.setText(usuario.getApellido1());
+		txtApellido2.setText(usuario.getApellido2());
+		dateChooser.setDate(usuario.getFechaNac());
+		txtCedula.setText(usuario.getDocumento());
+		txtTelefono.setText(usuario.getTelefono());
+		txtEmail.setText(usuario.getMail());
+		txtUsuario.setText(usuario.getUsuario());
+		passwordField.setText(usuario.getClave());
 		
 		try {
-			selectGenero.setSelectedItem((Genero)table.getValueAt(row, 5));
+			/*selectGenero.setSelectedItem((Genero)table.getValueAt(row, 5));
 			selectDepartamento.setSelectedItem((Departamento)table.getValueAt(row, 10));
 			selectLocalidad.setSelectedItem((Localidad)table.getValueAt(row, 11));
 			selectItr.setSelectedItem((Itr)table.getValueAt(row, 12));
 			selectEstado.setSelectedItem(table.getValueAt(row, 15));
-			
+			*/
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

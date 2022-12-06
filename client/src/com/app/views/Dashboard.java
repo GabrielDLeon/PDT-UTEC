@@ -134,9 +134,9 @@ public class Dashboard extends JFrame {
 						public void selected(int index, DrawerItem item) {
 							if (item == d1) {
 								desktopPane.removeAll();
-								viewCrud vc;
+								ViewUsuarioMain vc;
 								try {
-									vc = new viewCrud(u);
+									vc = new ViewUsuarioMain(u);
 									desktopPane.add(vc);
 									Dimension desktopSize = desktopPane.getSize();
 									Dimension FrameSize = vc.getSize();
@@ -216,9 +216,9 @@ public class Dashboard extends JFrame {
 						public void selected(int index, DrawerItem item) {
 							if (item == d1) {
 								desktopPane.removeAll();
-								viewCrud vc;
+								ViewUsuarioMain vc;
 								try {
-									vc = new viewCrud(u);
+									vc = new ViewUsuarioMain(u);
 									desktopPane.add(vc);
 									Dimension desktopSize = desktopPane.getSize();
 									Dimension FrameSize = vc.getSize();
@@ -265,9 +265,9 @@ public class Dashboard extends JFrame {
 						public void selected(int index, DrawerItem item) {
 							if (item == d1) {
 								desktopPane.removeAll();
-								viewCrud vc;
+								ViewUsuarioMain vc;
 								try {
-									vc = new viewCrud(u);
+									vc = new ViewUsuarioMain(u);
 									desktopPane.add(vc);
 									Dimension desktopSize = desktopPane.getSize();
 									Dimension FrameSize = vc.getSize();
