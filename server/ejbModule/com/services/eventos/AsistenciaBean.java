@@ -34,7 +34,7 @@ public class AsistenciaBean implements AsistenciaBeanRemote {
     	session = factory.openSession();
 		session.beginTransaction();
 		for (Asistencia asistencia : convocados) {
-			em.merge(asistencia);
+			em.merge(asistencia);				
 		}
 		session.getTransaction().commit();
 		session.close();

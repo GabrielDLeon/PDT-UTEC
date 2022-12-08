@@ -89,7 +89,7 @@ public class ViewEventoResponsables extends JFrame {
 	protected void insert() {
 		int row = table.getSelectedRow();
 		if (row >= 0) {
-			Tutor tutor = (Tutor) table.getValueAt(0, row);
+			Tutor tutor = (Tutor) table.getValueAt(row, 0);
 			map.put(tutor.getIdUsuario(), tutor);
 			refreshList();
 		}

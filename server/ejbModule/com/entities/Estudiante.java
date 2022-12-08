@@ -12,10 +12,10 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
+@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @SuperBuilder
 @Entity
 @Table(name="USER_ESTUDIANTES")
@@ -38,6 +38,11 @@ public class Estudiante extends Usuario implements Serializable {
 	@OneToMany(mappedBy="estudiante", orphanRemoval = true)
 	List<Asistencia> asistencias;
 
+	@Override
+	public String toString() {
+		return getDocumento() + " - " + getNombre1() + " " + getApellido1();
+	}
+	
 	public Estudiante removeAsitencia(Asistencia asistencia) {
 		asistencias.remove(asistencia);
 		return this;

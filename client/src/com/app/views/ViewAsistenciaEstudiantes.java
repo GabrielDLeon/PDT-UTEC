@@ -13,9 +13,11 @@ import javax.swing.JButton;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
+import com.app.controllers.AsistenciaDAO;
 import com.app.controllers.UsuarioDAO;
 import com.app.singleton.RobotoFont;
 import com.app.views.panels.PanelUsuarioFiltro;
+import com.entities.Asistencia;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.Usuario;
@@ -24,8 +26,10 @@ import com.formdev.flatlaf.FlatLightLaf;
 
 import javax.swing.JScrollPane;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JLabel;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,7 +37,7 @@ import java.util.Map;
 import java.util.Set;
 import java.awt.event.ActionEvent;
 
-public class ViewAsistenciaEstudiantes extends JInternalFrame {
+public class ViewAsistenciaEstudiantes extends JFrame {
 
 	private JPanel contentPane;
 	private CustomTable table;
@@ -44,6 +48,10 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 	private DefaultListModel<Estudiante> lModel = new DefaultListModel<Estudiante>();
 
 	private Evento evento = new Evento();
+	
+	private AsistenciaDAO dao = new AsistenciaDAO();
+	
+	private ViewAsistenciaMain main;
 	
 	// TODO: Eliminar el método Main
 	public static void main(String[] args) {
@@ -90,10 +98,8 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 	
 	protected void insert() {
 		int row = table.getSelectedRow();
-		System.out.println(row);
 		if (row >= 0) {
 			Estudiante estudiante = (Estudiante) table.getValueAt(row, 0);
-			System.out.println(estudiante);
 			map.put(estudiante.getIdUsuario(), estudiante);
 			refreshList();
 		}
@@ -106,17 +112,31 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 		refreshList();
 	}
 
+	private void save() {
+		List<Estudiante> list = new ArrayList<Estudiante>(map.values());
+		String mensaje = "";
+		try {
+			dao.create(evento, list);
+			mensaje = "Estudiantes registrados al Evento correctamente";
+		} catch (Exception e) {
+			// TODO: handle exception
+			mensaje = "Error al intentar registrar los Estudiantes:\n" + e.getMessage();
+		}
+		main.refreshTable();
+		JOptionPane.showMessageDialog(null, mensaje);
+	}
 	
 	public Set<Estudiante> getSeleccionados() {
 		return new HashSet<Estudiante>(map.values());
 	}
 
-	
-	public ViewAsistenciaEstudiantes(Set<Estudiante> seleccionados, Evento evento) {
-		if (seleccionados != null)
-			for (Estudiante estudiante : seleccionados) {
+	public ViewAsistenciaEstudiantes(List<Asistencia> convocados, Evento evento) {
+		if (convocados != null)
+			for (Asistencia asistencia : convocados) {
+				Estudiante estudiante = asistencia.getEstudiante();
 				map.put(estudiante.getIdUsuario(), estudiante);
 			}
+
 		this.evento = evento;
 		
 		setup();
@@ -150,13 +170,14 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 		contentPane.add(panel, gbc_panel);
 		GridBagLayout gbl_panel = new GridBagLayout();
 		gbl_panel.columnWidths = new int[]{0, 0, 0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0};
+		gbl_panel.rowHeights = new int[]{0, 0, 0, 0};
 		gbl_panel.columnWeights = new double[]{1.0, 5.0, 5.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{1.0, 0.0, Double.MIN_VALUE};
+		gbl_panel.rowWeights = new double[]{1.0, 0.0, 0.0, Double.MIN_VALUE};
 		panel.setLayout(gbl_panel);
 		
 		PanelUsuarioFiltro panelUsuarioFiltro = new PanelUsuarioFiltro(new Estudiante());
 		GridBagConstraints gbc_panelUsuarioFiltro = new GridBagConstraints();
+		gbc_panelUsuarioFiltro.gridheight = 2;
 		gbc_panelUsuarioFiltro.fill = GridBagConstraints.BOTH;
 		gbc_panelUsuarioFiltro.insets = new Insets(0, 0, 5, 5);
 		gbc_panelUsuarioFiltro.gridx = 0;
@@ -184,14 +205,6 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 		listaSeleccionados.setModel(lModel);
 		scrollPane_1.setViewportView(listaSeleccionados);
 		
-		JButton btnSearch = new JButton("Buscar");
-		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
-		gbc_btnSearch.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnSearch.insets = new Insets(0, 0, 0, 5);
-		gbc_btnSearch.gridx = 0;
-		gbc_btnSearch.gridy = 1;
-		panel.add(btnSearch, gbc_btnSearch);
-		
 		JButton btnInsert = new JButton("Añadir Estudiante");
 		btnInsert.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -200,7 +213,7 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 		});
 		GridBagConstraints gbc_btnInsert = new GridBagConstraints();
 		gbc_btnInsert.fill = GridBagConstraints.HORIZONTAL;
-		gbc_btnInsert.insets = new Insets(0, 0, 0, 5);
+		gbc_btnInsert.insets = new Insets(0, 0, 5, 5);
 		gbc_btnInsert.gridx = 1;
 		gbc_btnInsert.gridy = 1;
 		panel.add(btnInsert, gbc_btnInsert);
@@ -212,10 +225,35 @@ public class ViewAsistenciaEstudiantes extends JInternalFrame {
 			}
 		});
 		GridBagConstraints gbc_btnDelete = new GridBagConstraints();
+		gbc_btnDelete.insets = new Insets(0, 0, 5, 0);
 		gbc_btnDelete.fill = GridBagConstraints.HORIZONTAL;
 		gbc_btnDelete.gridx = 2;
 		gbc_btnDelete.gridy = 1;
 		panel.add(btnDelete, gbc_btnDelete);
+		
+		JButton btnSearch = new JButton("Buscar");
+		GridBagConstraints gbc_btnSearch = new GridBagConstraints();
+		gbc_btnSearch.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnSearch.insets = new Insets(0, 0, 0, 5);
+		gbc_btnSearch.gridx = 0;
+		gbc_btnSearch.gridy = 2;
+		panel.add(btnSearch, gbc_btnSearch);
+		
+		JButton btnConvocar = new JButton("Convocar Estudiantes Seleccionados");
+		btnConvocar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				save();
+			}
+		});
+		GridBagConstraints gbc_btnConvocar = new GridBagConstraints();
+		gbc_btnConvocar.fill = GridBagConstraints.HORIZONTAL;
+		gbc_btnConvocar.gridwidth = 2;
+		gbc_btnConvocar.gridx = 1;
+		gbc_btnConvocar.gridy = 2;
+		panel.add(btnConvocar, gbc_btnConvocar);
 	}
 	
+	public void setMain(ViewAsistenciaMain main) {
+		this.main = main;
+	}
 }

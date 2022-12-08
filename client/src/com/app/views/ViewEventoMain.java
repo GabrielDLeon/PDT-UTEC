@@ -269,7 +269,6 @@ public class ViewEventoMain extends JInternalFrame {
 		refreshTable(vo);
 	}
 	
-	
 	private void clean() {
 		panelFiltro.cleanFilters();
 		refreshTable(null);

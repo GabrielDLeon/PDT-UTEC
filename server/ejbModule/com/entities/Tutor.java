@@ -23,7 +23,6 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @SuperBuilder
 @Entity
 @Table(name = "USER_TUTORES")
@@ -38,4 +37,9 @@ public class Tutor extends Usuario implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private EnumTutorArea area;
 
+	@Override
+	public String toString() {
+		return getDocumento() + " - " + getNombre1() + " " + getApellido1();
+	}
+	
 }

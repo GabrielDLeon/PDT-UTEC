@@ -33,7 +33,9 @@ import javax.swing.JScrollPane;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JTable;
 import javax.swing.JButton;
@@ -65,7 +67,6 @@ public class ViewAsistenciaMain extends JFrame {
 	       return false;
 	    }
 	};
-	
 
 	private List<Asistencia> convocados = new ArrayList<Asistencia>();
 	private JComboBox<EnumAsistenciaEstado> selectEstado;
@@ -117,7 +118,7 @@ public class ViewAsistenciaMain extends JFrame {
 	
 	// Funciones sobre el Tablero
 	
-	private void refreshTable() {
+	protected void refreshTable() {
 		model.setRowCount(0);
 		convocados = dao.findByEvento(evento.getIdEvento());
 		for (Asistencia a : convocados) {
@@ -148,9 +149,9 @@ public class ViewAsistenciaMain extends JFrame {
 		double calificacion = (double) tAsistencia.getValueAt(row, 3);
 		inputNombre.setText(nombre + " " + apellido);
 		inputDocumento.setText(e.getDocumento());
-//		inputGeneracion.setText(e.getGeneracion());
+		inputGeneracion.setText(e.getGeneracion()+"");
 		if (e.getItr() != null)
-			inputItr.setText(e.getItr().toString());
+			inputItr.setText(e.getItr()+"");
 		
 		selectEstado.setSelectedItem(estado);
 		inputNota.setValue(calificacion);
@@ -169,22 +170,25 @@ public class ViewAsistenciaMain extends JFrame {
 	}
 
 	protected void addEstudiante() {
-		// TODO Auto-generated method stub
-		
+		ViewAsistenciaEstudiantes view = new ViewAsistenciaEstudiantes(convocados, evento);
+		view.setVisible(true);
+		view.setDefaultCloseOperation(HIDE_ON_CLOSE);
+		view.setMain(this);
 	}
 	
 	private void delete() {
-		int row = tAsistencia.getSelectedRow();
-		Asistencia a = (Asistencia) tAsistencia.getValueAt(row, 0);
-		long idEvento = a.getEvento().getIdEvento();
-		System.out.println(idEvento);
-		long idEstudiante = a.getEstudiante().getIdUsuario();
-		System.out.println(idEstudiante);
-		String mensaje = dao.delete(idEvento, idEstudiante);
-		refreshTable();
-		JOptionPane.showMessageDialog(null, mensaje);
+		int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar la convocatoria del Estudiante seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
+		if(dialogResult == JOptionPane.YES_OPTION) {
+			int row = tAsistencia.getSelectedRow();
+			Asistencia a = (Asistencia) tAsistencia.getValueAt(row, 0);
+			long idEvento = a.getEvento().getIdEvento();
+			long idEstudiante = a.getEstudiante().getIdUsuario();
+			String mensaje = dao.delete(idEvento, idEstudiante);
+			refreshTable();
+			JOptionPane.showMessageDialog(null, mensaje);
+		}
 	}
-	
+
 	
 	// Manejadores de UI
 	
