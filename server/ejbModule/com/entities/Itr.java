@@ -36,7 +36,7 @@ public class Itr implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@SequenceGenerator(name = "ITR_IDITR_GENERATOR", sequenceName = "SEQ_ITR")
+	@SequenceGenerator(name = "ITR_IDITR_GENERATOR", sequenceName = "SEQ_ITR", allocationSize = 1)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ITR_IDITR_GENERATOR")
 	@Column(name = "ID_ITR")
 	private long idItr;

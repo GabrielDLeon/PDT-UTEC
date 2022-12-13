@@ -1,5 +1,6 @@
 package com.app.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.naming.NamingException;
@@ -13,34 +14,34 @@ import com.services.users.UsuarioBeanRemote;
 
 public class UsuarioDAO {
 
-	private UsuarioBeanRemote beanUsuario;
+	private UsuarioBeanRemote bean;
 	
 	public UsuarioDAO() {
 		try {
-			beanUsuario = BeanRemoteManager.getBeanUsuario();
+			bean = BeanRemoteManager.getBeanUsuario();
 		} catch (NamingException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	public Tutor findTutor(Long id) {
-		Tutor tutor = beanUsuario.findTutor(id);
+		Tutor tutor = bean.findTutor(id);
 		return tutor;
 	}
 	
 	public Usuario findUsuario(Long id) {
-		Usuario u = beanUsuario.findUsuario(id);
+		Usuario u = bean.findUsuario(id);
 		return u;
 	}
 	
 	public Estudiante findEstudiante(Long id) {
-		Estudiante e = beanUsuario.findEstudiante(id);
+		Estudiante e = bean.findEstudiante(id);
 		return e;
 	}
 	
 	public void update(Usuario u) {
 		try {
-			beanUsuario.update(u);
+			bean.update(u);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,7 +50,7 @@ public class UsuarioDAO {
 	
 	public void delete(Long id) {
 		try {
-			beanUsuario.delete(id);
+			bean.delete(id);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -57,23 +58,43 @@ public class UsuarioDAO {
 	}
 	
 	public List<Tutor> getAllTutores(){
-		List<Tutor> tutores = beanUsuario.findAllTutores();
+		List<Tutor> tutores = bean.findAllTutores();
 		return tutores;
 	}
 	
 	public List<Estudiante> getAllEstudiantes(){
-		List<Estudiante> estudiantes = beanUsuario.findAllEstudiantes();
+		List<Estudiante> estudiantes = bean.findAllEstudiantes();
 		return estudiantes;
 	}
 	
 	public List<Usuario> getAllUsuarios(){
-		List<Usuario> usuarios = beanUsuario.findAll();
+		List<Usuario> usuarios = bean.findAll();
 		return usuarios;
 	}
 	
 	public List<Usuario> search(UsuarioBusquedaVO vo) {
-		List<Usuario> result = beanUsuario.busqueda(vo);
+		List<Usuario> result = bean.search(vo);
 		return result;
+	}
+	
+	public List<Estudiante> searchEstudiantes(UsuarioBusquedaVO vo) {
+		vo.setUsuario(new Estudiante());
+		List<Usuario> result = bean.search(vo);
+		List<Estudiante> estudiantes = new ArrayList<Estudiante>();
+		for (Usuario u : result) {
+			estudiantes.add((Estudiante) u);
+		}
+		return estudiantes;
+	}
+	
+	public List<Tutor> searchTutores(UsuarioBusquedaVO vo) {
+		vo.setUsuario(new Tutor());
+		List<Usuario> result = bean.search(vo);
+		List<Tutor> tutores = new ArrayList<Tutor>();
+		for (Usuario u : result) {
+			tutores.add((Tutor) u);
+		}
+		return tutores;
 	}
 	
 	public Usuario login(String user, String password) throws Exception{
@@ -81,7 +102,7 @@ public class UsuarioDAO {
 			if (user.trim().isEmpty() || password.trim().isEmpty()) {
 				throw new Exception ("Debe de completar todos los campos");
 			}
-			Usuario u = beanUsuario.login(user, password);
+			Usuario u = bean.login(user, password);
 			return u;
 		} catch (Exception e) {
 			throw new Exception (e.getMessage());
@@ -92,7 +113,7 @@ public class UsuarioDAO {
 		if (checkIsEmpty(u.getNombre1()) || checkIsEmpty(u.getApellido1()) || checkIsEmpty(u.getClave()) || checkIsEmpty(u.getUsuario()) || checkIsEmpty(u.getDocumento())) {
 			throw new Exception("No pueden existir campos obligatorios vacíos");
 		}
-		beanUsuario.create(u);
+		bean.create(u);
 	}
 	
 	private boolean checkIsEmpty(String s) {

@@ -30,7 +30,7 @@ public interface UsuarioBeanRemote {
 
 	Usuario findUsuario(Long id);
 	
-	List<Usuario> busqueda(UsuarioBusquedaVO vo);
+	List<Usuario> search(UsuarioBusquedaVO vo);
 
 	public Usuario login(String user, String password) throws Exception;
 	

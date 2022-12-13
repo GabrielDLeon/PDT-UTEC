@@ -2,6 +2,7 @@ package com.services.users;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -9,20 +10,25 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.dto.UsuarioBusquedaVO;
+import com.entities.Analista;
 import com.entities.Estudiante;
 import com.entities.Evento;
 import com.entities.Itr;
 import com.entities.Tutor;
 import com.entities.Usuario;
 import com.enumerators.EnumUsuarioEstado;
+import com.enumerators.EnumUsuarioTipo;
 
 @Stateless
 public class UsuarioBean implements UsuarioBeanRemote {
@@ -136,10 +142,13 @@ public class UsuarioBean implements UsuarioBeanRemote {
 	}
 
 	@Override
-	public List<Usuario> busqueda(UsuarioBusquedaVO vo) {
-		var qb = em.getCriteriaBuilder();
-		var query = qb.createQuery(Usuario.class);
-		var root = query.from(Usuario.class);
+	public List<Usuario> search(UsuarioBusquedaVO vo) {
+		CriteriaBuilder qb = em.getCriteriaBuilder();
+		CriteriaQuery<Usuario> query = qb.createQuery(Usuario.class);
+		Class<? extends Usuario> type;
+		if (vo.getUsuario() == null) type = Usuario.class;
+		else type = vo.getUsuario().getClass();
+		var root = query.from(type);
 		query.select(root);
 		
 		List<Predicate> predicates = new ArrayList<Predicate>();
@@ -159,6 +168,23 @@ public class UsuarioBean implements UsuarioBeanRemote {
 				predicates.add(qb.equal(root.get("estado"), vo.getEstado()));
 			}
 		}
+		
+		if (vo.getArea() != null) {
+			predicates.add(qb.equal(root.get("area"), vo.getArea()));
+		}
+		
+		if (!vo.getNombre().trim().isEmpty()) {
+			predicates.add(qb.like(root.get("nombre1"), "%" + vo.getNombre() + "%"));
+		}
+		
+		if (!vo.getDocumento().trim().isEmpty()) {
+			predicates.add(qb.like(root.get("documento"), vo.getDocumento() + "%"));
+		}
+		
+		if (vo.getGeneracion() != 0) {
+			predicates.add(qb.equal(root.get("generacion"), vo.getGeneracion()));
+		}
+		
 		
 		query.where(qb.and(predicates.toArray(new Predicate[predicates.size()])));
 		return em.createQuery(query).getResultList();

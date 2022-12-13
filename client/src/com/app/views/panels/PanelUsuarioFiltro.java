@@ -9,9 +9,11 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 
 import com.app.singleton.RobotoFont;
+import com.dto.UsuarioBusquedaVO;
 import com.entities.Estudiante;
 import com.entities.Tutor;
 import com.entities.Usuario;
+import com.enumerators.EnumTutorArea;
 import com.enumerators.EnumUsuarioTipo;
 
 import javax.swing.JComboBox;
@@ -23,6 +25,7 @@ public class PanelUsuarioFiltro extends JPanel {
 	private JPanel panelTutor = new JPanel();
 	
 	private JComboBox<EnumUsuarioTipo> selectTipo;
+	private JComboBox<EnumTutorArea> selectArea;
 	private JSpinner inputGeneracion;
 	private JTextField inputNombre;
 	private JTextField inputDocumento;
@@ -116,7 +119,7 @@ public class PanelUsuarioFiltro extends JPanel {
 		panelEstudiante.add(lblGeneracion, gbc_lblGeneracion);
 		
 		inputGeneracion = new JSpinner();
-		inputGeneracion.setModel(new SpinnerNumberModel(2016, 2016, 3450, 1));
+		inputGeneracion.setModel(new SpinnerNumberModel(0, 0, 3450, 1));
 		GridBagConstraints gbc_inputGeneracion = new GridBagConstraints();
 		gbc_inputGeneracion.fill = GridBagConstraints.HORIZONTAL;
 		gbc_inputGeneracion.gridx = 0;
@@ -131,13 +134,30 @@ public class PanelUsuarioFiltro extends JPanel {
 		gbc_lblArea.gridy = 0;
 		panelTutor.add(lblArea, gbc_lblArea);
 		
-		JComboBox selectArea = new JComboBox();
+		selectArea = new JComboBox<EnumTutorArea>(EnumTutorArea.values());
 		GridBagConstraints gbc_selectArea = new GridBagConstraints();
 		gbc_selectArea.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectArea.gridx = 0;
 		gbc_selectArea.gridy = 1;
 		panelTutor.add(selectArea, gbc_selectArea);
 		
+	}
+	
+	public void cleanForm(){
+		inputNombre.setText("");
+		inputDocumento.setText("");
+		inputGeneracion.setValue(0);
+		selectArea.setSelectedItem(null);
+	}
+	
+	public UsuarioBusquedaVO search() {
+		UsuarioBusquedaVO vo = UsuarioBusquedaVO.builder()
+				.nombre(inputNombre.getText())
+				.area((EnumTutorArea) selectArea.getSelectedItem())
+				.documento(inputDocumento.getText())
+				.generacion((int) inputGeneracion.getValue())
+				.build();
+		return vo;
 	}
 
 }
