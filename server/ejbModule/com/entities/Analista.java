@@ -23,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+//@ToString
 @SuperBuilder
 @Entity
 @Table(name = "USER_ANALISTAS")
@@ -41,5 +41,10 @@ public class Analista extends Usuario implements Serializable {
 	@JoinTable(name = "GESTIONES", joinColumns = { @JoinColumn(name = "ANALISTA") }, inverseJoinColumns = {
 			@JoinColumn(name = "EVENTO") })
 	private List<Evento> eventos;
+	
+	@Override
+	public String toString() {
+		return getDocumento() + " - " + getNombre1() + " " + getApellido1();
+	}
 
 }

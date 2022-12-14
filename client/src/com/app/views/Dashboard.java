@@ -117,6 +117,8 @@ public class Dashboard extends JFrame {
 
 		DrawerItem d6 = new DrawerItem("Modulo Escolaridad")
 				.icon(new ImageIcon(getClass().getResource("/com/app/themes/Escolaridad.png")));
+		
+//		DrawerItem d7 = new DrawerItem("Modulo Constancias").icon(new ImageIcon(getClass().getResource("/com/app/themes/Constancia.png")));
 
 		DrawerItem exit = new DrawerItem("Salir")
 				.icon(new ImageIcon(getClass().getResource("/com/app/themes/Logout.png")));
@@ -126,7 +128,7 @@ public class Dashboard extends JFrame {
 		if (userType.getClass() == Analista.class) {
 			drawer = Drawer.newDrawer(this).drawerBackground(new Color(65, 65, 65)).enableScroll(true).header(h)
 					.separator(2, new Color(75, 75, 75)).space(20).addChild(d1.build()).addChild(d2.build())
-					.addChild(d3.build()).addChild(d4.build()).addChild(d5.build()).addChild(d6.build())
+					.addChild(d3.build()).addChild(d4.build()).addChild(d5.build()).addChild(d6.build())/*.addChild(d7.build())*/
 					.addFooter(exit.build())
 
 					.event(new EventDrawer() {
@@ -198,6 +200,15 @@ public class Dashboard extends JFrame {
 								ve.setLocation((desktopSize.width - FrameSize.width) / 2,
 										(desktopSize.height - FrameSize.height) / 2);
 								ve.show();
+//							} else if (item == d7) {
+//								desktopPane.removeAll();
+//								ViewConstancia vc = new ViewConstancia();
+//								desktopPane.add(vc);
+//								Dimension desktopSize = desktopPane.getSize();
+//								Dimension FrameSize = vc.getSize();
+//								vc.setLocation((desktopSize.width - FrameSize.width) / 2,
+//										(desktopSize.height - FrameSize.height) / 2);
+//								vc.show();
 							} else if (item == exit) {
 								exit();
 							}

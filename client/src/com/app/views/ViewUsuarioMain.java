@@ -20,6 +20,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -515,7 +516,12 @@ public class ViewUsuarioMain extends JInternalFrame {
 			btnModificar = new JButton("Modificar");
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					
+					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea modificar el Usuario seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
+					if(dialogResult == JOptionPane.YES_OPTION) {
+						
 					Usuario u = dao.findUsuario(getIdFromTable());
+					
 					u.setNombre1(txtNombre1.getText());
 					u.setNombre2(txtNombre2.getText());
 					u.setApellido1(txtApellido1.getText());
@@ -532,7 +538,9 @@ public class ViewUsuarioMain extends JInternalFrame {
 					u.setClave(passwordField.getText());
 					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
 					
-					dao.update(u);
+					dao.update(u);	
+					
+					}
 					
 				}
 			});
@@ -558,7 +566,11 @@ public class ViewUsuarioMain extends JInternalFrame {
 					u.setClave(passwordField.getText());
 //					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
 					
-					dao.update(u);
+					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Esta seguro/a que desea modificar los datos ingresados?","Confirmación", JOptionPane.YES_NO_OPTION);
+					if(dialogResult == JOptionPane.YES_OPTION) {
+						dao.update(u);
+						fillTable();
+					}
 					
 				}
 			});
@@ -645,7 +657,13 @@ public class ViewUsuarioMain extends JInternalFrame {
 			JButton btnEliminar = new JButton("Eliminar");
 			btnEliminar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					dao.delete(getIdFromTable());
+					
+					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Usuario seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
+					if(dialogResult == JOptionPane.YES_OPTION) {
+						dao.delete(getIdFromTable());
+						fillTable();
+					}
+					
 				}
 			});
 			GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
@@ -661,46 +679,59 @@ public class ViewUsuarioMain extends JInternalFrame {
 
 	protected void fillTable() {
 
-		ArrayList<Estudiante> estudiantes = (ArrayList<Estudiante>) dao.getAllEstudiantes();
-			ArrayList<Estudiante> est = new ArrayList<>(estudiantes);
-		
-		ArrayList<Tutor> tutores = (ArrayList<Tutor>) dao.getAllTutores();
-			ArrayList<Tutor> tut = new ArrayList<>(tutores);
-
+//		ArrayList<Estudiante> estudiantes = (ArrayList<Estudiante>) dao.getAllEstudiantes();
+//			ArrayList<Estudiante> est = new ArrayList<>(estudiantes);
+//		
+//		ArrayList<Tutor> tutores = (ArrayList<Tutor>) dao.getAllTutores();
+//			ArrayList<Tutor> tut = new ArrayList<>(tutores);
+//
 		table.model.setRowCount(0);
+//		
+//		for (Usuario u : est) {
+//			Object[] row = new Object[5];
+//			row[0] = u.getIdUsuario();
+//			row[1] = u;
+//			row[2] = u.getDocumento();
+//			row[3] = u.getNombre1() + u.getApellido1();
+//			row[4] = u.getEstado();
+//			table.model.addRow(row);
+//		}
+//
+//		for (Usuario u : tut) {
+//
+//			Object[] row = new Object[16];
+//			row[0] = u.getIdUsuario();
+//			row[1] = u.getNombre1();
+//			row[2] = u.getNombre2();
+//			row[3] = u.getApellido1();
+//			row[4] = u.getApellido2();
+//			row[5] = u.getGenero();
+//			row[6] = u.getFechaNac();
+//			row[7] = u.getDocumento();
+//			row[8] = u.getTelefono();
+//			row[9] = u.getMail();
+//			row[10] = u.getDepartamento();
+//			row[11] = u.getLocalidad();
+//			row[12] = u.getItr();
+//			row[13] = u.getUsuario();
+//			row[14] = u.getClave();
+//			row[15] = u.getEstado();
+//			table.model.addRow(row);
+
+//		}
 		
-		for (Usuario u : est) {
-			Object[] row = new Object[5];
-			row[0] = u;
-			row[1] = u.getIdUsuario();
-			row[2] = u.getDocumento();
-			row[3] = u.getNombre1() + u.getApellido1();
-			row[4] = u.getEstado();
-			table.model.addRow(row);
+		ArrayList<Usuario> users = new ArrayList<Usuario>(dao.getAllUsuarios());
+		
+		for (Usuario u : users) {	
+		Object[] row = new Object[5];
+		row[0] = u.getIdUsuario();
+		row[1] = u;
+		row[2] = u.getDocumento();
+		row[3] = u.getNombre1() + u.getApellido1();
+		row[4] = u.getEstado();
+		table.model.addRow(row);
 		}
-
-		for (Usuario u : tut) {
-
-			Object[] row = new Object[16];
-			row[0] = u.getIdUsuario();
-			row[1] = u.getNombre1();
-			row[2] = u.getNombre2();
-			row[3] = u.getApellido1();
-			row[4] = u.getApellido2();
-			row[5] = u.getGenero();
-			row[6] = u.getFechaNac();
-			row[7] = u.getDocumento();
-			row[8] = u.getTelefono();
-			row[9] = u.getMail();
-			row[10] = u.getDepartamento();
-			row[11] = u.getLocalidad();
-			row[12] = u.getItr();
-			row[13] = u.getUsuario();
-			row[14] = u.getClave();
-			row[15] = u.getEstado();
-			table.model.addRow(row);
-
-		}
+		
 	}
 
 	private void limpiarInput() {
@@ -717,7 +748,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 	
 	
 	public void fillInputFromTable(int row) {
-		Usuario usuario = (Usuario) table.getValueAt(0, row);
+		Usuario usuario = (Usuario) table.getValueAt(row, 1);
 		txtNombre1.setText(usuario.getNombre1());
 		txtNombre2.setText(usuario.getNombre2());
 		txtApellido1.setText(usuario.getApellido1());
