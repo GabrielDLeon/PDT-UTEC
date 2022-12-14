@@ -135,6 +135,7 @@ public class PanelUsuarioFiltro extends JPanel {
 		panelTutor.add(lblArea, gbc_lblArea);
 		
 		selectArea = new JComboBox<EnumTutorArea>(EnumTutorArea.values());
+		selectArea.setSelectedItem(null);
 		GridBagConstraints gbc_selectArea = new GridBagConstraints();
 		gbc_selectArea.fill = GridBagConstraints.HORIZONTAL;
 		gbc_selectArea.gridx = 0;

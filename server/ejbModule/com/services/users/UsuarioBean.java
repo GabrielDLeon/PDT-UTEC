@@ -173,11 +173,11 @@ public class UsuarioBean implements UsuarioBeanRemote {
 			predicates.add(qb.equal(root.get("area"), vo.getArea()));
 		}
 		
-		if (!vo.getNombre().trim().isEmpty()) {
+		if (vo.getNombre() != null && !vo.getNombre().trim().isEmpty()) {
 			predicates.add(qb.like(root.get("nombre1"), "%" + vo.getNombre() + "%"));
 		}
 		
-		if (!vo.getDocumento().trim().isEmpty()) {
+		if (vo.getDocumento() != null &&!vo.getDocumento().trim().isEmpty()) {
 			predicates.add(qb.like(root.get("documento"), vo.getDocumento() + "%"));
 		}
 		

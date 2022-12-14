@@ -45,6 +45,7 @@ import com.services.users.DepartamentoBeanRemote;
 import com.services.users.GeneroBeanRemote;
 import com.services.users.ItrBeanRemote;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JYearChooser;
 
 public class ViewUsuarioMain extends JInternalFrame {
 
@@ -78,6 +79,9 @@ public class ViewUsuarioMain extends JInternalFrame {
 	
 	private JComboBox filterItr;
 	private JComboBox filterEstado;
+	
+	private JComboBox filterUsuario;
+	private JYearChooser filterGeneracion;
 	
 	private List<Genero> generoList;
 	private List<Itr> itrList;
@@ -116,33 +120,53 @@ public class ViewUsuarioMain extends JInternalFrame {
 	}
 	
 	public void refreshTable(UsuarioBusquedaVO vo) {
+		
+		usuarios = (vo != null) ? dao.search(vo) : dao.getAllUsuarios();
+		
 		table.model.setRowCount(0);
-		if (vo != null) {
-			usuarios = dao.search(vo);
-		} else {
-			fillTable();
+		
+		for (Usuario u : usuarios) {	
+		Object[] row = new Object[5];
+		row[0] = u.getIdUsuario();
+		row[1] = u;
+		row[2] = u.getDocumento();
+		row[3] = u.getNombre1() + u.getApellido1();
+		row[4] = u.getEstado();
+		table.model.addRow(row);
+		
 		}
+		
 	}
 	
 	public void search() {
+		
+		Usuario u = null;
+		
+		String s = (String) filterUsuario.getSelectedItem();
+		
+		System.out.println(s);
+		
+		if(s != null) {
+			
+			if(s.equals("ANALISTA")) {
+				u = new Analista();
+			} else if (s.equals("ESTUDIANTE")) {
+				u = new Estudiante();
+			} else if (s.equals("TUTOR")) {
+				u = new Tutor();
+			}
+		}
+		
+		
 		UsuarioBusquedaVO vo = UsuarioBusquedaVO.builder()
+				
 				.itr((Itr) filterItr.getSelectedItem())
 				.estado((EnumUsuarioEstado) filterEstado.getSelectedItem())
+				.usuario(u)
+				.generacion(filterGeneracion.getValue())
 				.build();
 		refreshTable(vo);
-	}
-	
-	protected void fillFilteredTable() {
-		table.model.setRowCount(0);
-		for (Usuario u : usuarios) {
-			Object[] row = new Object[5];
-			row[0] = u;
-			row[1] = u.getIdUsuario();
-			row[2] = u.getDocumento();
-			row[3] = u.getNombre1() + u.getApellido1();
-			row[4] = u.getEstado();
-			table.model.addRow(row);
-		}
+		System.out.println(vo.toString());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -156,10 +180,10 @@ public class ViewUsuarioMain extends JInternalFrame {
 		setBounds(100, 100, 1001, 650);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 30, 30, 0, 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0, 0, 0, 0, 0 };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0 };
 		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
+				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
 
 		this.setBorder(null);
@@ -483,7 +507,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 			getContentPane().add(btnListar, gbc_btnListar);
 			btnListar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					fillTable();
+					refreshTable(null);
 				}
 			});
 		}
@@ -539,6 +563,8 @@ public class ViewUsuarioMain extends JInternalFrame {
 					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
 					
 					dao.update(u);	
+					refreshTable(null);
+					
 					
 					}
 					
@@ -569,7 +595,6 @@ public class ViewUsuarioMain extends JInternalFrame {
 					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Esta seguro/a que desea modificar los datos ingresados?","Confirmación", JOptionPane.YES_NO_OPTION);
 					if(dialogResult == JOptionPane.YES_OPTION) {
 						dao.update(u);
-						fillTable();
 					}
 					
 				}
@@ -631,25 +656,63 @@ public class ViewUsuarioMain extends JInternalFrame {
 		btnFiltar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				search();
-				fillFilteredTable();
 			}
 		});
+		
+		JLabel lblFiltarTipo = new JLabel("Filtrar por Usuario");
+		GridBagConstraints gbc_lblFiltarTipo = new GridBagConstraints();
+		gbc_lblFiltarTipo.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFiltarTipo.gridx = 1;
+		gbc_lblFiltarTipo.gridy = 21;
+		getContentPane().add(lblFiltarTipo, gbc_lblFiltarTipo);
+		
+		filterUsuario = new JComboBox(new Object[]{});
+		filterUsuario.setModel(new DefaultComboBoxModel(new String[] {"", "ANALISTA", "ESTUDIANTE", "TUTOR"}));
+		filterUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+		GridBagConstraints gbc_filterUsuario = new GridBagConstraints();
+		gbc_filterUsuario.gridwidth = 2;
+		gbc_filterUsuario.insets = new Insets(0, 0, 5, 5);
+		gbc_filterUsuario.fill = GridBagConstraints.HORIZONTAL;
+		gbc_filterUsuario.gridx = 3;
+		gbc_filterUsuario.gridy = 21;
+		getContentPane().add(filterUsuario, gbc_filterUsuario);
+		
+		JLabel lblFiltarGen = new JLabel("Filtrar por Generacion");
+		GridBagConstraints gbc_lblFiltarGen = new GridBagConstraints();
+		gbc_lblFiltarGen.insets = new Insets(0, 0, 5, 5);
+		gbc_lblFiltarGen.gridx = 1;
+		gbc_lblFiltarGen.gridy = 22;
+		getContentPane().add(lblFiltarGen, gbc_lblFiltarGen);
+		
+		filterGeneracion = new JYearChooser();
+		filterGeneracion.setStartYear(0);
+		filterGeneracion.setMinimum(0);
+		GridBagConstraints gbc_yearChooser = new GridBagConstraints();
+		gbc_yearChooser.insets = new Insets(0, 0, 5, 5);
+		gbc_yearChooser.fill = GridBagConstraints.BOTH;
+		gbc_yearChooser.gridx = 3;
+		gbc_yearChooser.gridy = 22;
+		getContentPane().add(filterGeneracion, gbc_yearChooser);
 		GridBagConstraints gbc_btnFiltar = new GridBagConstraints();
 		gbc_btnFiltar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnFiltar.gridx = 3;
-		gbc_btnFiltar.gridy = 21;
+		gbc_btnFiltar.gridy = 23;
 		getContentPane().add(btnFiltar, gbc_btnFiltar);
 		
 		JButton btnLimpiar = new JButton("Limpiar Filtros");
 		btnLimpiar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				refreshTable(null);
+				filterUsuario.setSelectedItem(null);
+				filterItr.setSelectedItem(null);
+				filterGeneracion.setValue(0);
+				filterEstado.setSelectedItem(null);
 			}
 		});
 		GridBagConstraints gbc_btnLimpiar = new GridBagConstraints();
 		gbc_btnLimpiar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnLimpiar.gridx = 4;
-		gbc_btnLimpiar.gridy = 21;
+		gbc_btnLimpiar.gridy = 23;
 		getContentPane().add(btnLimpiar, gbc_btnLimpiar);
 
 		if (userType.getClass() == Analista.class) {
@@ -661,7 +724,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Usuario seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
 					if(dialogResult == JOptionPane.YES_OPTION) {
 						dao.delete(getIdFromTable());
-						fillTable();
+						refreshTable(null);
 					}
 					
 				}
@@ -674,64 +737,13 @@ public class ViewUsuarioMain extends JInternalFrame {
 		}
 		
 		}
-
-	}
-
-	protected void fillTable() {
-
-//		ArrayList<Estudiante> estudiantes = (ArrayList<Estudiante>) dao.getAllEstudiantes();
-//			ArrayList<Estudiante> est = new ArrayList<>(estudiantes);
-//		
-//		ArrayList<Tutor> tutores = (ArrayList<Tutor>) dao.getAllTutores();
-//			ArrayList<Tutor> tut = new ArrayList<>(tutores);
-//
-		table.model.setRowCount(0);
-//		
-//		for (Usuario u : est) {
-//			Object[] row = new Object[5];
-//			row[0] = u.getIdUsuario();
-//			row[1] = u;
-//			row[2] = u.getDocumento();
-//			row[3] = u.getNombre1() + u.getApellido1();
-//			row[4] = u.getEstado();
-//			table.model.addRow(row);
-//		}
-//
-//		for (Usuario u : tut) {
-//
-//			Object[] row = new Object[16];
-//			row[0] = u.getIdUsuario();
-//			row[1] = u.getNombre1();
-//			row[2] = u.getNombre2();
-//			row[3] = u.getApellido1();
-//			row[4] = u.getApellido2();
-//			row[5] = u.getGenero();
-//			row[6] = u.getFechaNac();
-//			row[7] = u.getDocumento();
-//			row[8] = u.getTelefono();
-//			row[9] = u.getMail();
-//			row[10] = u.getDepartamento();
-//			row[11] = u.getLocalidad();
-//			row[12] = u.getItr();
-//			row[13] = u.getUsuario();
-//			row[14] = u.getClave();
-//			row[15] = u.getEstado();
-//			table.model.addRow(row);
-
-//		}
 		
-		ArrayList<Usuario> users = new ArrayList<Usuario>(dao.getAllUsuarios());
 		
-		for (Usuario u : users) {	
-		Object[] row = new Object[5];
-		row[0] = u.getIdUsuario();
-		row[1] = u;
-		row[2] = u.getDocumento();
-		row[3] = u.getNombre1() + u.getApellido1();
-		row[4] = u.getEstado();
-		table.model.addRow(row);
-		}
-		
+		filterUsuario.setSelectedItem(null);
+		filterItr.setSelectedItem(null);
+		filterGeneracion.setValue(0);
+		filterEstado.setSelectedItem(null);
+
 	}
 
 	private void limpiarInput() {
