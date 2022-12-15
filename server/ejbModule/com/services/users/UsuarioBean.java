@@ -181,7 +181,7 @@ public class UsuarioBean implements UsuarioBeanRemote {
 			predicates.add(qb.like(root.get("documento"), vo.getDocumento() + "%"));
 		}
 		
-		if (vo.getGeneracion() != 0) {
+		if (vo.getUsuario().getClass().equals(Estudiante.class) && vo.getGeneracion() != 0) {
 			predicates.add(qb.equal(root.get("generacion"), vo.getGeneracion()));
 		}
 		

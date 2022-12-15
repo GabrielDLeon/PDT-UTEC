@@ -74,19 +74,19 @@ public class ViewUsuarioMain extends JInternalFrame {
 	private JButton btnListar;
 	private JButton btnModificar;
 	private JLabel lblUsuario;
-	
+
 	private List<Usuario> usuarios;
-	
+
 	private JComboBox filterItr;
 	private JComboBox filterEstado;
-	
+
 	private JComboBox filterUsuario;
 	private JYearChooser filterGeneracion;
-	
+
 	private List<Genero> generoList;
 	private List<Itr> itrList;
 	private List<Departamento> departamentoList;
-	
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -100,55 +100,55 @@ public class ViewUsuarioMain extends JInternalFrame {
 			}
 		});
 	}
-	
+
 	public List<Genero> getGenero() throws NamingException {
 		GeneroBeanRemote beanGenero = (GeneroBeanRemote) InitialContext
 				.doLookup("ejb:/PDT-Server/GeneroBean!com.services.users.GeneroBeanRemote");
 		return generoList = beanGenero.findAll();
 	}
-	
+
 	public List<Itr> getItr() throws NamingException {
 		ItrBeanRemote beanItr = (ItrBeanRemote) InitialContext
 				.doLookup("ejb:/PDT-Server/ItrBean!com.services.users.ItrBeanRemote");
 		return itrList = beanItr.findAll();
 	}
-	
+
 	public List<Departamento> getDepartamento() throws NamingException {
 		DepartamentoBeanRemote beanDepartamento = (DepartamentoBeanRemote) InitialContext
 				.doLookup("ejb:/PDT-Server/DepartamentoBean!com.services.users.DepartamentoBeanRemote");
 		return departamentoList = beanDepartamento.findAll();
 	}
-	
+
 	public void refreshTable(UsuarioBusquedaVO vo) {
-		
+
 		usuarios = (vo != null) ? dao.search(vo) : dao.getAllUsuarios();
-		
+
 		table.model.setRowCount(0);
-		
-		for (Usuario u : usuarios) {	
-		Object[] row = new Object[5];
-		row[0] = u.getIdUsuario();
-		row[1] = u;
-		row[2] = u.getDocumento();
-		row[3] = u.getNombre1() + u.getApellido1();
-		row[4] = u.getEstado();
-		table.model.addRow(row);
-		
+
+		for (Usuario u : usuarios) {
+			Object[] row = new Object[5];
+			row[0] = u.getIdUsuario();
+			row[1] = u;
+			row[2] = u.getDocumento();
+			row[3] = u.getNombre1() + u.getApellido1();
+			row[4] = u.getEstado();
+			table.model.addRow(row);
+
 		}
-		
+
 	}
-	
+
 	public void search() {
-		
+
 		Usuario u = null;
-		
+
 		String s = (String) filterUsuario.getSelectedItem();
-		
+
 		System.out.println(s);
-		
-		if(s != null) {
-			
-			if(s.equals("ANALISTA")) {
+
+		if (s != null) {
+
+			if (s.equals("ANALISTA")) {
 				u = new Analista();
 			} else if (s.equals("ESTUDIANTE")) {
 				u = new Estudiante();
@@ -156,32 +156,30 @@ public class ViewUsuarioMain extends JInternalFrame {
 				u = new Tutor();
 			}
 		}
-		
-		
+
 		UsuarioBusquedaVO vo = UsuarioBusquedaVO.builder()
-				
-				.itr((Itr) filterItr.getSelectedItem())
-				.estado((EnumUsuarioEstado) filterEstado.getSelectedItem())
-				.usuario(u)
-				.generacion(filterGeneracion.getValue())
-				.build();
+
+				.itr((Itr) filterItr.getSelectedItem()).estado((EnumUsuarioEstado) filterEstado.getSelectedItem())
+				.usuario(u).generacion(filterGeneracion.getValue()).build();
 		refreshTable(vo);
 		System.out.println(vo.toString());
 	}
 
 	@SuppressWarnings("unchecked")
 	public ViewUsuarioMain(Usuario u) throws NamingException {
-		
+
 		this.userType = u;
-		
+
 		setMaximizable(true);
 
 		getContentPane().setFont(new Font("Roboto", Font.PLAIN, 12));
 		setBounds(100, 100, 1001, 650);
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.columnWidths = new int[] { 0, 0, 0, 0, 0, 30, 30, 0, 0, 0, 0 };
-		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0, 0 };
-		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE };
+		gridBagLayout.rowHeights = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 28, 0, 0, 0, 28, 0, 0, 0, 0, 0, 0,
+				0 };
+		gridBagLayout.columnWeights = new double[] { 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+				Double.MIN_VALUE };
 		gridBagLayout.rowWeights = new double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
 				0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE };
 		getContentPane().setLayout(gridBagLayout);
@@ -220,11 +218,11 @@ public class ViewUsuarioMain extends JInternalFrame {
 		gbc_scrollPane.gridy = 1;
 		getContentPane().add(scrollPane, gbc_scrollPane);
 
-		
 		if (userType.getClass() == Analista.class) {
 			table = new CustomTable();
-			table.setColumns("Usuario","ID","Documento","Nombre","Estado");
+			table.setColumns("Usuario", "ID", "Documento", "Nombre", "Estado");
 			scrollPane.setViewportView(table);
+			refreshTable(null);
 			table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 				public void valueChanged(ListSelectionEvent lse) {
 					if (!lse.getValueIsAdjusting()) {
@@ -238,7 +236,6 @@ public class ViewUsuarioMain extends JInternalFrame {
 				}
 			});
 		}
-		
 
 		JLabel lblNombre2 = new JLabel("Segundo Nombre");
 		lblNombre2.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -307,7 +304,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 		getContentPane().add(lblGenero, gbc_lblGenero);
 
 		ArrayList<Genero> generos = (ArrayList<Genero>) getGenero();
-		
+
 		selectGenero = new JComboBox(generos.toArray());
 		selectGenero.setFont(new Font("Roboto", Font.PLAIN, 12));
 		GridBagConstraints gbc_selectGenero = new GridBagConstraints();
@@ -392,10 +389,10 @@ public class ViewUsuarioMain extends JInternalFrame {
 		gbc_txtTelefono.gridy = 9;
 		getContentPane().add(txtTelefono, gbc_txtTelefono);
 
-		if(userType.getClass() == Analista.class) {
+		if (userType.getClass() == Analista.class) {
 			lblUsuario = new JLabel("Usuario");
 			lblUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
-			
+
 			txtUsuario = new JTextField();
 			txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
 			txtUsuario.setColumns(10);
@@ -412,8 +409,6 @@ public class ViewUsuarioMain extends JInternalFrame {
 			gbc_txtUsuario.gridy = 10;
 			getContentPane().add(txtUsuario, gbc_txtUsuario);
 		}
-		
-
 
 		JLabel lblClave = new JLabel("Contraseña");
 		lblClave.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -440,7 +435,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 		gbc_lbItr.gridx = 1;
 		gbc_lbItr.gridy = 12;
 		getContentPane().add(lbItr, gbc_lbItr);
-		
+
 		ArrayList<Itr> itrs = (ArrayList<Itr>) getItr();
 
 		selectItr = new JComboBox(itrs.toArray());
@@ -462,7 +457,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 		getContentPane().add(lblDepartamento, gbc_lblDepartamento);
 
 		ArrayList<Departamento> departamentos = (ArrayList<Departamento>) getDepartamento();
-		
+
 		selectDepartamento = new JComboBox(departamentos.toArray());
 		selectDepartamento.setFont(new Font("Roboto", Font.PLAIN, 12));
 		selectDepartamento.addItemListener(new ItemListener() {
@@ -511,9 +506,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 				}
 			});
 		}
-		
-		
-		
+
 		if (userType.getClass() == Analista.class) {
 			selectEstado = new JComboBox(EnumUsuarioEstado.values());
 			selectEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
@@ -532,45 +525,43 @@ public class ViewUsuarioMain extends JInternalFrame {
 			gbc_selectEstado.gridy = 15;
 			getContentPane().add(selectEstado, gbc_selectEstado);
 		}
-		
-		
 
 		if (userType.getClass() == Analista.class) {
-			
+
 			btnModificar = new JButton("Modificar");
 			btnModificar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					
-					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea modificar el Usuario seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
-					if(dialogResult == JOptionPane.YES_OPTION) {
-						
-					Usuario u = dao.findUsuario(getIdFromTable());
-					
-					u.setNombre1(txtNombre1.getText());
-					u.setNombre2(txtNombre2.getText());
-					u.setApellido1(txtApellido1.getText());
-					u.setApellido2(txtApellido2.getText());
-					u.setGenero((Genero) selectGenero.getSelectedItem());
-					u.setFechaNac(dateChooser.getDate());
-					u.setDocumento(txtCedula.getText());
-					u.setTelefono(txtTelefono.getText());
-					u.setMail(txtEmail.getText());
-					u.setDepartamento((Departamento) selectDepartamento.getSelectedItem());
-					u.setLocalidad((Localidad) selectLocalidad.getSelectedItem());
-					u.setItr((Itr) selectItr.getSelectedItem());
-					u.setUsuario(txtUsuario.getText());
-					u.setClave(passwordField.getText());
-					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
-					
-					dao.update(u);	
-					refreshTable(null);
-					
-					
+
+					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea modificar el Usuario seleccionado?",
+							"Confirmación", JOptionPane.YES_NO_OPTION);
+					if (dialogResult == JOptionPane.YES_OPTION) {
+
+						Usuario u = dao.findUsuario(getIdFromTable());
+
+						u.setNombre1(txtNombre1.getText());
+						u.setNombre2(txtNombre2.getText());
+						u.setApellido1(txtApellido1.getText());
+						u.setApellido2(txtApellido2.getText());
+						u.setGenero((Genero) selectGenero.getSelectedItem());
+						u.setFechaNac(dateChooser.getDate());
+						u.setDocumento(txtCedula.getText());
+						u.setTelefono(txtTelefono.getText());
+						u.setMail(txtEmail.getText());
+						u.setDepartamento((Departamento) selectDepartamento.getSelectedItem());
+						u.setLocalidad((Localidad) selectLocalidad.getSelectedItem());
+						u.setItr((Itr) selectItr.getSelectedItem());
+						u.setUsuario(txtUsuario.getText());
+						u.setClave(passwordField.getText());
+						u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
+
+						dao.update(u);
+						refreshTable(null);
+
 					}
-					
+
 				}
 			});
-			
+
 		} else if (userType.getClass() == Tutor.class || userType.getClass() == Estudiante.class) {
 			btnModificar = new JButton("Modificar");
 			btnModificar.addActionListener(new ActionListener() {
@@ -591,154 +582,173 @@ public class ViewUsuarioMain extends JInternalFrame {
 //					u.setUsuario(txtUsuario.getText());
 					u.setClave(passwordField.getText());
 //					u.setEstado((EnumUsuarioEstado) selectEstado.getSelectedItem());
-					
-					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Esta seguro/a que desea modificar los datos ingresados?","Confirmación", JOptionPane.YES_NO_OPTION);
-					if(dialogResult == JOptionPane.YES_OPTION) {
+
+					int dialogResult = JOptionPane.showConfirmDialog(null,
+							"¿Esta seguro/a que desea modificar los datos ingresados?", "Confirmación",
+							JOptionPane.YES_NO_OPTION);
+					if (dialogResult == JOptionPane.YES_OPTION) {
 						dao.update(u);
 					}
-					
+
 				}
 			});
-		} 
-		
-		
+		}
+
 		GridBagConstraints gbc_btnModificar = new GridBagConstraints();
 		gbc_btnModificar.insets = new Insets(0, 0, 0, 5);
 		gbc_btnModificar.gridx = 4;
 		gbc_btnModificar.gridy = 17;
 		getContentPane().add(btnModificar, gbc_btnModificar);
-		
-		if(userType.getClass() == Analista.class) {
-		
-		JLabel lblFiltrar = new JLabel("Filtrar");
-		GridBagConstraints gbc_lblFiltrar = new GridBagConstraints();
-		gbc_lblFiltrar.gridwidth = 4;
-		gbc_lblFiltrar.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFiltrar.gridx = 1;
-		gbc_lblFiltrar.gridy = 18;
-		getContentPane().add(lblFiltrar, gbc_lblFiltrar);
-		
-		JLabel lblItr = new JLabel("Filtrar por ITR");
-		GridBagConstraints gbc_lblItr = new GridBagConstraints();
-		gbc_lblItr.insets = new Insets(0, 0, 5, 5);
-		gbc_lblItr.gridx = 1;
-		gbc_lblItr.gridy = 19;
-		getContentPane().add(lblItr, gbc_lblItr);
-		
-		filterItr = new JComboBox(itrs.toArray());
-		filterItr.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_filterItr = new GridBagConstraints();
-		gbc_filterItr.gridwidth = 2;
-		gbc_filterItr.insets = new Insets(0, 0, 5, 5);
-		gbc_filterItr.fill = GridBagConstraints.HORIZONTAL;
-		gbc_filterItr.gridx = 3;
-		gbc_filterItr.gridy = 19;
-		getContentPane().add(filterItr, gbc_filterItr);
-		
-		JLabel lblFiltrarPorEstado = new JLabel("Filtrar por Estado");
-		GridBagConstraints gbc_lblFiltrarPorEstado = new GridBagConstraints();
-		gbc_lblFiltrarPorEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFiltrarPorEstado.gridx = 1;
-		gbc_lblFiltrarPorEstado.gridy = 20;
-		getContentPane().add(lblFiltrarPorEstado, gbc_lblFiltrarPorEstado);
-		
-		filterEstado = new JComboBox(EnumUsuarioEstado.values());
-		filterEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_filterEstado = new GridBagConstraints();
-		gbc_filterEstado.gridwidth = 2;
-		gbc_filterEstado.insets = new Insets(0, 0, 5, 5);
-		gbc_filterEstado.fill = GridBagConstraints.HORIZONTAL;
-		gbc_filterEstado.gridx = 3;
-		gbc_filterEstado.gridy = 20;
-		getContentPane().add(filterEstado, gbc_filterEstado);
-		
-		JButton btnFiltar = new JButton("Filtrar");
-		btnFiltar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				search();
-			}
-		});
-		
-		JLabel lblFiltarTipo = new JLabel("Filtrar por Usuario");
-		GridBagConstraints gbc_lblFiltarTipo = new GridBagConstraints();
-		gbc_lblFiltarTipo.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFiltarTipo.gridx = 1;
-		gbc_lblFiltarTipo.gridy = 21;
-		getContentPane().add(lblFiltarTipo, gbc_lblFiltarTipo);
-		
-		filterUsuario = new JComboBox(new Object[]{});
-		filterUsuario.setModel(new DefaultComboBoxModel(new String[] {"", "ANALISTA", "ESTUDIANTE", "TUTOR"}));
-		filterUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
-		GridBagConstraints gbc_filterUsuario = new GridBagConstraints();
-		gbc_filterUsuario.gridwidth = 2;
-		gbc_filterUsuario.insets = new Insets(0, 0, 5, 5);
-		gbc_filterUsuario.fill = GridBagConstraints.HORIZONTAL;
-		gbc_filterUsuario.gridx = 3;
-		gbc_filterUsuario.gridy = 21;
-		getContentPane().add(filterUsuario, gbc_filterUsuario);
-		
-		JLabel lblFiltarGen = new JLabel("Filtrar por Generacion");
-		GridBagConstraints gbc_lblFiltarGen = new GridBagConstraints();
-		gbc_lblFiltarGen.insets = new Insets(0, 0, 5, 5);
-		gbc_lblFiltarGen.gridx = 1;
-		gbc_lblFiltarGen.gridy = 22;
-		getContentPane().add(lblFiltarGen, gbc_lblFiltarGen);
-		
-		filterGeneracion = new JYearChooser();
-		filterGeneracion.setStartYear(0);
-		filterGeneracion.setMinimum(0);
-		GridBagConstraints gbc_yearChooser = new GridBagConstraints();
-		gbc_yearChooser.insets = new Insets(0, 0, 5, 5);
-		gbc_yearChooser.fill = GridBagConstraints.BOTH;
-		gbc_yearChooser.gridx = 3;
-		gbc_yearChooser.gridy = 22;
-		getContentPane().add(filterGeneracion, gbc_yearChooser);
-		GridBagConstraints gbc_btnFiltar = new GridBagConstraints();
-		gbc_btnFiltar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnFiltar.gridx = 3;
-		gbc_btnFiltar.gridy = 23;
-		getContentPane().add(btnFiltar, gbc_btnFiltar);
-		
-		JButton btnLimpiar = new JButton("Limpiar Filtros");
-		btnLimpiar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				refreshTable(null);
-				filterUsuario.setSelectedItem(null);
-				filterItr.setSelectedItem(null);
-				filterGeneracion.setValue(0);
-				filterEstado.setSelectedItem(null);
-			}
-		});
-		GridBagConstraints gbc_btnLimpiar = new GridBagConstraints();
-		gbc_btnLimpiar.insets = new Insets(0, 0, 0, 5);
-		gbc_btnLimpiar.gridx = 4;
-		gbc_btnLimpiar.gridy = 23;
-		getContentPane().add(btnLimpiar, gbc_btnLimpiar);
 
 		if (userType.getClass() == Analista.class) {
-			
-			JButton btnEliminar = new JButton("Eliminar");
-			btnEliminar.addActionListener(new ActionListener() {
+
+			JLabel lblFiltrar = new JLabel("Filtrar");
+			GridBagConstraints gbc_lblFiltrar = new GridBagConstraints();
+			gbc_lblFiltrar.gridwidth = 4;
+			gbc_lblFiltrar.insets = new Insets(0, 0, 5, 5);
+			gbc_lblFiltrar.gridx = 1;
+			gbc_lblFiltrar.gridy = 18;
+			getContentPane().add(lblFiltrar, gbc_lblFiltrar);
+
+			JLabel lblItr = new JLabel("Filtrar por ITR");
+			GridBagConstraints gbc_lblItr = new GridBagConstraints();
+			gbc_lblItr.insets = new Insets(0, 0, 5, 5);
+			gbc_lblItr.gridx = 1;
+			gbc_lblItr.gridy = 19;
+			getContentPane().add(lblItr, gbc_lblItr);
+
+			filterItr = new JComboBox(itrs.toArray());
+			filterItr.setFont(new Font("Roboto", Font.PLAIN, 12));
+			GridBagConstraints gbc_filterItr = new GridBagConstraints();
+			gbc_filterItr.gridwidth = 2;
+			gbc_filterItr.insets = new Insets(0, 0, 5, 5);
+			gbc_filterItr.fill = GridBagConstraints.HORIZONTAL;
+			gbc_filterItr.gridx = 3;
+			gbc_filterItr.gridy = 19;
+			getContentPane().add(filterItr, gbc_filterItr);
+
+			JLabel lblFiltrarPorEstado = new JLabel("Filtrar por Estado");
+			GridBagConstraints gbc_lblFiltrarPorEstado = new GridBagConstraints();
+			gbc_lblFiltrarPorEstado.insets = new Insets(0, 0, 5, 5);
+			gbc_lblFiltrarPorEstado.gridx = 1;
+			gbc_lblFiltrarPorEstado.gridy = 20;
+			getContentPane().add(lblFiltrarPorEstado, gbc_lblFiltrarPorEstado);
+
+			filterEstado = new JComboBox(EnumUsuarioEstado.values());
+			filterEstado.setFont(new Font("Roboto", Font.PLAIN, 12));
+			GridBagConstraints gbc_filterEstado = new GridBagConstraints();
+			gbc_filterEstado.gridwidth = 2;
+			gbc_filterEstado.insets = new Insets(0, 0, 5, 5);
+			gbc_filterEstado.fill = GridBagConstraints.HORIZONTAL;
+			gbc_filterEstado.gridx = 3;
+			gbc_filterEstado.gridy = 20;
+			getContentPane().add(filterEstado, gbc_filterEstado);
+
+			JButton btnFiltar = new JButton("Filtrar");
+			btnFiltar.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
+					search();
+				}
+			});
+
+			JLabel lblFiltarTipo = new JLabel("Filtrar por Usuario");
+			GridBagConstraints gbc_lblFiltarTipo = new GridBagConstraints();
+			gbc_lblFiltarTipo.insets = new Insets(0, 0, 5, 5);
+			gbc_lblFiltarTipo.gridx = 1;
+			gbc_lblFiltarTipo.gridy = 21;
+			getContentPane().add(lblFiltarTipo, gbc_lblFiltarTipo);
+
+			filterUsuario = new JComboBox(new Object[] {});
+			filterUsuario.setModel(new DefaultComboBoxModel(new String[] { "", "ANALISTA", "ESTUDIANTE", "TUTOR" }));
+			filterUsuario.setFont(new Font("Roboto", Font.PLAIN, 12));
+			GridBagConstraints gbc_filterUsuario = new GridBagConstraints();
+			gbc_filterUsuario.gridwidth = 2;
+			gbc_filterUsuario.insets = new Insets(0, 0, 5, 5);
+			gbc_filterUsuario.fill = GridBagConstraints.HORIZONTAL;
+			gbc_filterUsuario.gridx = 3;
+			gbc_filterUsuario.gridy = 21;
+			getContentPane().add(filterUsuario, gbc_filterUsuario);
+
+			JLabel lblFiltarGen = new JLabel("Filtrar por Generacion");
+			GridBagConstraints gbc_lblFiltarGen = new GridBagConstraints();
+			gbc_lblFiltarGen.insets = new Insets(0, 0, 5, 5);
+			gbc_lblFiltarGen.gridx = 1;
+			gbc_lblFiltarGen.gridy = 22;
+			getContentPane().add(lblFiltarGen, gbc_lblFiltarGen);
+
+			filterGeneracion = new JYearChooser();
+			filterGeneracion.setStartYear(0);
+			filterGeneracion.setMinimum(0);
+			GridBagConstraints gbc_yearChooser = new GridBagConstraints();
+			gbc_yearChooser.insets = new Insets(0, 0, 5, 5);
+			gbc_yearChooser.fill = GridBagConstraints.BOTH;
+			gbc_yearChooser.gridx = 3;
+			gbc_yearChooser.gridy = 22;
+			getContentPane().add(filterGeneracion, gbc_yearChooser);
+			GridBagConstraints gbc_btnFiltar = new GridBagConstraints();
+			gbc_btnFiltar.insets = new Insets(0, 0, 0, 5);
+			gbc_btnFiltar.gridx = 3;
+			gbc_btnFiltar.gridy = 23;
+			getContentPane().add(btnFiltar, gbc_btnFiltar);
+			filterGeneracion.setEnabled(false);
+
+			filterUsuario.addItemListener(new ItemListener() {
+				@Override
+				public void itemStateChanged(ItemEvent e) {
 					
-					int dialogResult = JOptionPane.showConfirmDialog(null, "¿Desea eliminar el Usuario seleccionado?","Confirmación", JOptionPane.YES_NO_OPTION);
-					if(dialogResult == JOptionPane.YES_OPTION) {
-						dao.delete(getIdFromTable());
-						refreshTable(null);
+					if(filterUsuario.getSelectedItem() != null) {
+						
+						if (filterUsuario.getSelectedItem().toString().equals("ESTUDIANTE")) {
+							filterGeneracion.setEnabled(true);
+						} else {
+							filterGeneracion.setEnabled(false);
+						}
 					}
 					
 				}
 			});
-			GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
-			gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
-			gbc_btnEliminar.gridx = 5;
-			gbc_btnEliminar.gridy = 17;
-			getContentPane().add(btnEliminar, gbc_btnEliminar);
+
+			JButton btnLimpiar = new JButton("Limpiar Filtros");
+			btnLimpiar.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					refreshTable(null);
+					filterUsuario.setSelectedItem(null);
+					filterItr.setSelectedItem(null);
+					filterGeneracion.setValue(0);
+					filterEstado.setSelectedItem(null);
+					filterGeneracion.setEnabled(false);
+				}
+			});
+			GridBagConstraints gbc_btnLimpiar = new GridBagConstraints();
+			gbc_btnLimpiar.insets = new Insets(0, 0, 0, 5);
+			gbc_btnLimpiar.gridx = 4;
+			gbc_btnLimpiar.gridy = 23;
+			getContentPane().add(btnLimpiar, gbc_btnLimpiar);
+
+			if (userType.getClass() == Analista.class) {
+
+				JButton btnEliminar = new JButton("Eliminar");
+				btnEliminar.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+
+						int dialogResult = JOptionPane.showConfirmDialog(null,
+								"¿Desea eliminar el Usuario seleccionado?", "Confirmación", JOptionPane.YES_NO_OPTION);
+						if (dialogResult == JOptionPane.YES_OPTION) {
+							dao.delete(getIdFromTable());
+							refreshTable(null);
+						}
+
+					}
+				});
+				GridBagConstraints gbc_btnEliminar = new GridBagConstraints();
+				gbc_btnEliminar.insets = new Insets(0, 0, 0, 5);
+				gbc_btnEliminar.gridx = 5;
+				gbc_btnEliminar.gridy = 17;
+				getContentPane().add(btnEliminar, gbc_btnEliminar);
+			}
+
 		}
-		
-		}
-		
-		
+
 		filterUsuario.setSelectedItem(null);
 		filterItr.setSelectedItem(null);
 		filterGeneracion.setValue(0);
@@ -757,8 +767,7 @@ public class ViewUsuarioMain extends JInternalFrame {
 		txtUsuario.setText("");
 		passwordField.setText("");
 	}
-	
-	
+
 	public void fillInputFromTable(int row) {
 		Usuario usuario = (Usuario) table.getValueAt(row, 1);
 		txtNombre1.setText(usuario.getNombre1());
@@ -771,23 +780,24 @@ public class ViewUsuarioMain extends JInternalFrame {
 		txtEmail.setText(usuario.getMail());
 		txtUsuario.setText(usuario.getUsuario());
 		passwordField.setText(usuario.getClave());
-		
+
 		try {
-			/*selectGenero.setSelectedItem((Genero)table.getValueAt(row, 5));
-			selectDepartamento.setSelectedItem((Departamento)table.getValueAt(row, 10));
-			selectLocalidad.setSelectedItem((Localidad)table.getValueAt(row, 11));
-			selectItr.setSelectedItem((Itr)table.getValueAt(row, 12));
-			selectEstado.setSelectedItem(table.getValueAt(row, 15));
-			*/
+			/*
+			 * selectGenero.setSelectedItem((Genero)table.getValueAt(row, 5));
+			 * selectDepartamento.setSelectedItem((Departamento)table.getValueAt(row, 10));
+			 * selectLocalidad.setSelectedItem((Localidad)table.getValueAt(row, 11));
+			 * selectItr.setSelectedItem((Itr)table.getValueAt(row, 12));
+			 * selectEstado.setSelectedItem(table.getValueAt(row, 15));
+			 */
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	protected Long getIdFromTable() {
 		int row = table.getSelectedRow();
 		Long id = (Long) table.getValueAt(row, 0);
 		return id;
 	}
-	
+
 }
